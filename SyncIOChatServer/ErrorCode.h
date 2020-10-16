@@ -43,3 +43,9 @@ namespace NServerNetLib
 		int Vlaue = 0;
 	};
 }
+
+
+enum ERORR_CODDE : short
+{
+	NONE = 0,
+};

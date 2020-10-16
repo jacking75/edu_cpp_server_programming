@@ -139,12 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChatServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PacketProcess.cpp" />
     <ClCompile Include="TcpNetwork.cpp" />
     <ClCompile Include="TcpSession.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChatServer.h" />
     <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketProcess.h" />
     <ClInclude Include="TcpNetwork.h" />
     <ClInclude Include="TcpSession.h" />
   </ItemGroup>

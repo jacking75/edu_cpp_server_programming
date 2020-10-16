@@ -4,10 +4,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TcpNetwork.cpp" />
     <ClCompile Include="TcpSession.cpp" />
+    <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="PacketProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TcpNetwork.h" />
     <ClInclude Include="TcpSession.h" />
     <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="ChatServer.h" />
+    <ClInclude Include="PacketProcess.h" />
+    <ClInclude Include="Packet.h" />
   </ItemGroup>
 </Project>
