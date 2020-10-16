@@ -23,4 +23,11 @@
 [참고 코드: edu_cpp_IOCP](https://github.com/jacking75/edu_cpp_IOCP)  
 [참고 코드: IocpChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/IocpChatServer)  
 [참고 코드: nhn_next_IocpServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/nhn_next_IocpServer)  
-  
+     
+<br/>     
+    
+	
+## 오픈 소스 코드 분석
+- [CppLogger2. Lightweight logger for C++](https://github.com/emilienlemaire/CppLogger2 )
+- [pretty_log](https://github.com/myyrakle/pretty_log  )
+- [BlackMATov/curly.hpp  Simple cURL C++17 wrapper](https://github.com/BlackMATov/curly.hpp )  
