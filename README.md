@@ -10,6 +10,7 @@
 ## Sync I/O: select 사용 
     
 ### 채팅 서버
+[참고 코드: SelectChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/SelectChatServer )   
   
   
 ### 오목 게임 서버
@@ -19,3 +20,7 @@
 	
 
 ## Async I/O: IOCP 사용  
+[참고 코드: edu_cpp_IOCP](https://github.com/jacking75/edu_cpp_IOCP)  
+[참고 코드: IocpChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/IocpChatServer)  
+[참고 코드: nhn_next_IocpServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/nhn_next_IocpServer)  
+  
