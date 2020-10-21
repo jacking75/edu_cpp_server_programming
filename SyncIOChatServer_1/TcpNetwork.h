@@ -37,8 +37,6 @@ namespace NServerNetLib
 		void Run();
 		void Stop();
 
-		size_t ConnectSessionCount() { return ConnectedSessions.size(); }
-
 	protected:
 		void RunCheckSelectClients(fd_set& read_set);
 		bool RunCheckSelectResult(const int result);
@@ -51,8 +49,7 @@ namespace NServerNetLib
 		NET_ERROR_CODE SetNonBlockSocket(const SOCKET sock);
 		NET_ERROR_CODE RecvSocket(const int sessionIndex);
 
-		void SetSockOption(const SOCKET fd);
-		NET_ERROR_CODE ConnectedSession(const int sessionIndex, const SOCKET fd);
+		void ConnectedSession(const int sessionIndex, const SOCKET fd);
 		void CloseSession(const SOCKET_CLOSE_CASE closeCase, const SOCKET sockFD, const int sessionIndex);
 		int AllocClientSessionIndex();
 		void ReleaseSessionIndex(const int index);
@@ -61,7 +58,6 @@ namespace NServerNetLib
 
 		ServerConfig m_Config;
 
-		SOCKET m_MaxSockFD = 0;
 		SOCKET m_ServerSockfd;
 		fd_set m_Readfds;
 
@@ -70,8 +66,6 @@ namespace NServerNetLib
 		std::vector<TcpSession> m_ClientSessionPool;
 		std::deque<int> m_ClientSessionPoolIndex;
 
-		// 연결된 세션들 저장한 컨테이너
-		std::unordered_map<int64_t, TcpSession*> ConnectedSessions;
 
 	};
 }

@@ -117,18 +117,14 @@ namespace NServerNetLib
 
 			struct sockaddr_in client_adr;
 
-			auto client_len = static_cast<int>(sizeof(client_adr));
+			socklen_t client_len = sizeof(client_adr);
 			auto client_sockfd = accept(m_ServerSockfd, (struct sockaddr*)&client_adr, &client_len);
 
 			if (client_sockfd == INVALID_SOCKET)
 			{
-				if (WSAGetLastError() == WSAEWOULDBLOCK)
-				{
-					return NET_ERROR_CODE::ACCEPT_API_WSAEWOULDBLOCK;
-				}
-
 				return NET_ERROR_CODE::ACCEPT_API_ERROR;
 			}
+
 			std::cout << std::endl;
 			std::cout << "클라이언트 연결 " << inet_ntoa(client_adr.sin_addr) <<":"<<client_adr.sin_port<< std::endl;
 			
@@ -138,50 +134,25 @@ namespace NServerNetLib
 				CloseSession(SOCKET_CLOSE_CASE::SESSION_POOL_EMPTY, client_sockfd, -1);
 				return NET_ERROR_CODE::ACCEPT_MAX_SESSION_COUNT;
 			}
-			
-			SetSockOption(client_sockfd);
-
+		
 			SetNonBlockSocket(client_sockfd);
 
 			FD_SET(client_sockfd, &m_Readfds);
 
-			if (ConnectedSession(newSessionIndex, client_sockfd) == NET_ERROR_CODE::NONE)
-			{
-				break;
-			}
-			
+			ConnectedSession(newSessionIndex, client_sockfd);
+
 		} while (tryCount < FD_SETSIZE);
 
 		return NET_ERROR_CODE::NONE;
 	}
 
-	NET_ERROR_CODE TcpNetwork::ConnectedSession(const int sessionIndex, const SOCKET fd)
+	void TcpNetwork::ConnectedSession(const int sessionIndex, const SOCKET fd)
 	{
-
-		if (m_MaxSockFD < fd)
-		{
-			m_MaxSockFD = fd;
-		}
 
 		TcpSession* session = &m_ClientSessionPool[sessionIndex];
-		session->Seq = m_ConnectSeq;
 		session->SocketFD = fd;
-
-		//추가
-		ConnectedSessions.insert({ sessionIndex, session });
-
-		++m_ConnectSeq;
-
-		return NET_ERROR_CODE::NONE;
 	}
 
-	void TcpNetwork::SetSockOption(const SOCKET fd)
-	{
-		int size1 = m_Config.MaxClientSockOptRecvBufferSize;
-		int size2 = m_Config.MaxClientSockOptSendBufferSize;
-		setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (char*)&size1, sizeof(size1));
-		setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (char*)&size2, sizeof(size2));
-	}
 
 	NET_ERROR_CODE TcpNetwork::SetNonBlockSocket(const SOCKET sock)
 	{
@@ -223,10 +194,12 @@ namespace NServerNetLib
 			auto sessionIndex = session.mIndex;
 
 			auto retReceive = RunProcessReceive(sessionIndex, fd, read_set);
+			/*
 			if (retReceive == false) {
 				continue;
 			}
-			//write
+			write
+			*/
 		}
 	}
 	bool TcpNetwork::RunProcessReceive(const int sessionIndex, const SOCKET fd, fd_set& read_set)
@@ -257,13 +230,6 @@ namespace NServerNetLib
 		}
 
 		int recvPos = 0;
-
-		if (session.RemainingDataSize > 0)
-		{
-			memcpy(session.pRecvBuffer, &session.pRecvBuffer[session.PrevReadPosInRecvBuffer], session.RemainingDataSize);
-			recvPos += session.RemainingDataSize;
-		}
-
 		auto recvSize = recv(fd, &session.pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
 //		std::cout << "recv 완료" << std::endl;
 		if (recvSize == 0) 
@@ -285,11 +251,9 @@ namespace NServerNetLib
 			}
 		}
 
-		//받은 바이트 출력
 		std::cout << "RECEIVE Session Index [ " << sessionIndex << " ] [ " << recvSize << " ] Bytes" << '\n';
 
-	
-		session.RemainingDataSize += recvSize;
+
 		return NET_ERROR_CODE::NONE;
 	}
 
@@ -315,8 +279,6 @@ namespace NServerNetLib
 
 		ReleaseSessionIndex(sessionIndex);
 
-		// 컨테이너에서 삭제
-		ConnectedSessions.erase(sessionIndex);
 	}
 
 	NET_ERROR_CODE TcpNetwork::InitServerSocket()
@@ -353,12 +315,19 @@ namespace NServerNetLib
 			return NET_ERROR_CODE::SERVER_SOCKET_BIND_FAIL;
 		}
 
+		auto netError = SetNonBlockSocket(m_ServerSockfd);
+		if (netError != NET_ERROR_CODE::NONE)
+		{
+			return netError;
+		}
+
 		if (listen(m_ServerSockfd, backlogCount) == SOCKET_ERROR)
 		{
 			return NET_ERROR_CODE::SERVER_SOCKET_LISTEN_FAIL;
 		}
 
 	}
+
 
 	void TcpNetwork::Stop()
 	{
