@@ -87,33 +87,30 @@ namespace NServerNetLib
 
 	void TcpNetwork::Run()
 	{
-		while (1) {
+\
+		fd_set read_set;
+		read_set = m_Readfds;
+		timeval timeout{ 0, 1000 }; //tv_sec, tv_usec
 
-			fd_set read_set;
-			read_set = m_Readfds;
-			timeval timeout{ 0, 1000 }; //tv_sec, tv_usec
+		auto selectResult = select(0, &read_set, nullptr, nullptr, &timeout);
 
-			auto selectResult = select(0, &read_set, nullptr, nullptr, &timeout);
-
-			if (RunCheckSelectResult(selectResult) == false)
-			{
-				continue;
-			}
-
-			if (FD_ISSET(m_ServerSockfd, &read_set))
-			{
-				NewSession();
-			}
-			RunCheckSelectClients(read_set);
-
+		if (RunCheckSelectResult(selectResult) == false)
+		{
+			return;
 		}
+		if (FD_ISSET(m_ServerSockfd, &read_set))
+		{
+			NewSession();
+		}
+		RunCheckSelectClients(read_set);
+\
 	}
 
 	NET_ERROR_CODE TcpNetwork::NewSession()
 	{
 		auto tryCount = 0;
 
-		do
+		do 
 		{
 			++tryCount;
 
@@ -127,8 +124,6 @@ namespace NServerNetLib
 				return NET_ERROR_CODE::ACCEPT_API_ERROR;
 			}
 
-			std::cout << std::endl;
-			std::cout << "클라이언트 연결 " << inet_ntoa(client_adr.sin_addr) <<":"<<client_adr.sin_port<< std::endl;
 			
 			auto newSessionIndex = AllocClientSessionIndex();
 			if (newSessionIndex < 0)
@@ -136,14 +131,13 @@ namespace NServerNetLib
 				CloseSession(SOCKET_CLOSE_CASE::SESSION_POOL_EMPTY, client_sockfd, -1);
 				return NET_ERROR_CODE::ACCEPT_MAX_SESSION_COUNT;
 			}
-		
-			SetNonBlockSocket(client_sockfd);
+	
 
 			FD_SET(client_sockfd, &m_Readfds);
 
 			ConnectedSession(newSessionIndex, client_sockfd);
 
-		} while (tryCount < FD_SETSIZE);
+		} while (tryCount < backLogLoop);
 
 		return NET_ERROR_CODE::NONE;
 	}
@@ -153,9 +147,33 @@ namespace NServerNetLib
 
 		TcpSession* session = &m_ClientSessionPool[sessionIndex];
 		session->SocketFD = fd;
+
+		AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
+
 	}
 
+	RecvPacketInfo TcpNetwork::GetReceivePacket() 
+	{
+		RecvPacketInfo packetInfo;
 
+		if (m_PacketQueue.empty() == false)
+		{
+			packetInfo = m_PacketQueue.front();
+			m_PacketQueue.pop_front();
+		}
+
+		return packetInfo;
+	}
+	void TcpNetwork::AddPacketQueue(const int sessionIndex, const short pktId, const short bodySize, char* pDataPos)
+	{
+		RecvPacketInfo packetInfo;
+		packetInfo.SessionIndex = sessionIndex;
+		packetInfo.PacketId = pktId;
+		packetInfo.PacketBodySize = bodySize;
+		packetInfo.pRefData = pDataPos;
+
+		m_PacketQueue.push_back(packetInfo);
+	}
 	NET_ERROR_CODE TcpNetwork::SetNonBlockSocket(const SOCKET sock)
 	{
 		unsigned long mode = 1;
@@ -196,12 +214,7 @@ namespace NServerNetLib
 			auto sessionIndex = session.mIndex;
 
 			auto retReceive = RunProcessReceive(sessionIndex, fd, read_set);
-			/*
-			if (retReceive == false) {
-				continue;
-			}
-			write
-			*/
+
 		}
 	}
 	bool TcpNetwork::RunProcessReceive(const int sessionIndex, const SOCKET fd, fd_set& read_set)
@@ -215,9 +228,9 @@ namespace NServerNetLib
 		if (ret != NET_ERROR_CODE::NONE)
 		{
 			CloseSession(SOCKET_CLOSE_CASE::SOCKET_RECV_ERROR, fd, sessionIndex);
-			std::cout << "클라이언트 접속 끊어짐" << std::endl;
 			return false;
 		}
+
 		return true;
 	}
 
@@ -233,7 +246,7 @@ namespace NServerNetLib
 
 		int recvPos = 0;
 		auto recvSize = recv(fd, &session.pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
-//		std::cout << "recv 완료" << std::endl;
+
 		if (recvSize == 0) 
 		{
 			return NET_ERROR_CODE::RECV_REMOTE_CLOSE;
@@ -243,7 +256,7 @@ namespace NServerNetLib
 		{
 			auto netError = WSAGetLastError();
 
-			if (netError != WSAEWOULDBLOCK)
+			if (netError != WSAEWOULDBLOCK) 
 			{
 				return NET_ERROR_CODE::RECV_API_ERROR;
 			}
@@ -253,7 +266,7 @@ namespace NServerNetLib
 			}
 		}
 
-		std::cout << "RECEIVE Session Index [ " << sessionIndex << " ] [ " << recvSize << " ] Bytes" << '\n';
+		AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_RECV_SESSION, recvSize, nullptr);
 
 
 		return NET_ERROR_CODE::NONE;
@@ -277,10 +290,9 @@ namespace NServerNetLib
 
 		FD_CLR(sockFD, &m_Readfds);
 
-		m_ClientSessionPool[sessionIndex].Init(sessionIndex);
-
 		ReleaseSessionIndex(sessionIndex);
 
+		AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CLOSE_SESSION, 0, nullptr);
 	}
 
 	NET_ERROR_CODE TcpNetwork::InitServerSocket()
@@ -330,10 +342,9 @@ namespace NServerNetLib
 
 	}
 
-
 	void TcpNetwork::Stop()
 	{
-
+		WSACleanup(); 
 	}
 
 }
