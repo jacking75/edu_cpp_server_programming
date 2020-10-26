@@ -39,9 +39,25 @@ OS의 Socket API를 사용한 실시간 통신(TCP/UDP)을 하는 게임 서버�
 	
 
 ## Async I/O: IOCP 사용  
-[참고 코드: edu_cpp_IOCP](https://github.com/jacking75/edu_cpp_IOCP)  
-[참고 코드: IocpChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/IocpChatServer)  
-[참고 코드: nhn_next_IocpServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/nhn_next_IocpServer)  
+  
+### IOCP 단계별 과제 구현하기
+[edu_cpp_IOCP](https://github.com/jacking75/edu_cpp_IOCP)  
+  
+### (도서)"온라인 게임 서버" 분석 및 리팩토링
+[YES24](http://www.yes24.com/Product/Goods/1776627 )  
+이 책은 팀에 있다.  예제 코드는 `onlinegameserver.zip` 이다.  
+이 책의 예제 코드 중 게임서버 코드를 Modern C++ 코드로 리팩토링한다.  
+- MFC는 사용하지 않는다.
+- C++스러운 네임컨벤셜을 따른다.  
+- C가 아닌 C++ 코드스럽게 한다.  
+  
+  
+### IOCP를 사용한 오목 게임 서버 
+  
+  
+### 참고 코드
+[IocpChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/IocpChatServer)  
+[nhn_next_IocpServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/nhn_next_IocpServer)  
      
 <br/>     
     
