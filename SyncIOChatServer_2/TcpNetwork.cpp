@@ -265,7 +265,7 @@ namespace NServerNetLib
 				return NET_ERROR_CODE::NONE;
 			}
 		}
-
+		//TODO : packet으로 나누어서 전송
 		AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_RECV_SESSION, recvSize, nullptr);
 
 

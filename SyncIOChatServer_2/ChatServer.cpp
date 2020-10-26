@@ -19,7 +19,7 @@ namespace ChatServerLib
 			m_pNetwork->Stop();
 		}
 	}
-
+	//TODO : Config 포인터 수정 
 	NServerNetLib::ERROR_CODE ChatServer::Init(const NServerNetLib::ServerConfig* pConfig)
 	{
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();

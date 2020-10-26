@@ -15,7 +15,7 @@ int main()
 	m_pServerConfig->MaxClientRecvBufferSize = 8192;
 	m_pServerConfig->MaxClientSendBufferSize = 8192;
 
-	
+	//TODO : 두개 합치기 
 	if (chatServer.Init(m_pServerConfig) != NServerNetLib::ERROR_CODE::NONE) {
 		std::cout << "Init Fail";
 		return 0;
