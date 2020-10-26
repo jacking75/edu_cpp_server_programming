@@ -55,6 +55,10 @@ OS의 Socket API를 사용한 실시간 통신(TCP/UDP)을 하는 게임 서버�
 ### IOCP를 사용한 오목 게임 서버 
   
   
+### (도서)"게임 서버 프로그래밍 입문" 분석
+[YES24](http://www.yes24.com/Product/Goods/18497117 )  
+    
+	
 ### 참고 코드
 [IocpChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/IocpChatServer)  
 [nhn_next_IocpServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/nhn_next_IocpServer)  
