@@ -219,7 +219,6 @@ namespace NServerNetLib
 				continue;
 			}
 
-			// check write
 			RunProcessWrite(sessionIndex, fd, write_set);
 		}
 	}
