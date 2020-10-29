@@ -1,4 +1,26 @@
 # 컴투스 C++ 서버 프로그래밍 실습
-1. 복수 클라이언트 접속 처리 
-2. ChatServer와 PacketProcess로 클라이언트 접속처리
-3. 방 입장, 방 나가기, 방 채팅 구현
+  
+## 1 단계
+- SyncIOChatServer_1
+- 구현한 기능
+    - ?
+      
+      
+## 2 단계
+- SyncIOChatServer_2
+- 구현한 기능
+    - ?
+  
+  
+## 3 단계
+- SyncIOChatServer_3
+- 구현한 기능
+    - ?
+  
+  
+## 4 단계
+- - SyncIOOmokGameServer_1
+- 구현한 기능
+    - ?
+  
+  
