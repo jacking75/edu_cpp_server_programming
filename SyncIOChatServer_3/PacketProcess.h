@@ -33,6 +33,8 @@ namespace ChatServerLib
 		NServerNetLib::ERROR_CODE RoomLeave(PacketInfo packetInfo);
 
 		NServerNetLib::ERROR_CODE RoomChat(PacketInfo packetInfo);
+		NServerNetLib::ERROR_CODE MatchUser(PacketInfo packetInfo);
+		NServerNetLib::ERROR_CODE GamePut(PacketInfo packetInfo);
 
 	private:
 		NServerNetLib::TcpNetwork* m_pRefNetwork;

@@ -140,9 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="Omok.cpp" />
+    <ClCompile Include="OmokLogic.cpp" />
+    <ClCompile Include="PacketProcessGame.cpp" />
     <ClCompile Include="PacketProcessLogin.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PacketProcess.cpp" />
+    <ClCompile Include="PacketProcessMatch.cpp" />
     <ClCompile Include="PacketProcessRoom.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
@@ -153,6 +157,8 @@
   <ItemGroup>
     <ClInclude Include="ChatServer.h" />
     <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="Omok.h" />
+    <ClInclude Include="OmokLogic.h" />
     <ClInclude Include="PacketDef.h" />
     <ClInclude Include="PacketID.h" />
     <ClInclude Include="PacketProcess.h" />

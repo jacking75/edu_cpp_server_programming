@@ -13,17 +13,15 @@ namespace ChatServerLib
 	public:
 		RoomManager() = default;
 		~RoomManager() = default;
+		void Init(const int maxRoomNum, NServerNetLib::TcpNetwork* pNetwork);
 
+		Room* FindProperRoom();
+		Room* FindRoom(const int roomIndex);
+		void Release();
 
 	private:
 		std::vector<Room*> m_RoomList;
-
-
-	public:
-
-		void Init(const int maxRoomNum, NServerNetLib::TcpNetwork* pNetwork);
-		Room* FindRoom(const int roomIndex);
-		void Release();
+		
 	};
 }
 

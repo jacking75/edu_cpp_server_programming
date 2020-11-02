@@ -38,6 +38,5 @@ namespace ChatServerLib
 
 		std::unordered_map<int, User*> m_UserSessionDic;
 		std::unordered_map<const char*, User*> m_UserIDDic; 
-
 	};
 }

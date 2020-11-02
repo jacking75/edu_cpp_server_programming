@@ -105,8 +105,9 @@ namespace ChatServerLib
 	}
 	User* UserManager::FindUser(const char* pszID)
 	{
-		auto findIter = m_UserIDDic.find(pszID);
 
+		auto findIter = m_UserIDDic.find(pszID);
+		
 		if (findIter == m_UserIDDic.end()) {
 			return nullptr;
 		}

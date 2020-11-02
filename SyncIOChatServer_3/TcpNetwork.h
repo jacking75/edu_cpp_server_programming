@@ -33,7 +33,7 @@ namespace NServerNetLib
 		virtual ~TcpNetwork();
 
 		NET_ERROR_CODE Init(const ServerConfig pConfig);
-		NET_ERROR_CODE SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg);
+		NetError SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg);
 
 		void Run();
 		void Stop();
@@ -43,7 +43,7 @@ namespace NServerNetLib
 
 		
 	protected:
-		void RunCheckSelectClients(fd_set& read_set, fd_set& write_set);
+		void RunCheckSelectClients(fd_set& read_set);
 		bool RunCheckSelectResult(const int result);
 		int CreateSessionPool(const int maxClientCount);
 

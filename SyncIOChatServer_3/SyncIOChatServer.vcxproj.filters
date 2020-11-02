@@ -11,6 +11,10 @@
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
     <ClCompile Include="PacketProcessLogin.cpp" />
+    <ClCompile Include="PacketProcessMatch.cpp" />
+    <ClCompile Include="PacketProcessGame.cpp" />
+    <ClCompile Include="Omok.cpp" />
+    <ClCompile Include="OmokLogic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TcpNetwork.h" />
@@ -25,5 +29,7 @@
     <ClInclude Include="UserManager.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
+    <ClInclude Include="Omok.h" />
+    <ClInclude Include="OmokLogic.h" />
   </ItemGroup>
 </Project>

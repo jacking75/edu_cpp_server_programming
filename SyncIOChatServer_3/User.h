@@ -28,6 +28,8 @@ namespace ChatServerLib
 			m_ID = "";
 			m_CurDomainState = DOMAIN_STATE::NONE;
 			m_RoomIndex = -1;
+			m_Black = false;
+			m_White = false;
 		}
 
 		void Set(const int sessionIndex, const char* pszID)
@@ -65,6 +67,8 @@ namespace ChatServerLib
 			return m_CurDomainState == DOMAIN_STATE::ROOM ? true : false;
 		}
 
+		void SetBlack() { m_Black = true; };
+
 	protected:
 		short m_Index = -1;
 
@@ -75,5 +79,8 @@ namespace ChatServerLib
 		DOMAIN_STATE m_CurDomainState = DOMAIN_STATE::NONE;
 
 		short m_RoomIndex = -1;
+
+		bool m_Black = false;
+		bool m_White = false;
 	};
 }

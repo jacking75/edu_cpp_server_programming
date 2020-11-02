@@ -16,6 +16,7 @@ namespace ChatServerLib
 	{
 		auto reqPkt = (NCommon::PktRoomEnterReq*)packetInfo.pRefData;
 		NCommon::PktRoomEnterRes resPkt;
+
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -72,8 +73,7 @@ namespace ChatServerLib
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return NServerNetLib::ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
-
-		
+	
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 
 		if (pRoom == nullptr) {
@@ -102,7 +102,7 @@ namespace ChatServerLib
 	{
 		auto reqPkt = (NCommon::PktRoomChatReq*)packetInfo.pRefData;
 		NCommon::PktRoomChatRes resPkt;
-
+		
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;

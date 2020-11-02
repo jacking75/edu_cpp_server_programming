@@ -28,6 +28,8 @@ namespace ChatServerLib
 		PacketFuncArray[(int)commonPacketId::LOGIN_IN_REQ] = &PacketProcess::Login;
 		PacketFuncArray[(int)commonPacketId::ROOM_LEAVE_REQ] = &PacketProcess::RoomLeave;
 		PacketFuncArray[(int)commonPacketId::ROOM_CHAT_REQ] = &PacketProcess::RoomChat;
+		PacketFuncArray[(int)commonPacketId::MATCH_USER_REQ] = &PacketProcess::MatchUser;
+		PacketFuncArray[(int)commonPacketId::PUT_STONE_REQ] = &PacketProcess::GamePut;
 
 	}
 	
@@ -56,12 +58,14 @@ namespace ChatServerLib
 		std::cout << "Close Session [ " << packetInfo.SessionIndex << " ]" << std::endl;
 		auto pUser = std::get<1>(m_pRefUserMgr->GetUser(packetInfo.SessionIndex));
 
-		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
-
-		if (pRoom)
-		{
-			pRoom->LeaveUser(pUser->GetIndex());
-			pRoom->NotifyLeaveUserInfo(pUser->GetID().c_str());
+		if (pUser) {
+			auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
+			if (pRoom)
+			{
+				pRoom->LeaveUser(pUser->GetIndex());
+				pRoom->NotifyLeaveUserInfo(pUser->GetID().c_str());
+			}
+			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}
 
 		return NServerNetLib::ERROR_CODE::NONE;

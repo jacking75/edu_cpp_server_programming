@@ -3,19 +3,20 @@
 ## 1 단계
 - SyncIOChatServer_1
 - 구현한 기능
-    - ?
+    - 새로운 연결이 발생하면 TcpSession 객체를 생성하여 관리
+    - 클라이언트 연결, 클라이언트로  receive,  클라이언트의 접속 끊어짐이 발생할 때 마다 콘솔에 메세지를 출력
       
       
 ## 2 단계
 - SyncIOChatServer_2
 - 구현한 기능
-    - ?
+    - ChatServer와 PacketProcess로 클라이언트 접속처리
   
   
 ## 3 단계
 - SyncIOChatServer_3
 - 구현한 기능
-    - ?
+    - 오목게임 서버 구현중
   
   
 ## 4 단계

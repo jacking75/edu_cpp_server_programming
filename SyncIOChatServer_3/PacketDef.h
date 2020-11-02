@@ -2,6 +2,7 @@
 
 #include "PacketID.h"
 #include "ErrorCode.h"
+#include <string>
 
 namespace NCommon
 {
@@ -30,6 +31,18 @@ namespace NCommon
 
 	struct PktLogInRes : PktBase
 	{
+
+	};
+
+
+	struct PktMatchReq
+	{
+		
+	};
+
+	struct PktMatchRes : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
 
@@ -42,7 +55,21 @@ namespace NCommon
 
 	struct PktRoomEnterRes : PktBase
 	{
+
 	};
+
+
+	struct PktPutStoneReq
+	{
+		int x;
+		int y;
+	};
+
+	struct PktPutStoneRes : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+	};
+
 
 
 	//- 룸에 있는 유저에게 새로 들어온 유저 정보 통보
@@ -57,6 +84,7 @@ namespace NCommon
 
 	struct PktRoomLeaveRes : PktBase
 	{
+	
 	};
 
 	//- 룸에서 나가는 유저 통보(로비에 있는 유저에게)

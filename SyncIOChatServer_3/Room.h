@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <memory>
-
 #include "User.h"
+#include "Omok.h"
 #include "TcpNetwork.h"
 
 
@@ -13,6 +13,11 @@ namespace ChatServerLib
 	class Room
 	{
 	public:
+		enum class ROOM_STATE {
+			NONE = 0,
+			GAME = 1
+		};
+
 		Room();
 		virtual ~Room();
 
@@ -28,7 +33,7 @@ namespace ChatServerLib
 
 		short MaxUserCount() { return m_MaxUserCount; }
 
-		short GetUserCount() { return (short)m_UserList.size(); }
+		//short GetUserCount() { return (short)m_UserList.size(); }
 
 		NServerNetLib::ERROR_CODE EnterUser(User* pUser);
 
@@ -42,16 +47,26 @@ namespace ChatServerLib
 
 		void NotifyChat(const int sessionIndex, const char* pszUserID, const wchar_t* pszMsg);
 
+		bool IsCurDomainInGame() {
+			return m_CurDomainState == ROOM_STATE::GAME ? true : false;
+		}
+		std::unique_ptr<Omok> OmokGame;
+		std::vector<User*> m_UserList;
+
+		int m_BlackStoneUserIndex = -1;
 	private:
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
 
+		ROOM_STATE m_CurDomainState = ROOM_STATE::NONE;
+
 		short m_Index = -1;
-		short m_MaxUserCount;
+		short m_MaxUserCount = -1;
+
+		
 
 		bool m_IsUsed = false;
 		std::wstring m_Title;
-		std::vector<User*> m_UserList;
-
+	
 	};
 }

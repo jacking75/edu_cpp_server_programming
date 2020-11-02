@@ -8,6 +8,7 @@
 #include "TcpNetwork.h"
 #include "Room.h"
 #include "PacketDef.h"
+#include "Omok.h"
 
 namespace ChatServerLib
 {
@@ -22,6 +23,8 @@ namespace ChatServerLib
 	{
 		m_Index = index;
 		m_MaxUserCount = maxUserCount;
+		m_CurDomainState = ROOM_STATE::NONE;
+		OmokGame = std::make_unique<Omok>();
 	}
 
 	void Room::SetNetwork(NServerNetLib::TcpNetwork* pNetwork)
@@ -36,12 +39,12 @@ namespace ChatServerLib
 
 	NServerNetLib::ERROR_CODE Room::EnterUser(User* pUser)
 	{
-
 		if (m_UserList.size() == m_MaxUserCount) {
 			return NServerNetLib::ERROR_CODE::ROOM_ENTER_MEMBER_FULL;
 		}
 
 		m_UserList.push_back(pUser);
+
 		return NServerNetLib::ERROR_CODE::NONE;
 	}
 
@@ -58,12 +61,12 @@ namespace ChatServerLib
 		{
 			Clear();
 		}
-
 		return NServerNetLib::ERROR_CODE::NONE;
 	}
 	
+
 	void Room::SendToAllUser(const short packetId, const short dataSize, char* pData, const int passUserindex)
-	{
+	{		
 		for (auto pUser : m_UserList)
 		{
 			if (pUser->GetIndex() == passUserindex) {
