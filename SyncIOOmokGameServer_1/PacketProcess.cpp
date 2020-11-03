@@ -28,6 +28,8 @@ namespace ChatServerLib
 		PacketFuncArray[(int)commonPacketId::LOGIN_IN_REQ] = &PacketProcess::Login;
 		PacketFuncArray[(int)commonPacketId::ROOM_LEAVE_REQ] = &PacketProcess::RoomLeave;
 		PacketFuncArray[(int)commonPacketId::ROOM_CHAT_REQ] = &PacketProcess::RoomChat;
+		PacketFuncArray[(int)commonPacketId::MATCH_USER_REQ] = &PacketProcess::MatchUser;
+		PacketFuncArray[(int)commonPacketId::PUT_STONE_REQ] = &PacketProcess::GamePut;
 
 	}
 	

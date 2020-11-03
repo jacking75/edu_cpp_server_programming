@@ -8,6 +8,7 @@
 #include "TcpNetwork.h"
 #include "Room.h"
 #include "PacketDef.h"
+#include "Omok.h"
 
 namespace ChatServerLib
 {
@@ -22,6 +23,8 @@ namespace ChatServerLib
 	{
 		m_Index = index;
 		m_MaxUserCount = maxUserCount;
+		m_CurDomainState = ROOM_STATE::NONE;
+		OmokGame = std::make_unique<Omok>();
 	}
 
 	void Room::SetNetwork(NServerNetLib::TcpNetwork* pNetwork)

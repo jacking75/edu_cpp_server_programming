@@ -16,13 +16,13 @@
 ## 3 단계
 - SyncIOChatServer_3
 - 구현한 기능
-    - 오목게임 서버 구현중
+    - 채팅서버 완성
   
   
 ## 4 단계
 - SyncIOOmokGameServer_1
 - 구현한 기능
-    - ?
+    - 오목 구현 중
   
 ## 5 단계
 - SyncIOOmokGameServer_2
