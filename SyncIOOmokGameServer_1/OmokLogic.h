@@ -1,21 +1,16 @@
 #pragma once
-
-#include <vector>
-#include <string>
-#include <memory>
-#include "ErrorCode.h"
-
+#include "OmokPanPoint.h"
 namespace ChatServerLib
 {
-	class OmokLogic {
-	public:
-		OmokLogic();
-		virtual ~OmokLogic();
+    class OmokLogic
+    {
+    public:
+        bool ConfirmOmok(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType);
+        bool ConfirmThreeThree(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType);
+        int ConfirmHorizontal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType);
+        int ConfirmVertical(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType);
+        int ConfirmDiagonal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType);
+        int ConfirmOpDiagonal(OmokPanPoint** omokPanPointsint, int x, int y, OmokPanPoint::PointType pointType);
+    };
 
-		bool ConfirmOmok(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType);
-		bool ConfirmThreeThree(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType);
-		int ConfirmHorizontal(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType);
-		int ConfirmVertical(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType);
-	};
 }
-

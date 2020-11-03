@@ -1,13 +1,13 @@
-#include "OmokLogic.h"
-#include "Omok.h"
+#pragma once
 
+#include "Omok.h"
+#include "OmokLogic.h"
+#include "OmokPanPoint.h"
 
 namespace ChatServerLib
 {
-    OmokLogic::OmokLogic() {}
-    OmokLogic::~OmokLogic() {}
-    /*
-    bool OmokLogic::ConfirmOmok(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType)
+
+    bool OmokLogic::ConfirmOmok(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         if (ConfirmVertical(omokPanPoints, x, y, pointType) == 5
             || ConfirmHorizontal(omokPanPoints, x, y, pointType) == 5
@@ -20,7 +20,7 @@ namespace ChatServerLib
         return false;
     }
 
-    bool OmokLogic::ConfirmThreeThree(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType)
+    bool OmokLogic::ConfirmThreeThree(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         int cnt = 0;
 
@@ -44,7 +44,7 @@ namespace ChatServerLib
         return cnt > 1 ? true : false;
     }
 
-    int OmokLogic::ConfirmHorizontal(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType)
+    int OmokLogic::ConfirmHorizontal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         int cnt = 1;
 
@@ -76,7 +76,7 @@ namespace ChatServerLib
 
         return cnt;
     }
-   int OmokLogic::ConfirmVertical(OmokPanPoint omokPanPoints[19][19], int x, int y, OmokPanPoint::PointType pointType)
+   int OmokLogic::ConfirmVertical(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         int cnt = 1;
 
@@ -108,5 +108,70 @@ namespace ChatServerLib
 
         return cnt;
     }
-    */
+   int OmokLogic::ConfirmDiagonal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
+   {
+       int cnt = 1;
+
+       for (int i = 1; i <= 5; ++i)
+       {
+           if (x + i <= 18 && y + i <= 18
+               && pointType == omokPanPoints[y + i][x + i].Type)
+           {
+               ++cnt;
+           }
+           else
+           {
+               break;
+           }
+       }
+
+       for (int i = 1; i <= 5; ++i)
+       {
+           if (x - i >= 0 && y - i >= 0
+               && pointType == omokPanPoints[y - i][x - i].Type)
+           {
+               ++cnt;
+           }
+           else
+           {
+               break;
+           }
+       }
+
+       return cnt;
+   }
+
+   int OmokLogic::ConfirmOpDiagonal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
+   {
+       int cnt = 1;
+
+       for (int i = 1; i <= 5; ++i)
+       {
+           if (x - i >= 0 && y + i <= 18
+               && pointType == omokPanPoints[y + i][x - i].Type)
+           {
+               ++cnt;
+           }
+           else
+           {
+               break;
+           }
+       }
+
+       for (int i = 1; i <= 5; ++i)
+       {
+           if (x + i <= 18 && y - i >= 0
+               && pointType == omokPanPoints[y - i][x + i].Type)
+           {
+               ++cnt;
+           }
+           else
+           {
+               break;
+           }
+       }
+
+       return cnt;
+   }
+   
 }

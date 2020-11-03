@@ -50,6 +50,9 @@ namespace NCommon
 		ROOM_GAME_START_NTF = 113,
 
 		PUT_STONE_TURN = 114,
+		PUT_STONE_INFO_NOTIFY = 115,
+
+		GAME_END_RESULT = 116,
 		MAX = 256
 	};
 }

@@ -36,7 +36,7 @@ namespace ChatServerLib
 		pRoom->m_BlackStoneUserIndex = userIndex;
 
 		pRoom->OmokGame->init(userIndex);
-
+		
 		strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pUser->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
 		pRoom->SendToAllUser((short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);

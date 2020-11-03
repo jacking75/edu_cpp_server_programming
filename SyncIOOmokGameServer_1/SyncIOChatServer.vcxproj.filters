@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TcpNetwork.cpp" />
+    <ClCompile Include="TcpSession.cpp" />
+    <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="PacketProcess.cpp" />
+    <ClCompile Include="PacketProcessRoom.cpp" />
+    <ClCompile Include="UserManager.cpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="RoomManager.cpp" />
+    <ClCompile Include="PacketProcessLogin.cpp" />
+    <ClCompile Include="PacketProcessMatch.cpp" />
+    <ClCompile Include="PacketProcessGame.cpp" />
+    <ClCompile Include="Omok.cpp" />
+    <ClCompile Include="OmokLogic.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TcpNetwork.h" />
+    <ClInclude Include="TcpSession.h" />
+    <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="ChatServer.h" />
+    <ClInclude Include="PacketProcess.h" />
+    <ClInclude Include="Define.h" />
+    <ClInclude Include="PacketID.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="PacketDef.h" />
+    <ClInclude Include="UserManager.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="RoomManager.h" />
+    <ClInclude Include="Omok.h" />
+    <ClInclude Include="OmokLogic.h" />
+    <ClInclude Include="OmokPanPoint.h" />
+  </ItemGroup>
+</Project>

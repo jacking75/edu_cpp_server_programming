@@ -19,11 +19,12 @@ namespace ChatServerLib
 
 	}
 
-	void Room::Init(const short index, const short maxUserCount)
+	void Room::Init(const short index, const short maxUserCount, NServerNetLib::TcpNetwork* pNetwork)
 	{
 		m_Index = index;
 		m_MaxUserCount = maxUserCount;
 		m_CurDomainState = ROOM_STATE::NONE;
+		m_pRefNetwork = pNetwork;
 		OmokGame = std::make_unique<Omok>();
 	}
 
@@ -105,5 +106,27 @@ namespace ChatServerLib
 
 		SendToAllUser((short)NCommon::PACKET_ID::ROOM_CHAT_NTF, sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
+
+	void Room::NotifyPutStoneInfo(const int userIndex, const char* pszUserID , const int xPos , const int yPos)
+	{
+		NCommon::PktPutStoneInfoNtf pkt;
+
+		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+		pkt.xPos = xPos;
+		pkt.yPos = yPos;
+
+		SendToAllUser((short)NCommon::PACKET_ID::PUT_STONE_INFO_NOTIFY ,sizeof(pkt), (char*)&pkt, userIndex);
+	}
+
+	void Room::NotifyGameResult(const int userIndex, const char* pszUserID)
+	{
+		NCommon::PktGameResultNtf pkt;
+
+		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+
+		SendToAllUser((short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(pkt), (char*)&pkt, userIndex);
+	}
+
+
 
 }

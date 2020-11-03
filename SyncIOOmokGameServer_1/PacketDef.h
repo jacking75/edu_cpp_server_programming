@@ -70,7 +70,16 @@ namespace NCommon
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
-
+	struct PktPutStoneInfoNtf : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+		int xPos;
+		int yPos;
+	};
+	struct PktGameResultNtf : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+	};
 
 	//- 룸에 있는 유저에게 새로 들어온 유저 정보 통보
 	struct PktRoomEnterUserInfoNtf

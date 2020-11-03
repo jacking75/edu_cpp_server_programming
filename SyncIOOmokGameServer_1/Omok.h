@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <memory>
 #include "ErrorCode.h"
+#include <memory>
+#include "OmokPanPoint.h"
+#include <string>
 
 namespace ChatServerLib
 {
@@ -12,23 +12,16 @@ namespace ChatServerLib
         Omok();
         virtual ~Omok();
 
-        void init(int userIndex);
+       void init(int userIndex);
 
-        OmokPanPoint OmokPanPoints[19][19];
+        NServerNetLib::ERROR_CODE CheckGameEnd(int xPos, int yPos);
         NServerNetLib::ERROR_CODE GamePutStone(int userIndex, int xPos, int yPos);
         bool IsUserTurn(int userIndex);
+
+        bool IsBlackTurn = false;
+        int OmokTurnUserIndex = -1;
+
+        OmokPanPoint** OmokPanPoints;
 	};
 
-    class OmokPanPoint
-    {
-    public:
-        enum PointType
-        {
-            None,
-            Black = 1,
-            White = 2,
-        };
-        PointType Type;
-
-    };
 }

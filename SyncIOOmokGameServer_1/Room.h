@@ -21,7 +21,7 @@ namespace ChatServerLib
 		Room();
 		virtual ~Room();
 
-		void Init(const short index, const short maxUserCount);
+		void Init(const short index, const short maxUserCount, NServerNetLib::TcpNetwork* pNetwork);
 
 		void SetNetwork(NServerNetLib::TcpNetwork* pNetwork);
 
@@ -46,6 +46,8 @@ namespace ChatServerLib
 		void NotifyLeaveUserInfo(const char* pszUserID);
 
 		void NotifyChat(const int sessionIndex, const char* pszUserID, const wchar_t* pszMsg);
+		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID, const int xPos, const int yPos);
+		void NotifyGameResult(const int userIndex, const char* pszUserID);
 
 		bool IsCurDomainInGame() {
 			return m_CurDomainState == ROOM_STATE::GAME ? true : false;

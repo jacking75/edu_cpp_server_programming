@@ -10,8 +10,7 @@ namespace ChatServerLib
 		for (int i = 0; i < maxRoomNum; ++i)
 		{
 			m_RoomList.emplace_back(new Room());
-			m_RoomList[i]->Init((short)i, 2);
-			m_RoomList[i]->SetNetwork(pNetwork);
+			m_RoomList[i]->Init((short)i, 2, pNetwork);
 		}
 	}
 

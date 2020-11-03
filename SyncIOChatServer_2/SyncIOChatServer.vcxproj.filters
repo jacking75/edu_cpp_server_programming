@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TcpNetwork.cpp" />
+    <ClCompile Include="TcpSession.cpp" />
+    <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="PacketProcess.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TcpNetwork.h" />
+    <ClInclude Include="TcpSession.h" />
+    <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="ChatServer.h" />
+    <ClInclude Include="PacketProcess.h" />
+    <ClInclude Include="Define.h" />
+    <ClInclude Include="PacketID.h" />
+  </ItemGroup>
+</Project>
