@@ -42,7 +42,7 @@ namespace NCommon
 
 	struct PktMatchRes : PktBase
 	{
-		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+		
 	};
 
 
@@ -65,6 +65,13 @@ namespace NCommon
 		int y;
 	};
 
+
+	struct PktGameReadyRes : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+	};
+
+	
 	struct PktPutStoneRes : PktBase
 	{
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };

@@ -33,8 +33,6 @@ namespace ChatServerLib
 
 		short MaxUserCount() { return m_MaxUserCount; }
 
-		//short GetUserCount() { return (short)m_UserList.size(); }
-
 		NServerNetLib::ERROR_CODE EnterUser(User* pUser);
 
 		NServerNetLib::ERROR_CODE LeaveUser(const short userIndex);
@@ -48,14 +46,13 @@ namespace ChatServerLib
 		void NotifyChat(const int sessionIndex, const char* pszUserID, const wchar_t* pszMsg);
 		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID, const int xPos, const int yPos);
 		void NotifyGameResult(const int userIndex, const char* pszUserID);
-
-		bool IsCurDomainInGame() {
-			return m_CurDomainState == ROOM_STATE::GAME ? true : false;
-		}
+		void NotifyGameStart(const int userIndex, const char* pszUserID);
+		bool IsCurDomainInGame() {return m_CurDomainState == ROOM_STATE::GAME ? true : false;}
 		std::unique_ptr<Omok> OmokGame;
 		std::vector<User*> m_UserList;
 
 		int m_BlackStoneUserIndex = -1;
+		int m_TurnIndex = -1;
 	private:
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
@@ -64,9 +61,7 @@ namespace ChatServerLib
 
 		short m_Index = -1;
 		short m_MaxUserCount = -1;
-
-		
-
+	
 		bool m_IsUsed = false;
 		std::wstring m_Title;
 	

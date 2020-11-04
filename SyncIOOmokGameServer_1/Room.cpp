@@ -36,11 +36,14 @@ namespace ChatServerLib
 	void Room::Clear()
 	{
 		m_UserList.clear();
+		m_TurnIndex = -1;
+		m_BlackStoneUserIndex = -1;
 	}
 
 	NServerNetLib::ERROR_CODE Room::EnterUser(User* pUser)
 	{
-		if (m_UserList.size() == m_MaxUserCount) {
+		if (m_UserList.size() == m_MaxUserCount) 
+		{
 			return NServerNetLib::ERROR_CODE::ROOM_ENTER_MEMBER_FULL;
 		}
 
@@ -52,7 +55,8 @@ namespace ChatServerLib
 	NServerNetLib::ERROR_CODE Room::LeaveUser(const short userIndex)
 	{
 		auto iter = std::find_if(std::begin(m_UserList), std::end(m_UserList), [userIndex](auto pUser) { return pUser->GetIndex() == userIndex; });
-		if (iter == std::end(m_UserList)) {
+		if (iter == std::end(m_UserList)) 
+		{
 			return NServerNetLib::ERROR_CODE::ROOM_LEAVE_NOT_MEMBER;
 		}
 
@@ -70,7 +74,8 @@ namespace ChatServerLib
 	{		
 		for (auto pUser : m_UserList)
 		{
-			if (pUser->GetIndex() == passUserindex) {
+			if (pUser->GetIndex() == passUserindex) 
+			{
 				continue;
 			}
 
@@ -127,6 +132,13 @@ namespace ChatServerLib
 		SendToAllUser((short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(pkt), (char*)&pkt, userIndex);
 	}
 
+	void Room::NotifyGameStart(const int userIndex, const char* pszUserID)
+	{
+		NCommon::PktGameReadyRes pkt;
 
+		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+
+		SendToAllUser((short)NCommon::PACKET_ID::GAME_START_RES, sizeof(pkt), (char*)&pkt, userIndex);
+	}
 
 }

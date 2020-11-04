@@ -16,7 +16,8 @@ namespace ChatServerLib
 
 	ChatServer::~ChatServer()
 	{
-		if (m_pNetwork) {
+		if (m_pNetwork) 
+		{
 			m_pNetwork->Stop();
 		}
 	}

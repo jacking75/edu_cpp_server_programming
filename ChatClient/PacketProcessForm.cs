@@ -21,7 +21,10 @@ namespace csharp_test_client
             PacketFuncDic.Add(PACKET_ID.ROOM_LEAVE_USER_NTF, PacketProcess_RoomLeaveUserNotify);
             PacketFuncDic.Add(PACKET_ID.ROOM_CHAT_RES, PacketProcess_RoomChatResponse);            
             PacketFuncDic.Add(PACKET_ID.ROOM_CHAT_NOTIFY, PacketProcess_RoomChatNotify);
-            //PacketFuncDic.Add(PACKET_ID.PACKET_ID_ROOM_RELAY_NTF, PacketProcess_RoomRelayNotify);
+            PacketFuncDic.Add(PACKET_ID.MATCH_USER_RES, PacketProcess_MatchUserResponse);
+            PacketFuncDic.Add(PACKET_ID.PUT_STONE_RES, PacketProcess_PutStoneResponse);
+            PacketFuncDic.Add(PACKET_ID.GAME_END_RESULT, PacketProcess_GameEndResultResponse);
+            PacketFuncDic.Add(PACKET_ID.GAME_START_RES, PacketProcess_GameStartResultResponse);
         }
 
         void PacketProcess(PacketData packet)
@@ -39,6 +42,63 @@ namespace csharp_test_client
                 DevLog.Write("Unknown Packet Id: " + packet.PacketID.ToString());
             }         
         }
+        void PacketProcess_PutStoneInfoNotifyResponse(byte[] bodyData)
+        {
+            var responsePkt = new PutStoneNtfPacket();
+            responsePkt.FromBytes(bodyData);
+
+            DevLog.Write($"'{responsePkt.userID}' Put Stone  : [{responsePkt.xPos}] , [{responsePkt.yPos}] ");
+
+        }
+
+        void PacketProcess_GameStartResultResponse(byte[] bodyData)
+        {
+            var responsePkt = new GameStartResPacket();
+            responsePkt.FromBytes(bodyData);
+
+            if ((ERROR_CODE)responsePkt.Result == ERROR_CODE.NOT_READY_EXIST)
+            {
+                DevLog.Write($"모두 레디상태여야 시작합니다.");
+            }
+            else
+            {
+                DevLog.Write($"게임시작 !!!! '{responsePkt.UserID}' turn  ");
+            }
+
+        }
+
+        void PacketProcess_GameEndResultResponse(byte[] bodyData)
+        {
+            var responsePkt = new GameResultResPacket();
+            responsePkt.FromBytes(bodyData);
+            
+            DevLog.Write($"'{responsePkt.UserID}' WIN , END GAME ");
+
+        }
+
+        void PacketProcess_PutStoneResponse(byte[] bodyData)
+        {
+            var responsePkt = new MatchUserResPacket();
+            responsePkt.FromBytes(bodyData);
+
+            if((ERROR_CODE)responsePkt.Result != ERROR_CODE.ERROR_NONE)
+            {
+                DevLog.Write($"Put Stone Error : {(ERROR_CODE)responsePkt.Result}");
+            }
+
+            DevLog.Write($"다음 턴 :  {(ERROR_CODE)responsePkt.Result}");
+
+        }
+
+        void PacketProcess_MatchUserResponse(byte[] bodyData)
+        {
+            var responsePkt = new MatchUserResPacket();
+            responsePkt.FromBytes(bodyData);
+
+            DevLog.Write($"매칭 결과:  {(ERROR_CODE)responsePkt.Result} ");
+
+        }
+
 
         void PacketProcess_ErrorNotify(byte[] bodyData)
         {

@@ -20,38 +20,13 @@ namespace ChatServerLib
         return false;
     }
 
-    bool OmokLogic::ConfirmThreeThree(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
-    {
-        int cnt = 0;
-
-        if (ConfirmHorizontal(omokPanPoints, x, y, pointType) == 3)
-        {
-            ++cnt;
-        }
-        if (ConfirmVertical(omokPanPoints, x, y, pointType) == 3)
-        {
-            ++cnt;
-        }
-        if (ConfirmDiagonal(omokPanPoints, x, y, pointType) == 3)
-        {
-            ++cnt;
-        }
-        if (ConfirmOpDiagonal(omokPanPoints, x, y, pointType) == 3)
-        {
-            ++cnt;
-        }
-
-        return cnt > 1 ? true : false;
-    }
-
     int OmokLogic::ConfirmHorizontal(OmokPanPoint** omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         int cnt = 1;
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x + i <= 18
-                && pointType == omokPanPoints[y][x + i].Type)
+            if (x + i <= 18 && pointType == omokPanPoints[y][x + i].Type)
             {
                 ++cnt;
             }
@@ -63,8 +38,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x - i >= 0
-                && pointType == omokPanPoints[y][x - i].Type)
+            if (x - i >= 0 && pointType == omokPanPoints[y][x - i].Type)
             {
                 ++cnt;
             }
@@ -82,8 +56,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (y + i <= 18
-                && pointType == omokPanPoints[y + i][x].Type)
+            if (y + i <= 18 && pointType == omokPanPoints[y + i][x].Type)
             {
                 ++cnt;
             }
@@ -95,8 +68,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (y - i >= 0
-                && pointType == omokPanPoints[y - i][x].Type)
+            if (y - i >= 0 && pointType == omokPanPoints[y - i][x].Type)
             {
                 ++cnt;
             }
@@ -114,8 +86,7 @@ namespace ChatServerLib
 
        for (int i = 1; i <= 5; ++i)
        {
-           if (x + i <= 18 && y + i <= 18
-               && pointType == omokPanPoints[y + i][x + i].Type)
+           if (x + i <= 18 && y + i <= 18 && pointType == omokPanPoints[y + i][x + i].Type)
            {
                ++cnt;
            }
@@ -127,8 +98,7 @@ namespace ChatServerLib
 
        for (int i = 1; i <= 5; ++i)
        {
-           if (x - i >= 0 && y - i >= 0
-               && pointType == omokPanPoints[y - i][x - i].Type)
+           if (x - i >= 0 && y - i >= 0 && pointType == omokPanPoints[y - i][x - i].Type)
            {
                ++cnt;
            }
@@ -147,8 +117,7 @@ namespace ChatServerLib
 
        for (int i = 1; i <= 5; ++i)
        {
-           if (x - i >= 0 && y + i <= 18
-               && pointType == omokPanPoints[y + i][x - i].Type)
+           if (x - i >= 0 && y + i <= 18 && pointType == omokPanPoints[y + i][x - i].Type)
            {
                ++cnt;
            }
@@ -160,8 +129,7 @@ namespace ChatServerLib
 
        for (int i = 1; i <= 5; ++i)
        {
-           if (x + i <= 18 && y - i >= 0
-               && pointType == omokPanPoints[y - i][x + i].Type)
+           if (x + i <= 18 && y - i >= 0 && pointType == omokPanPoints[y - i][x + i].Type)
            {
                ++cnt;
            }

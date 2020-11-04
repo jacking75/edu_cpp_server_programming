@@ -17,9 +17,11 @@ int main()
 	m_pServerConfig.MaxRoomUserCount = 4;
 	m_pServerConfig.MaxRoomCountByLobby = 5;
 	
-	std::thread logicThread([&]() {	
+	std::thread logicThread([&]() 
+		{	
 
-		if (chatServer.Init(m_pServerConfig) != NServerNetLib::ERROR_CODE::NONE) {
+		if (chatServer.Init(m_pServerConfig) != NServerNetLib::ERROR_CODE::NONE) 
+		{
 			std::cout << "Init Fail";
 			return 0;
 		}

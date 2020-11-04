@@ -90,9 +90,10 @@ namespace ChatServerLib
             {
                 return NServerNetLib::ERROR_CODE::GAME_RESULT_WHITE_WIN;
             }
-            return NServerNetLib::ERROR_CODE::NONE;
+         
         }
 
+        return NServerNetLib::ERROR_CODE::NONE;
     }
 
 

@@ -12,9 +12,10 @@
     <ClCompile Include="RoomManager.cpp" />
     <ClCompile Include="PacketProcessLogin.cpp" />
     <ClCompile Include="PacketProcessMatch.cpp" />
-    <ClCompile Include="PacketProcessGame.cpp" />
     <ClCompile Include="Omok.cpp" />
     <ClCompile Include="OmokLogic.cpp" />
+    <ClCompile Include="PacketProcessGamePut.cpp" />
+    <ClCompile Include="PacketProcessGameReady.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TcpNetwork.h" />

@@ -18,11 +18,13 @@ namespace NServerNetLib
     {
         for (auto& client : m_ClientSessionPool)
         {
-            if (client.pRecvBuffer) {
+            if (client.pRecvBuffer) 
+            {
                 delete[] client.pRecvBuffer;
             }
 
-            if (client.pSendBuffer) {
+            if (client.pSendBuffer) 
+            {
                 delete[] client.pSendBuffer;
             }
         }
@@ -87,8 +89,7 @@ namespace NServerNetLib
 
     void TcpNetwork::Run()
     {
-        \
-            fd_set read_set;
+        fd_set read_set;
         read_set = m_Readfds;
 
         timeval timeout{ 0, 1000 }; //tv_sec, tv_usec
@@ -207,7 +208,8 @@ namespace NServerNetLib
         {
             auto& session = m_ClientSessionPool[i];
 
-            if (session.IsConnected() == false) {
+            if (session.IsConnected() == false) 
+            {
                 continue;
             }
 

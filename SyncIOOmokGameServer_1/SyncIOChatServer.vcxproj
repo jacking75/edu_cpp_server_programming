@@ -142,7 +142,8 @@
     <ClCompile Include="ChatServer.cpp" />
     <ClCompile Include="Omok.cpp" />
     <ClCompile Include="OmokLogic.cpp" />
-    <ClCompile Include="PacketProcessGame.cpp" />
+    <ClCompile Include="PacketProcessGamePut.cpp" />
+    <ClCompile Include="PacketProcessGameReady.cpp" />
     <ClCompile Include="PacketProcessLogin.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PacketProcess.cpp" />

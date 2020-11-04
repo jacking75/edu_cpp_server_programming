@@ -25,16 +25,15 @@ namespace ChatServerLib
 		NServerNetLib::ERROR_CODE NtfSysCloseSession(PacketInfo packetInfo);
 
 		void Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, NServerNetLib::ServerConfig pConfig);
-		NServerNetLib::ERROR_CODE Login(PacketInfo packetInfo);
 		void Process(PacketInfo packetInfo);
 
+		NServerNetLib::ERROR_CODE Login(PacketInfo packetInfo);
 		NServerNetLib::ERROR_CODE RoomEnter(PacketInfo packetInfo);
-
 		NServerNetLib::ERROR_CODE RoomLeave(PacketInfo packetInfo);
-
 		NServerNetLib::ERROR_CODE RoomChat(PacketInfo packetInfo);
 		NServerNetLib::ERROR_CODE MatchUser(PacketInfo packetInfo);
 		NServerNetLib::ERROR_CODE GamePut(PacketInfo packetInfo);
+		NServerNetLib::ERROR_CODE GameReady(PacketInfo packetInfo);
 
 	private:
 		NServerNetLib::TcpNetwork* m_pRefNetwork;

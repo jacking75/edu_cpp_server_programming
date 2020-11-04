@@ -30,7 +30,8 @@ namespace ChatServerLib
 	}
 	User* UserManager::AllocUserObjPoolIndex()
 	{
-		if (m_UserObjPoolIndex.empty()) {
+		if (m_UserObjPoolIndex.empty())
+		{
 			return nullptr;
 		}
 
@@ -47,12 +48,14 @@ namespace ChatServerLib
 
 	NServerNetLib::ERROR_CODE UserManager::AddUser(const int sessionIndex, const char* pszID)
 	{
-		if (FindUser(pszID) != nullptr) {
+		if (FindUser(pszID) != nullptr)
+		{
 			return NServerNetLib::ERROR_CODE::USER_MGR_ID_DUPLICATION;
 		}
 
 		auto pUser = AllocUserObjPoolIndex();
-		if (pUser == nullptr) {
+		if (pUser == nullptr)
+		{
 			return NServerNetLib::ERROR_CODE::USER_MGR_MAX_USER_COUNT;
 		}
 
@@ -68,7 +71,8 @@ namespace ChatServerLib
 	{
 		auto pUser = FindUser(sessionIndex);
 
-		if (pUser == nullptr) {
+		if (pUser == nullptr) 
+		{
 			return NServerNetLib::ERROR_CODE::USER_MGR_REMOVE_INVALID_SESSION;
 		}
 
@@ -86,7 +90,8 @@ namespace ChatServerLib
 	{
 		auto pUser = FindUser(sessionIndex);
 
-		if (pUser == nullptr) {
+		if (pUser == nullptr) 
+		{
 			return { NServerNetLib::ERROR_CODE::USER_MGR_INVALID_SESSION_INDEX, nullptr };
 		}
 
@@ -97,7 +102,8 @@ namespace ChatServerLib
 	{
 		auto findIter = m_UserSessionDic.find(sessionIndex);
 
-		if (findIter == m_UserSessionDic.end()) {
+		if (findIter == m_UserSessionDic.end())
+		{
 			return nullptr;
 		}
 
@@ -108,7 +114,8 @@ namespace ChatServerLib
 
 		auto findIter = m_UserIDDic.find(pszID);
 		
-		if (findIter == m_UserIDDic.end()) {
+		if (findIter == m_UserIDDic.end())
+		{
 			return nullptr;
 		}
 

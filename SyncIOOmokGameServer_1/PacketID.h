@@ -53,6 +53,10 @@ namespace NCommon
 		PUT_STONE_INFO_NOTIFY = 115,
 
 		GAME_END_RESULT = 116,
+
+		GAME_START_REQ = 118,
+		GAME_START_RES = 119,
+
 		MAX = 256
 	};
 }

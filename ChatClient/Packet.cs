@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace csharp_test_client
 {
@@ -60,7 +61,7 @@ namespace csharp_test_client
             return dataSource.ToArray();
         }
     }
-
+    
     public class LoginResPacket
     {
         public Int16 Result;
@@ -92,12 +93,14 @@ namespace csharp_test_client
     public class RoomEnterResPacket
     {
         public Int16 Result;
-        public Int64 RoomUserUniqueId;
+        //public Int64 RoomUserUniqueId;
 
         public bool FromBytes(byte[] bodyData)
         {
+        
             Result = BitConverter.ToInt16(bodyData, 0);
-            RoomUserUniqueId = BitConverter.ToInt64(bodyData, 2);
+          //  RoomUserUniqueId = BitConverter.ToInt64(bodyData, 2);
+                    
             return true;
         }
     }
@@ -141,6 +144,7 @@ namespace csharp_test_client
 
         public bool FromBytes(byte[] bodyData)
         {
+       
             var readPos = 0;
 
             UserUniqueId = BitConverter.ToInt64(bodyData, readPos);
@@ -156,6 +160,70 @@ namespace csharp_test_client
         }
     }
 
+    public class MatchUserResPacket
+    {
+        public Int16 Result;
+     
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+            return true;
+        }
+    }
+
+    public class GameResultResPacket
+    {
+        public Int16 Result;
+        public string UserID;
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+            UserID = BitConverter.ToString(bodyData, 2);
+            return true;
+        }
+    }
+    public class PutStoneReqPacket
+    {
+        Int16 xPos;
+        Int16 yPos;
+        public void SetValue(Int16 x, Int16 y)
+        {
+            xPos = x;
+            yPos = y;
+        }
+
+        public byte[] ToBytes()
+        {
+            List<byte> dataSource = new List<byte>();
+            dataSource.AddRange(BitConverter.GetBytes(xPos));
+            dataSource.AddRange(BitConverter.GetBytes(yPos));
+            return dataSource.ToArray();
+        }
+    }
+
+    public class PutStoneResPacket
+    {
+        public Int16 Result;
+        public string UserID;
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+            UserID = BitConverter.ToString(bodyData, 2);
+            return true;
+        }
+    }
+
+    public class GameStartResPacket
+    {
+        public Int16 Result;
+        public string UserID;
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+            UserID = BitConverter.ToString(bodyData, 2);
+            return true;
+        }
+    }
 
     public class RoomChatReqPacket
     {
@@ -200,13 +268,36 @@ namespace csharp_test_client
             var msgLen = BitConverter.ToInt16(bodyData, 8);
             byte[] messageTemp = new byte[msgLen];
             Buffer.BlockCopy(bodyData, 8 + 2, messageTemp, 0, msgLen);
-            Message = Encoding.UTF8.GetString(messageTemp);
+            Message = Encoding.GetEncoding(949).GetString(messageTemp);
+
             return true;
         }
     }
 
+    /// ///////////////////////////////////////////////
+   public class PutStoneNtfPacket
+    {
+        public Int16 Result;
+        public Int64 xPos;
+        public Int64 yPos;
+        public string userID;
 
-     public class RoomLeaveResPacket
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+            xPos = BitConverter.ToInt64(bodyData, 2);
+            yPos = BitConverter.ToInt64(bodyData, 6);
+
+            var msgLen = BitConverter.ToInt16(bodyData, 10);
+            byte[] messageTemp = new byte[msgLen];
+            Buffer.BlockCopy(bodyData, 10 + 2, messageTemp, 0, msgLen);
+            userID = Encoding.GetEncoding(949).GetString(messageTemp);
+
+            return true;
+        }
+    }
+
+    public class RoomLeaveResPacket
     {
         public Int16 Result;
         

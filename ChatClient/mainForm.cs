@@ -27,7 +27,6 @@ namespace csharp_test_client
         System.Windows.Threading.DispatcherTimer dispatcherUITimer;
 
 
-
         public mainForm()
         {
             InitializeComponent();
@@ -147,7 +146,7 @@ namespace csharp_test_client
                             RecvPacketQueue.Enqueue(packet);
                         }
                     }
-                    //DevLog.Write($"받은 데이터: {recvData.Item2}", LOG_LEVEL.INFO);
+                  //  DevLog.Write($"받은 데이터: {recvData.Item2}", LOG_LEVEL.INFO);
                 }
                 else
                 {
@@ -201,8 +200,8 @@ namespace csharp_test_client
                 {
                     PacketProcess(packet);
                 }
-            }
-            catch (Exception ex)
+           }
+           catch (Exception ex)
             {
                 MessageBox.Show(string.Format("ReadPacketQueueProcess. error:{0}", ex.Message));
             }
@@ -355,17 +354,10 @@ namespace csharp_test_client
             DevLog.Write($"방 채팅 요청");
         }
 
-        private void btnRoomRelay_Click(object sender, EventArgs e)
+        private void btnMatching_Click(object sender, EventArgs e)
         {
-            //if( textBoxRelay.Text.IsEmpty())
-            //{
-            //    MessageBox.Show("릴레이 할 데이터가 없습니다");
-            //    return;
-            //}
-            
-            //var bodyData = Encoding.UTF8.GetBytes(textBoxRelay.Text);
-            //PostSendPacket(PACKET_ID.PACKET_ID_ROOM_RELAY_REQ, bodyData);
-            //DevLog.Write($"방 릴레이 요청");
+            PostSendPacket(PACKET_ID.MATCH_USER_REQ, null);
+            DevLog.Write($"매칭 요청");
         }
 
         // 로비 리스트 요청
@@ -385,6 +377,32 @@ namespace csharp_test_client
         private void button5_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void listBoxRoomChatMsg_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxRelay_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_PutStoneClick(object sender, EventArgs e)
+        {
+            var requestPkt = new PutStoneReqPacket();
+            requestPkt.SetValue(xPosTextNumber.Text.ToInt16(), yPosTextNumber.Text.ToInt16());
+
+            PostSendPacket(PACKET_ID.PUT_STONE_REQ, requestPkt.ToBytes());
+            DevLog.Write($"put stone 요청 : x  [  {xPosTextNumber.Text}  ], y : [ {yPosTextNumber.Text} ] ");
+
+        }
+
+        private void btn_GameStartClick(object sender, EventArgs e)
+        {
+            PostSendPacket(PACKET_ID.GAME_START_REQ, null);
+            DevLog.Write($"게임시작 요청");
         }
     }
 }

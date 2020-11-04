@@ -11,6 +11,8 @@ namespace ChatServerLib
 			LOGIN = 1,
 			LOBBY = 2,
 			ROOM = 3,
+			READY = 4,
+			GAME = 5
 		};
 
 	public:
@@ -28,8 +30,6 @@ namespace ChatServerLib
 			m_ID = "";
 			m_CurDomainState = DOMAIN_STATE::NONE;
 			m_RoomIndex = -1;
-			m_Black = false;
-			m_White = false;
 		}
 
 		void Set(const int sessionIndex, const char* pszID)
@@ -58,6 +58,15 @@ namespace ChatServerLib
 			m_CurDomainState = DOMAIN_STATE::LOGIN;
 		}
 
+		void SetReady()
+		{
+			m_CurDomainState = DOMAIN_STATE::READY;
+		}
+
+		void SetGame()
+		{
+			m_CurDomainState = DOMAIN_STATE::GAME;
+		}
 
 		bool IsCurDomainInLogIn() {
 			return m_CurDomainState == DOMAIN_STATE::LOGIN ? true : false;
@@ -67,7 +76,13 @@ namespace ChatServerLib
 			return m_CurDomainState == DOMAIN_STATE::ROOM ? true : false;
 		}
 
-		void SetBlack() { m_Black = true; };
+		bool IsCurDomainInReady() {
+			return m_CurDomainState == DOMAIN_STATE::READY ? true : false;
+		}
+		bool IsCurDomainInGame() {
+			return m_CurDomainState == DOMAIN_STATE::GAME ? true : false;
+		}
+
 
 	protected:
 		short m_Index = -1;
@@ -80,7 +95,6 @@ namespace ChatServerLib
 
 		short m_RoomIndex = -1;
 
-		bool m_Black = false;
-		bool m_White = false;
+		
 	};
 }

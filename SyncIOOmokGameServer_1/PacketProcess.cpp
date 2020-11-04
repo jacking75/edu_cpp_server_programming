@@ -30,6 +30,7 @@ namespace ChatServerLib
 		PacketFuncArray[(int)commonPacketId::ROOM_CHAT_REQ] = &PacketProcess::RoomChat;
 		PacketFuncArray[(int)commonPacketId::MATCH_USER_REQ] = &PacketProcess::MatchUser;
 		PacketFuncArray[(int)commonPacketId::PUT_STONE_REQ] = &PacketProcess::GamePut;
+		PacketFuncArray[(int)commonPacketId::GAME_START_REQ] = &PacketProcess::GameReady;
 
 	}
 	
@@ -58,7 +59,8 @@ namespace ChatServerLib
 		std::cout << "Close Session [ " << packetInfo.SessionIndex << " ]" << std::endl;
 		auto pUser = std::get<1>(m_pRefUserMgr->GetUser(packetInfo.SessionIndex));
 
-		if (pUser) {
+		if (pUser) 
+		{
 			auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 			if (pRoom)
 			{
