@@ -23,11 +23,6 @@ namespace ChatServerLib
 		auto userIndex = pUser->GetIndex();
 
 		auto pRoom = m_pRefRoomMgr->FindProperRoom();
-
-		pRoom->EnterUser(pUser);
-		pUser->EnterRoom(pRoom->GetIndex());
-
-		pRoom->NotifyEnterUserInfo(userIndex, pUser->GetID().c_str());
 		if (pRoom == nullptr) 
 		{
 			roomResPkt.SetError(NServerNetLib::ERROR_CODE::MATCHING_FAIL);
@@ -35,10 +30,14 @@ namespace ChatServerLib
 			return errorCode;
 		}
 
+		pRoom->EnterUser(pUser);
+		pUser->EnterRoom(pRoom->GetIndex());
+		pRoom->NotifyEnterUserInfo(userIndex, pUser->GetID().c_str());
+
 		//TODO :  검은돌 랜덤 선정
 		pRoom->m_BlackStoneUserIndex = userIndex;
 		pRoom->m_TurnIndex = userIndex;
-		pRoom->OmokGame->init(userIndex); 
+		pRoom->OmokGame->init(); 
 		 
  		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
 		pRoom->SendToAllUser((short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);

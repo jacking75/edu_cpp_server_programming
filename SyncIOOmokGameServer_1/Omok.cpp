@@ -20,7 +20,7 @@ namespace ChatServerLib
     }
    
   
-    void Omok::init(int userIndex)
+    void Omok::init()
     {
         OmokPanPoints = new OmokPanPoint * [OmokPanPointNumber];
 
@@ -36,18 +36,11 @@ namespace ChatServerLib
                 OmokPanPoints[i][j].Type = OmokPanPoint::PointType::None;
             }
         }
-        IsBlackTurn = !IsBlackTurn;
-        OmokTurnUserIndex = userIndex;
-
+        IsBlackTurn = true;
 	}
 
     NServerNetLib::ERROR_CODE Omok::GamePutStone(int userIndex, int xPos, int yPos)
     {
-        if (IsUserTurn(userIndex) == false)
-        {
-            return NServerNetLib::ERROR_CODE::GAME_NOT_YOUR_TURN;
-        }
-
         auto point = OmokPanPoints[yPos][xPos];
         if (point.Type != OmokPanPoint::PointType::None)
         {
@@ -57,23 +50,11 @@ namespace ChatServerLib
         OmokPanPoint::PointType pointType = OmokPanPoint::PointType::None;
         pointType = IsBlackTurn == true ? OmokPanPoint::PointType::Black : OmokPanPoint::PointType::White;
         OmokLogic logic;
-
-        if (logic.ConfirmOmok(OmokPanPoints,xPos, yPos, pointType) == true)
-        {
-            return  NServerNetLib::ERROR_CODE::GAME_PUT_SAM_SAM;
-        }
-        
+      
         point.Type = pointType;
         IsBlackTurn = !IsBlackTurn;
         
         return NServerNetLib::ERROR_CODE::NONE;
-    }
-
-
-    bool Omok::IsUserTurn(int userIndex)
-    {
-        if (OmokTurnUserIndex == userIndex) return true;
-        else return false;
     }
 
     NServerNetLib::ERROR_CODE Omok::CheckGameEnd(int xPos, int yPos)

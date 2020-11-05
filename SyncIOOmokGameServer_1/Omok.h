@@ -12,7 +12,7 @@ namespace ChatServerLib
         Omok();
         virtual ~Omok();
 
-       void init(int userIndex);
+       void init();
 
         NServerNetLib::ERROR_CODE CheckGameEnd(int xPos, int yPos);
         NServerNetLib::ERROR_CODE GamePutStone(int userIndex, int xPos, int yPos);
