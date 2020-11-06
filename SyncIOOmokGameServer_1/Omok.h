@@ -10,13 +10,13 @@ namespace ChatServerLib
 	class Omok {
     public:
         Omok();
-        virtual ~Omok();
+        ~Omok();
 
        void init();
 
         NServerNetLib::ERROR_CODE CheckGameEnd(int xPos, int yPos);
-        NServerNetLib::ERROR_CODE GamePutStone(int userIndex, int xPos, int yPos);
-        bool IsUserTurn(int userIndex);
+        NServerNetLib::ERROR_CODE GamePutStone( int xPos, int yPos);
+        void initType();
 
         bool IsBlackTurn = false;
         int OmokTurnUserIndex = -1;

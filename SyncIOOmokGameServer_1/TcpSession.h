@@ -8,8 +8,8 @@ namespace NServerNetLib
 	{
 
 	public:
-		TcpSession();
-		virtual ~TcpSession();
+		TcpSession() = default;
+		~TcpSession() = default;
 
 		void Init(const int index);
 		bool IsConnected() { return SocketFD != -1 ? true : false; }

@@ -76,8 +76,8 @@ namespace csharp_test_client
 
     public class RoomEnterReqPacket
     {
-        int RoomNumber;
-        public void SetValue(int roomNumber)
+        Int16 RoomNumber;
+        public void SetValue(Int16 roomNumber)
         {
             RoomNumber = roomNumber;
         }
@@ -93,14 +93,11 @@ namespace csharp_test_client
     public class RoomEnterResPacket
     {
         public Int16 Result;
-        //public Int64 RoomUserUniqueId;
 
         public bool FromBytes(byte[] bodyData)
         {
         
             Result = BitConverter.ToInt16(bodyData, 0);
-          //  RoomUserUniqueId = BitConverter.ToInt64(bodyData, 2);
-                    
             return true;
         }
     }
@@ -178,15 +175,19 @@ namespace csharp_test_client
         public bool FromBytes(byte[] bodyData)
         {
             Result = BitConverter.ToInt16(bodyData, 0);
-            UserID = BitConverter.ToString(bodyData, 2);
+
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 2, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
             return true;
         }
     }
     public class PutStoneReqPacket
     {
-        Int16 xPos;
-        Int16 yPos;
-        public void SetValue(Int16 x, Int16 y)
+        int xPos;
+        int yPos;
+        public void SetValue(int x, int y)
         {
             xPos = x;
             yPos = y;
@@ -208,7 +209,12 @@ namespace csharp_test_client
         public bool FromBytes(byte[] bodyData)
         {
             Result = BitConverter.ToInt16(bodyData, 0);
-            UserID = BitConverter.ToString(bodyData, 2);
+
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 2, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
+
             return true;
         }
     }
@@ -220,26 +226,28 @@ namespace csharp_test_client
         public bool FromBytes(byte[] bodyData)
         {
             Result = BitConverter.ToInt16(bodyData, 0);
-            UserID = BitConverter.ToString(bodyData, 2);
+
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 2, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
+          
             return true;
         }
     }
 
     public class RoomChatReqPacket
     {
-        Int16 MsgLen;
-        byte[] Msg;//= new byte[PacketDef.MAX_USER_ID_BYTE_LENGTH];
+        byte[] Msg = new byte[PacketDef.MAX_ROOM_CHAT_MSG_SIZE + 1];
 
         public void SetValue(string message)
         {
             Msg = Encoding.UTF8.GetBytes(message);
-            MsgLen = (Int16)Msg.Length;
         }
 
         public byte[] ToBytes()
         {
             List<byte> dataSource = new List<byte>();
-            dataSource.AddRange(BitConverter.GetBytes(MsgLen));
             dataSource.AddRange(Msg);
             return dataSource.ToArray();
         }
@@ -258,19 +266,23 @@ namespace csharp_test_client
 
     public class RoomChatNtfPacket
     {
-        public Int64 UserUniqueId;
+        public string UserID;
         public string Message;
 
         public bool FromBytes(byte[] bodyData)
         {
-            UserUniqueId = BitConverter.ToInt64(bodyData, 0);
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 0, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
+            //UserID = new string(Encoding.GetEncoding(949).GetChars(userIdTemp));
 
-            var msgLen = BitConverter.ToInt16(bodyData, 8);
+            var msgLen = PacketDef.MAX_ROOM_CHAT_MSG_SIZE;
             byte[] messageTemp = new byte[msgLen];
-            Buffer.BlockCopy(bodyData, 8 + 2, messageTemp, 0, msgLen);
+            Buffer.BlockCopy(bodyData, PacketDef.MAX_USER_ID_BYTE_LENGTH + 1, messageTemp, 0, msgLen);
             Message = Encoding.GetEncoding(949).GetString(messageTemp);
-
-            return true;
+           // Message = new string(Encoding.GetEncoding(949).GetChars(messageTemp));
+           return true;
         }
     }
 
@@ -278,20 +290,16 @@ namespace csharp_test_client
    public class PutStoneNtfPacket
     {
         public Int16 Result;
-        public Int64 xPos;
-        public Int64 yPos;
-        public string userID;
+        public string UserID;
 
         public bool FromBytes(byte[] bodyData)
         {
             Result = BitConverter.ToInt16(bodyData, 0);
-            xPos = BitConverter.ToInt64(bodyData, 2);
-            yPos = BitConverter.ToInt64(bodyData, 6);
 
-            var msgLen = BitConverter.ToInt16(bodyData, 10);
-            byte[] messageTemp = new byte[msgLen];
-            Buffer.BlockCopy(bodyData, 10 + 2, messageTemp, 0, msgLen);
-            userID = Encoding.GetEncoding(949).GetString(messageTemp);
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 0, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
 
             return true;
         }

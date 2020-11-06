@@ -25,8 +25,8 @@ namespace NCommon
 	const int MAX_USER_PASSWORD_SIZE = 16;
 	struct PktLogInReq
 	{
-		char szID[MAX_USER_ID_SIZE + 1] = { 0, };
-		char szPW[MAX_USER_PASSWORD_SIZE + 1] = { 0, };
+		char szID[MAX_USER_ID_SIZE] = { 0, };
+		char szPW[MAX_USER_PASSWORD_SIZE] = { 0, };
 	};
 
 	struct PktLogInRes : PktBase
@@ -50,7 +50,7 @@ namespace NCommon
 	const int MAX_ROOM_TITLE_SIZE = 16;
 	struct PktRoomEnterReq
 	{
-		short RoomIndex;
+		INT16 RoomIndex;
 	};
 
 	struct PktRoomEnterRes : PktBase
@@ -77,12 +77,6 @@ namespace NCommon
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
-	struct PktPutStoneInfoNtf : PktBase
-	{
-		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
-		int xPos;
-		int yPos;
-	};
 	struct PktGameResultNtf : PktBase
 	{
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
@@ -114,7 +108,7 @@ namespace NCommon
 	const int MAX_ROOM_CHAT_MSG_SIZE = 256;
 	struct PktRoomChatReq
 	{
-		wchar_t Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
+		char Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
 	};
 
 	struct PktRoomChatRes : PktBase
@@ -124,7 +118,7 @@ namespace NCommon
 	struct PktRoomChatNtf
 	{
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
-		wchar_t Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
+		char Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
 	};
 
 	const int DEV_ECHO_DATA_MAX_SIZE = 1024;

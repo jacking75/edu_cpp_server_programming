@@ -17,7 +17,6 @@ namespace ChatServerLib
 
 		Room* FindProperRoom();
 		Room* FindRoom(const int roomIndex);
-		void Release();
 
 	private:
 		std::vector<Room*> m_RoomList;

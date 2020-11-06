@@ -136,6 +136,7 @@ namespace csharp_test_client
                         }
 
                         var packet = new PacketData();
+                      //  packet.DataSize = (short)(data.Count);
                         packet.DataSize = (short)(data.Count - PacketHeaderSize);
                         packet.PacketID = BitConverter.ToInt16(data.Array, data.Offset + 2);
                         packet.Type = (SByte)data.Array[(data.Offset + 4)];
@@ -327,7 +328,7 @@ namespace csharp_test_client
         private void btn_RoomEnter_Click(object sender, EventArgs e)
         {
             var requestPkt = new RoomEnterReqPacket();
-            requestPkt.SetValue(textBoxRoomNumber.Text.ToInt32());
+            requestPkt.SetValue(textBoxRoomNumber.Text.ToInt16 ());
 
             PostSendPacket(PACKET_ID.ROOM_ENTER_REQ, requestPkt.ToBytes());
             DevLog.Write($"방 입장 요청:  {textBoxRoomNumber.Text} 번");
@@ -336,7 +337,7 @@ namespace csharp_test_client
         private void btn_RoomLeave_Click(object sender, EventArgs e)
         {
             PostSendPacket(PACKET_ID.ROOM_LEAVE_REQ,  null);
-            DevLog.Write($"방 입장 요청:  {textBoxRoomNumber.Text} 번");
+            DevLog.Write($"방 나가기 요청:  {textBoxRoomNumber.Text} 번");
         }
 
         private void btnRoomChat_Click(object sender, EventArgs e)

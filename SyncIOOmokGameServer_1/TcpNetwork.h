@@ -30,7 +30,7 @@ namespace NServerNetLib
 	{
 	public:
 		TcpNetwork();
-		virtual ~TcpNetwork();
+		 ~TcpNetwork();
 
 		NET_ERROR_CODE Init(const ServerConfig pConfig);
 		NetError SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg);

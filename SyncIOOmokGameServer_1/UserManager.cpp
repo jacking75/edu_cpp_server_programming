@@ -7,15 +7,6 @@
 
 namespace ChatServerLib
 {
-	UserManager::UserManager()
-	{
-
-	}
-
-	UserManager::~UserManager()
-	{
-
-	}
 
 	void UserManager::Init(const int maxUserCount)
 	{

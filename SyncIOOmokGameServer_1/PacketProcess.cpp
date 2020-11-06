@@ -5,9 +5,6 @@
 
 namespace ChatServerLib
 {	
-	PacketProcess::PacketProcess() {}
-	PacketProcess::~PacketProcess() {}
-
 	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr,NServerNetLib::ServerConfig pConfig)
 	{		
 		m_pRefNetwork = pNetwork;
@@ -65,7 +62,7 @@ namespace ChatServerLib
 			if (pRoom)
 			{
 				pRoom->LeaveUser(pUser->GetIndex());
-				pRoom->NotifyLeaveUserInfo(pUser->GetID().c_str());
+				pRoom->NotifyLeaveUserInfo(packetInfo.SessionIndex,pUser->GetID().c_str());
 			}
 			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}

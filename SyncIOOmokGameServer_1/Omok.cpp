@@ -28,7 +28,10 @@ namespace ChatServerLib
         {
             OmokPanPoints[count] = new OmokPanPoint[OmokPanPointNumber];
         }
+	}
 
+    void Omok::initType()
+    {
         for (int i = 0; i < OmokPanPointNumber; ++i)
         {
             for (int j = 0; j < OmokPanPointNumber; ++j)
@@ -37,9 +40,9 @@ namespace ChatServerLib
             }
         }
         IsBlackTurn = true;
-	}
+    }
 
-    NServerNetLib::ERROR_CODE Omok::GamePutStone(int userIndex, int xPos, int yPos)
+    NServerNetLib::ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
     {
         auto point = OmokPanPoints[yPos][xPos];
         if (point.Type != OmokPanPoint::PointType::None)

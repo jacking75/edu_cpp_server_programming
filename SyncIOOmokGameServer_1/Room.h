@@ -19,7 +19,7 @@ namespace ChatServerLib
 		};
 
 		Room();
-		virtual ~Room();
+		~Room();
 
 		void Init(const short index, const short maxUserCount, NServerNetLib::TcpNetwork* pNetwork);
 
@@ -41,14 +41,16 @@ namespace ChatServerLib
 
 		void NotifyEnterUserInfo(const int userIndex, const char* pszUserID);
 
-		void NotifyLeaveUserInfo(const char* pszUserID);
+		void NotifyLeaveUserInfo(const int userIndex, const char* pszUserID);
 
-		void NotifyChat(const int sessionIndex, const char* pszUserID, const wchar_t* pszMsg);
-		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID, const int xPos, const int yPos);
+		void NotifyChat(const int sessionIndex, const char* pszUserID, const char* pszMsg);
+		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID);
 		void NotifyGameResult(const int userIndex, const char* pszUserID);
 		void NotifyGameStart(const int userIndex, const char* pszUserID);
-		bool IsCurDomainInGame() {return m_CurDomainState == ROOM_STATE::GAME ? true : false;}
-		std::unique_ptr<Omok> OmokGame;
+		bool IsCurDomainInGame() { return m_CurDomainState == ROOM_STATE::GAME ? true : false; };
+
+
+		Omok* OmokGame  = new Omok();
 		std::vector<User*> m_UserList;
 
 		int m_BlackStoneUserIndex = -1;

@@ -42,14 +42,6 @@ namespace csharp_test_client
                 DevLog.Write("Unknown Packet Id: " + packet.PacketID.ToString());
             }         
         }
-        void PacketProcess_PutStoneInfoNotifyResponse(byte[] bodyData)
-        {
-            var responsePkt = new PutStoneNtfPacket();
-            responsePkt.FromBytes(bodyData);
-
-            DevLog.Write($"'{responsePkt.userID}' Put Stone  : [{responsePkt.xPos}] , [{responsePkt.yPos}] ");
-
-        }
 
         void PacketProcess_GameStartResultResponse(byte[] bodyData)
         {
@@ -78,15 +70,15 @@ namespace csharp_test_client
 
         void PacketProcess_PutStoneResponse(byte[] bodyData)
         {
-            var responsePkt = new MatchUserResPacket();
+            var responsePkt = new PutStoneResPacket();
             responsePkt.FromBytes(bodyData);
 
-            if((ERROR_CODE)responsePkt.Result != ERROR_CODE.ERROR_NONE)
+            if ((ERROR_CODE)responsePkt.Result != ERROR_CODE.ERROR_NONE)
             {
                 DevLog.Write($"Put Stone Error : {(ERROR_CODE)responsePkt.Result}");
             }
 
-            DevLog.Write($"다음 턴 :  {(ERROR_CODE)responsePkt.Result}");
+            else { DevLog.Write($"다음 턴 :  {responsePkt.UserID}"); }
 
         }
 
@@ -182,7 +174,7 @@ namespace csharp_test_client
             }
             else
             {
-                AddRoomChatMessageList(0, msg);
+                AddRoomChatMessageList("나 ", msg);
             }
         }
 
@@ -192,12 +184,12 @@ namespace csharp_test_client
             var responsePkt = new RoomChatNtfPacket();
             responsePkt.FromBytes(bodyData);
 
-            AddRoomChatMessageList(responsePkt.UserUniqueId, responsePkt.Message);
+            AddRoomChatMessageList(responsePkt.UserID, responsePkt.Message);
         }
 
-        void AddRoomChatMessageList(Int64 userUniqueId, string msgssage)
+        void AddRoomChatMessageList(string userUniqueId, string msgssage)
         {
-            var msg = $"{userUniqueId}:  {msgssage}";
+            var msg = $"{msgssage}: {userUniqueId}";
 
             if (listBoxRoomChatMsg.Items.Count > 512)
             {

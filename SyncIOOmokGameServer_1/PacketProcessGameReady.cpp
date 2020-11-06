@@ -27,7 +27,7 @@ namespace ChatServerLib
 				{
 					strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1),m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
 					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
-					pRoom->NotifyGameStart(userIndex, m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str());
+					pRoom->NotifyGameStart(packetInfo.SessionIndex, m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str());
 				}
 				else
 				{

@@ -16,16 +16,15 @@ namespace ChatServerLib
 
 	Room::~Room()
 	{
-
+		delete OmokGame;
 	}
 
 	void Room::Init(const short index, const short maxUserCount, NServerNetLib::TcpNetwork* pNetwork)
 	{
 		m_Index = index;
 		m_MaxUserCount = maxUserCount;
-		m_CurDomainState = ROOM_STATE::NONE;
 		m_pRefNetwork = pNetwork;
-		OmokGame = std::make_unique<Omok>();
+		
 	}
 
 	void Room::SetNetwork(NServerNetLib::TcpNetwork* pNetwork)
@@ -38,6 +37,7 @@ namespace ChatServerLib
 		m_UserList.clear();
 		m_TurnIndex = -1;
 		m_BlackStoneUserIndex = -1;
+		OmokGame->initType();
 	}
 
 	NServerNetLib::ERROR_CODE Room::EnterUser(User* pUser)
@@ -74,7 +74,7 @@ namespace ChatServerLib
 	{		
 		for (auto pUser : m_UserList)
 		{
-			if (pUser->GetIndex() == passUserindex) 
+			if (pUser->GetSessioIndex() == passUserindex)
 			{
 				continue;
 			}
@@ -88,39 +88,35 @@ namespace ChatServerLib
 		NCommon::PktRoomEnterUserInfoNtf pkt;
 
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
-
-
 		SendToAllUser((short)NCommon::PACKET_ID::ROOM_ENTER_NEW_USER_NTF, sizeof(pkt), (char*)&pkt, userIndex);
 	}
 
-	void Room::NotifyLeaveUserInfo(const char* pszUserID)
+	void Room::NotifyLeaveUserInfo(const int userIndex, const char* pszUserID)
 	{
 
 		NCommon::PktRoomLeaveUserInfoNtf pkt;
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::ROOM_LEAVE_USER_NTF, sizeof(pkt), (char*)&pkt);
+		SendToAllUser((short)NCommon::PACKET_ID::ROOM_LEAVE_USER_NTF, sizeof(pkt), (char*)&pkt , userIndex);
 	}
 
-	void Room::NotifyChat(const int sessionIndex, const char* pszUserID, const wchar_t* pszMsg)
+	void Room::NotifyChat(const int sessionIndex, const char* pszUserID, const char* pszMsg)
 	{
 		NCommon::PktRoomChatNtf pkt;
 
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
-		wcsncpy_s(pkt.Msg, NCommon::MAX_ROOM_CHAT_MSG_SIZE + 1, pszMsg, NCommon::MAX_ROOM_CHAT_MSG_SIZE);
+		strncpy_s(pkt.Msg, NCommon::MAX_ROOM_CHAT_MSG_SIZE + 1, pszMsg, NCommon::MAX_ROOM_CHAT_MSG_SIZE);
 
 		SendToAllUser((short)NCommon::PACKET_ID::ROOM_CHAT_NTF, sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
 
-	void Room::NotifyPutStoneInfo(const int userIndex, const char* pszUserID , const int xPos , const int yPos)
+	void Room::NotifyPutStoneInfo(const int userIndex, const char* pszUserID)
 	{
-		NCommon::PktPutStoneInfoNtf pkt;
+		NCommon::PktPutStoneRes pkt;
 
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
-		pkt.xPos = xPos;
-		pkt.yPos = yPos;
 
-		SendToAllUser((short)NCommon::PACKET_ID::PUT_STONE_INFO_NOTIFY ,sizeof(pkt), (char*)&pkt, userIndex);
+		SendToAllUser((short)NCommon::PACKET_ID::PUT_STONE_RES ,sizeof(pkt), (char*)&pkt, userIndex);
 	}
 
 	void Room::NotifyGameResult(const int userIndex, const char* pszUserID)

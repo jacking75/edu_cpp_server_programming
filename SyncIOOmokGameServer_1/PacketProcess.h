@@ -18,8 +18,8 @@ namespace ChatServerLib
 		PacketFunc PacketFuncArray[(int)NCommon::PACKET_ID::MAX];
 
 	public:
-		PacketProcess();
-		~PacketProcess();
+		PacketProcess() = default;
+		~PacketProcess() = default;
 
 		NServerNetLib::ERROR_CODE NtfSysConnectSession(PacketInfo packetInfo);
 		NServerNetLib::ERROR_CODE NtfSysCloseSession(PacketInfo packetInfo);

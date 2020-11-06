@@ -17,6 +17,7 @@ namespace ChatServerLib
 		auto reqPkt = (NCommon::PktRoomEnterReq*)packetInfo.pRefData;
 		NCommon::PktRoomEnterRes resPkt;
 
+		auto temp = reqPkt->RoomIndex;
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -48,7 +49,7 @@ namespace ChatServerLib
 
 		pUser->EnterRoom(pRoom->GetIndex());
 
-		pRoom->NotifyEnterUserInfo(pUser->GetIndex(), pUser->GetID().c_str());
+		pRoom->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 		return NServerNetLib::ERROR_CODE::NONE;
@@ -98,7 +99,7 @@ namespace ChatServerLib
 
 		pUser->LeaveRoom();
 
-		pRoom->NotifyLeaveUserInfo(pUser->GetID().c_str());
+		pRoom->NotifyLeaveUserInfo(packetInfo.SessionIndex,pUser->GetID().c_str());
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 		return NServerNetLib::ERROR_CODE::NONE;
@@ -136,7 +137,7 @@ namespace ChatServerLib
 			return NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
-		pRoom->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);
+	    pRoom->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 		return NServerNetLib::ERROR_CODE::NONE;

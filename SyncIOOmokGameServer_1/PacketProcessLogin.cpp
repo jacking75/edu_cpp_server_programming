@@ -10,9 +10,9 @@ namespace ChatServerLib
 	
 	NServerNetLib::ERROR_CODE PacketProcess::Login(PacketInfo packetInfo)
 	{
-		NCommon::PktLogInRes resPkt;
 		auto reqPkt = (NCommon::PktLogInReq*)packetInfo.pRefData;
-		
+		NCommon::PktLogInRes resPkt;
+
 		auto addRet = m_pRefUserMgr->AddUser(packetInfo.SessionIndex, reqPkt->szID);
 
 		if (addRet != NServerNetLib::ERROR_CODE::NONE) 

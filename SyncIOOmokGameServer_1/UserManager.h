@@ -14,8 +14,8 @@ namespace ChatServerLib
 	class UserManager
 	{
 	public:
-		UserManager();
-		virtual ~UserManager();
+		UserManager() = default;
+		~UserManager() = default;
 
 		void Init(const int maxUserCount);
 
