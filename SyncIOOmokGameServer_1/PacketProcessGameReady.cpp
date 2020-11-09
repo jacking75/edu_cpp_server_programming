@@ -1,13 +1,9 @@
-#include <tuple>
-#include <iostream>
-#include "User.h"
-#include "UserManager.h"
 #include "PacketProcess.h"
 #include "PacketDef.h"
 
 namespace ChatServerLib
 {
-	NServerNetLib::ERROR_CODE PacketProcess::GameReady(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::GameReady(PacketInfo packetInfo)
 	{
 		NCommon::PktGameReadyRes resPkt;
 
@@ -25,18 +21,20 @@ namespace ChatServerLib
 			{
 				if (iter->IsCurDomainInReady()) 
 				{
+					m_pRefUserMgr->GetUser(iter->GetSessioIndex()).second->SetGame();
+					pUser->SetGame();
 					strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1),m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
 					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
 					pRoom->NotifyGameStart(packetInfo.SessionIndex, m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str());
 				}
 				else
 				{
-					resPkt.SetError(NServerNetLib::ERROR_CODE::NOT_READY_EXIST);
+					resPkt.SetError(ERROR_CODE::NOT_READY_EXIST);
 					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
 				}
 			}
  		}
 
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 }

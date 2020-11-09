@@ -136,7 +136,6 @@ namespace csharp_test_client
                         }
 
                         var packet = new PacketData();
-                      //  packet.DataSize = (short)(data.Count);
                         packet.DataSize = (short)(data.Count - PacketHeaderSize);
                         packet.PacketID = BitConverter.ToInt16(data.Array, data.Offset + 2);
                         packet.Type = (SByte)data.Array[(data.Offset + 4)];
@@ -147,7 +146,6 @@ namespace csharp_test_client
                             RecvPacketQueue.Enqueue(packet);
                         }
                     }
-                  //  DevLog.Write($"받은 데이터: {recvData.Item2}", LOG_LEVEL.INFO);
                 }
                 else
                 {
@@ -404,6 +402,11 @@ namespace csharp_test_client
         {
             PostSendPacket(PACKET_ID.GAME_START_REQ, null);
             DevLog.Write($"게임시작 요청");
+        }
+
+        private void listBoxRoomUserList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿#include <cstring>
-#include <iostream>
+﻿#include <iostream>
 #include "PacketProcess.h"
-#include "UserManager.h"
 
 namespace ChatServerLib
 {	
@@ -34,6 +32,10 @@ namespace ChatServerLib
 	void PacketProcess::Process(PacketInfo packetInfo)
 	{
 		auto packetId = packetInfo.PacketId;
+		if (packetId < 0 || packetId >255)
+		{
+			return;
+		}
 
 		if (PacketFuncArray[packetId] == nullptr)
 		{
@@ -44,14 +46,14 @@ namespace ChatServerLib
 
 	}
 
-	NServerNetLib::ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
+	ChatServerLib::ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
 	{
 		std::cout << "Client Connect [ " << packetInfo.SessionIndex << " ]" << std::endl;
 
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 	
-	NServerNetLib::ERROR_CODE PacketProcess::NtfSysCloseSession(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::NtfSysCloseSession(PacketInfo packetInfo)
 	{
 		std::cout << "Close Session [ " << packetInfo.SessionIndex << " ]" << std::endl;
 		auto pUser = std::get<1>(m_pRefUserMgr->GetUser(packetInfo.SessionIndex));
@@ -67,7 +69,7 @@ namespace ChatServerLib
 			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}
 
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 
 }

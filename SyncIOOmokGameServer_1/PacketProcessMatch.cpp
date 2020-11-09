@@ -4,7 +4,7 @@
 
 namespace ChatServerLib
 {
-	NServerNetLib::ERROR_CODE PacketProcess::MatchUser(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::MatchUser(PacketInfo packetInfo)
 	{
 		NCommon::PktMatchRes resPkt;
 		NCommon::PktRoomEnterRes roomResPkt;
@@ -13,7 +13,7 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 
-		if (errorCode != NServerNetLib::ERROR_CODE::NONE) 
+		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
@@ -25,7 +25,7 @@ namespace ChatServerLib
 		auto pRoom = m_pRefRoomMgr->FindProperRoom();
 		if (pRoom == nullptr) 
 		{
-			roomResPkt.SetError(NServerNetLib::ERROR_CODE::MATCHING_FAIL);
+			roomResPkt.SetError(ERROR_CODE::MATCHING_FAIL);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(roomResPkt), (char*)&roomResPkt);
 			return errorCode;
 		}
@@ -40,9 +40,9 @@ namespace ChatServerLib
 		pRoom->OmokGame->init();
 
  		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
-		pRoom->SendToAllUser((short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
-
-		return NServerNetLib::ERROR_CODE::NONE;
+		//pRoom->SendToAllUser((short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
+		
+		return ERROR_CODE::NONE;
 
 	}
 }

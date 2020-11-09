@@ -9,7 +9,6 @@ namespace csharp_test_client
         public Socket Sock = null;   
         public string LatestErrorMsg;
         
-
         //소켓연결        
         public bool Connect(string ip, int port)
         {
@@ -37,7 +36,6 @@ namespace csharp_test_client
 
         public Tuple<int,byte[]> Receive()
         {
-
             try
             {
                 byte[] ReadBuffer = new byte[2048];

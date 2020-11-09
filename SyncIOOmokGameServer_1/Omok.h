@@ -1,27 +1,34 @@
 #pragma once
 
 #include "ErrorCode.h"
-#include <memory>
 #include "OmokPanPoint.h"
-#include <string>
+#include <vector>
 
 namespace ChatServerLib
 {
 	class Omok {
+        const int OmokPanPointNumber = 19;
+
     public:
-        Omok();
-        ~Omok();
+        Omok() = default;
+        ~Omok() = default;
 
        void init();
 
-        NServerNetLib::ERROR_CODE CheckGameEnd(int xPos, int yPos);
-        NServerNetLib::ERROR_CODE GamePutStone( int xPos, int yPos);
+       void printTest();
+
+        ERROR_CODE CheckGameEnd(int xPos, int yPos);
+
+        ERROR_CODE GamePutStone( int xPos, int yPos);
+
         void initType();
 
         bool IsBlackTurn = false;
+
         int OmokTurnUserIndex = -1;
 
-        OmokPanPoint** OmokPanPoints;
+        std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
+ 
 	};
 
 }

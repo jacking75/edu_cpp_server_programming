@@ -2,32 +2,20 @@
 
 #include "Omok.h"
 #include "OmokLogic.h"
-#include "OmokPanPoint.h"
+#include <iostream>
 
 namespace ChatServerLib
 {
-
-    const int OmokPanPointNumber = 19;
-
-    Omok::Omok() {}
-    Omok::~Omok()
-    {
-        for (int count = 0; count < OmokPanPointNumber; ++count)
-        {
-            delete[] OmokPanPoints[count];
-        }
-        delete[] OmokPanPoints;
-    }
-   
-  
     void Omok::init()
     {
-        OmokPanPoints = new OmokPanPoint * [OmokPanPointNumber];
-
-        for (int count = 0; count < OmokPanPointNumber; ++count)
-        {
-            OmokPanPoints[count] = new OmokPanPoint[OmokPanPointNumber];
+        for (int i = 0; i < OmokPanPointNumber; ++i)
+        { 
+            std::vector<OmokPanPoint> elem; 
+            elem.resize(OmokPanPointNumber); 
+            OmokPanPoints.push_back(elem);
         }
+
+        IsBlackTurn = true;
 	}
 
     void Omok::initType()
@@ -39,45 +27,60 @@ namespace ChatServerLib
                 OmokPanPoints[i][j].Type = OmokPanPoint::PointType::None;
             }
         }
+
         IsBlackTurn = true;
     }
 
-    NServerNetLib::ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
+    void Omok::printTest() {
+
+        for (int i = 0; i < OmokPanPointNumber; ++i)
+        {
+            for (int j = 0; j < OmokPanPointNumber; ++j)
+            {
+                std::cout << (int)OmokPanPoints[i][j].Type << " ";
+            }
+            std::cout << "\n"; 
+        }
+
+        std::cout << "\n"; std::cout << "\n";
+    }
+
+    ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
     {
-        auto point = OmokPanPoints[yPos][xPos];
+        auto &point = OmokPanPoints[yPos][xPos];
         if (point.Type != OmokPanPoint::PointType::None)
         {
-            return NServerNetLib::ERROR_CODE::GAME_PUT_ALREADY_EXIST;
+            return ERROR_CODE::GAME_PUT_ALREADY_EXIST;
         }
 
         OmokPanPoint::PointType pointType = OmokPanPoint::PointType::None;
         pointType = IsBlackTurn == true ? OmokPanPoint::PointType::Black : OmokPanPoint::PointType::White;
-        OmokLogic logic;
       
         point.Type = pointType;
         IsBlackTurn = !IsBlackTurn;
         
-        return NServerNetLib::ERROR_CODE::NONE;
+        return ERROR_CODE::NONE;
     }
 
-    NServerNetLib::ERROR_CODE Omok::CheckGameEnd(int xPos, int yPos)
+    ERROR_CODE Omok::CheckGameEnd(int xPos, int yPos)
     {
         auto pointType = IsBlackTurn == true ? OmokPanPoint::PointType::White : OmokPanPoint::PointType::Black;
-        OmokLogic logic;
-        if (logic.ConfirmOmok(OmokPanPoints, xPos, yPos, pointType) == true)
+
+        if (ConfirmOmok(OmokPanPoints, xPos, yPos, pointType) == false)
         {
-            if (pointType == OmokPanPoint::PointType::Black)
-            {
-                return NServerNetLib::ERROR_CODE::GAME_RESULT_BLACK_WIN;
-            }
-            else 
-            {
-                return NServerNetLib::ERROR_CODE::GAME_RESULT_WHITE_WIN;
-            }
-         
+            return ERROR_CODE::NONE;
         }
 
-        return NServerNetLib::ERROR_CODE::NONE;
+        
+        if (pointType == OmokPanPoint::PointType::Black)
+        {
+            return ERROR_CODE::GAME_RESULT_BLACK_WIN;
+        }
+        else 
+        {
+            return ERROR_CODE::GAME_RESULT_WHITE_WIN;
+        }
+         
     }
 
 

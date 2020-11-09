@@ -1,8 +1,4 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <cstring>
-#include <vector>
-#include <deque>
-#include <iostream>
 #include "TcpNetwork.h"
 #include "PacketDef.h"
 

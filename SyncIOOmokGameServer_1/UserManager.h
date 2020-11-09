@@ -5,10 +5,8 @@
 #include <vector>
 #include "ErrorCode.h"
 
-
 namespace ChatServerLib
 {
-
 	class User;
 
 	class UserManager
@@ -19,10 +17,10 @@ namespace ChatServerLib
 
 		void Init(const int maxUserCount);
 
-		NServerNetLib::ERROR_CODE AddUser(const int sessionIndex, const char* pszID);
-		NServerNetLib::ERROR_CODE RemoveUser(const int sessionIndex);
+		ERROR_CODE AddUser(const int sessionIndex, const char* pszID);
+		ERROR_CODE RemoveUser(const int sessionIndex);
 
-		std::pair<NServerNetLib::ERROR_CODE, User*> GetUser(const int sessionIndex);
+		std::pair<ERROR_CODE, User*> GetUser(const int sessionIndex);
 
 
 	private:

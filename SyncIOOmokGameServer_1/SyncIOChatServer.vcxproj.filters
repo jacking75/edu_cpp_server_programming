@@ -13,14 +13,12 @@
     <ClCompile Include="PacketProcessLogin.cpp" />
     <ClCompile Include="PacketProcessMatch.cpp" />
     <ClCompile Include="Omok.cpp" />
-    <ClCompile Include="OmokLogic.cpp" />
     <ClCompile Include="PacketProcessGamePut.cpp" />
     <ClCompile Include="PacketProcessGameReady.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TcpNetwork.h" />
     <ClInclude Include="TcpSession.h" />
-    <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="ChatServer.h" />
     <ClInclude Include="PacketProcess.h" />
     <ClInclude Include="Define.h" />
@@ -31,7 +29,9 @@
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
     <ClInclude Include="Omok.h" />
-    <ClInclude Include="OmokLogic.h" />
     <ClInclude Include="OmokPanPoint.h" />
+    <ClInclude Include="NetErrorCode.h" />
+    <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="OmokLogic.h" />
   </ItemGroup>
 </Project>

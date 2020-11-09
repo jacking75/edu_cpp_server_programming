@@ -1,12 +1,5 @@
-﻿#include <thread>
-#include <chrono>
+﻿#include "ChatServer.h"
 
-#include "ErrorCode.h"
-#include "Define.h"
-#include "ChatServer.h"
-
-#include <iostream>
-#include "RoomManager.h"
 namespace ChatServerLib
 {
 	ChatServer::ChatServer()
@@ -22,7 +15,7 @@ namespace ChatServerLib
 		}
 	}
 
-	NServerNetLib::ERROR_CODE ChatServer::Init(const NServerNetLib::ServerConfig Config)
+	ERROR_CODE ChatServer::Init(const NServerNetLib::ServerConfig Config)
 	{
 
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();
@@ -30,7 +23,7 @@ namespace ChatServerLib
 
 		if (result != NServerNetLib::NET_ERROR_CODE::NONE)
 		{
-			return NServerNetLib::ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
+			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 
 		m_pUserMgr = std::make_unique<UserManager>();
@@ -44,7 +37,7 @@ namespace ChatServerLib
 
 		m_IsRun = true;
 
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 	
 	void ChatServer::Stop()

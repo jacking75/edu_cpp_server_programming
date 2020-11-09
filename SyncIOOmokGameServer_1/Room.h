@@ -1,7 +1,4 @@
 #pragma once
-
-#include <vector>
-#include <string>
 #include <memory>
 #include "User.h"
 #include "Omok.h"
@@ -14,8 +11,8 @@ namespace ChatServerLib
 	{
 	public:
 		enum class ROOM_STATE {
-			NONE = 0,
-			GAME = 1
+			None = 0,
+			Game = 1
 		};
 
 		Room();
@@ -33,11 +30,13 @@ namespace ChatServerLib
 
 		short MaxUserCount() { return m_MaxUserCount; }
 
-		NServerNetLib::ERROR_CODE EnterUser(User* pUser);
+		ERROR_CODE EnterUser(User* pUser);
 
-		NServerNetLib::ERROR_CODE LeaveUser(const short userIndex);
+		ERROR_CODE LeaveUser(const short userIndex);
 
 		void SendToAllUser(const short packetId, const short dataSize, char* pData, const int passUserindex = -1);
+
+		void SendChatToAllUser(const short packetId, const short dataSize, char* pData, const int passUserindex);
 
 		void NotifyEnterUserInfo(const int userIndex, const char* pszUserID);
 
@@ -47,7 +46,7 @@ namespace ChatServerLib
 		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID);
 		void NotifyGameResult(const int userIndex, const char* pszUserID);
 		void NotifyGameStart(const int userIndex, const char* pszUserID);
-		bool IsCurDomainInGame() { return m_CurDomainState == ROOM_STATE::GAME ? true : false; };
+		bool IsCurDomainInGame() { return m_CurDomainState == ROOM_STATE::Game ? true : false; };
 
 
 		Omok* OmokGame  = new Omok();
@@ -59,7 +58,7 @@ namespace ChatServerLib
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
 
-		ROOM_STATE m_CurDomainState = ROOM_STATE::NONE;
+		ROOM_STATE m_CurDomainState = ROOM_STATE::None;
 
 		short m_Index = -1;
 		short m_MaxUserCount = -1;

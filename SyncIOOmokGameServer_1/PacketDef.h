@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PacketID.h"
-#include "ErrorCode.h"
 #include <string>
 
 namespace NCommon
@@ -16,8 +15,8 @@ namespace NCommon
 
 	struct PktBase
 	{
-		short ErrorCode = (short)NServerNetLib::ERROR_CODE::NONE;
-		void SetError(NServerNetLib::ERROR_CODE error) { ErrorCode = (short)error; }
+		short ErrorCode = (short)ChatServerLib::ERROR_CODE::NONE;
+		void SetError(ChatServerLib::ERROR_CODE error) { ErrorCode = (short)error; }
 	};
 
 	//- 로그인 요청
@@ -85,6 +84,7 @@ namespace NCommon
 	//- 룸에 있는 유저에게 새로 들어온 유저 정보 통보
 	struct PktRoomEnterUserInfoNtf
 	{
+		INT32 UserUniqueId;
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
@@ -100,7 +100,7 @@ namespace NCommon
 	//- 룸에서 나가는 유저 통보(로비에 있는 유저에게)
 	struct PktRoomLeaveUserInfoNtf
 	{
-		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+		INT32 UserUniqueId;
 	};
 
 

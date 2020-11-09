@@ -1,18 +1,10 @@
-#include <tuple>
-
-#include <cstring>
-#include <iostream>
 #include "PacketProcess.h"
 #include "PacketDef.h"
-#include "User.h"
-#include "UserManager.h"
-#include "ErrorCode.h"
-#include "Room.h"
 
 namespace ChatServerLib
 {
 	
-	NServerNetLib::ERROR_CODE PacketProcess::RoomEnter(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::RoomEnter(PacketInfo packetInfo)
 	{
 		auto reqPkt = (NCommon::PktRoomEnterReq*)packetInfo.pRefData;
 		NCommon::PktRoomEnterRes resPkt;
@@ -23,7 +15,7 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 		
-		if (errorCode != NServerNetLib::ERROR_CODE::NONE) 
+		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
@@ -34,13 +26,13 @@ namespace ChatServerLib
 		pRoom = m_pRefRoomMgr->FindRoom(reqPkt->RoomIndex);
 		if (pRoom == nullptr) 
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
+			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
+			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
 		auto enterRet = pRoom->EnterUser(pUser);
-		if (enterRet != NServerNetLib::ERROR_CODE::NONE) 
+		if (enterRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(enterRet);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
@@ -52,10 +44,11 @@ namespace ChatServerLib
 		pRoom->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 
-	NServerNetLib::ERROR_CODE PacketProcess::RoomLeave(PacketInfo packetInfo)
+	//TODO : 게임중에 나갔을때 처리
+	ERROR_CODE PacketProcess::RoomLeave(PacketInfo packetInfo)
 	{
 		NCommon::PktRoomLeaveRes resPkt;
 
@@ -64,7 +57,7 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 
-		if (errorCode != NServerNetLib::ERROR_CODE::NONE) 
+		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
@@ -73,24 +66,24 @@ namespace ChatServerLib
 
 		auto userIndex = pUser->GetIndex();
 
-		if (pUser->IsCurDomainInRoom() == false)
+		if (pUser->IsCurDomainInLogIn() == true)
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
+			resPkt.SetError(ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
+			return ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
 	
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 
 		if (pRoom == nullptr) 
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
+			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
+			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
 		auto leaveRet = pRoom->LeaveUser(userIndex);
-		if (leaveRet != NServerNetLib::ERROR_CODE::NONE) 
+		if (leaveRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(leaveRet);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
@@ -98,15 +91,14 @@ namespace ChatServerLib
 		}
 
 		pUser->LeaveRoom();
-
 		pRoom->NotifyLeaveUserInfo(packetInfo.SessionIndex,pUser->GetID().c_str());
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 
 
-	NServerNetLib::ERROR_CODE PacketProcess::RoomChat(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::RoomChat(PacketInfo packetInfo)
 	{
 		auto reqPkt = (NCommon::PktRoomChatReq*)packetInfo.pRefData;
 		NCommon::PktRoomChatRes resPkt;
@@ -115,7 +107,7 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 
-		if (errorCode != NServerNetLib::ERROR_CODE::NONE) 
+		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
@@ -124,23 +116,24 @@ namespace ChatServerLib
 
 		if (pUser->IsCurDomainInRoom() == false) 
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
+			resPkt.SetError(ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN;
+			return ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN;
 		}
 
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 		if (pRoom == nullptr) 
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
+			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
+			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
 	    pRoom->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);
-
+		//pRoom->NotifyChat(-1, pUser->GetID().c_str(), reqPkt->Msg);
+		
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
-		return NServerNetLib::ERROR_CODE::NONE;
+		return ERROR_CODE::NONE;
 	}
 
 }

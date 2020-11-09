@@ -1,13 +1,9 @@
-#include <tuple>
-#include <iostream>
-#include "User.h"
-#include "UserManager.h"
 #include "PacketProcess.h"
 #include "PacketDef.h"
 
 namespace ChatServerLib
 {
-	NServerNetLib::ERROR_CODE PacketProcess::GamePut(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::GamePut(PacketInfo packetInfo)
 	{
 		auto reqPkt = (NCommon::PktPutStoneReq*)packetInfo.pRefData;
 		NCommon::PktPutStoneRes resPkt;
@@ -18,7 +14,7 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 		
-		if (errorCode != NServerNetLib::ERROR_CODE::NONE) 
+		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
@@ -29,14 +25,14 @@ namespace ChatServerLib
 
 		if (packetInfo.SessionIndex != room->m_TurnIndex)
 		{
-			resPkt.SetError(NServerNetLib::ERROR_CODE::NOT_YOUR_TURN);
+			resPkt.SetError(ERROR_CODE::NOT_YOUR_TURN);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::NOT_YOUR_TURN;
+			return ERROR_CODE::NOT_YOUR_TURN;
 		}
 
 		auto result = room->OmokGame->GamePutStone(reqPkt->x, reqPkt->y);
-
-		if (result != NServerNetLib::ERROR_CODE::NONE)
+		room->OmokGame->printTest();
+		if (result != ERROR_CODE::NONE)
 		{
 			resPkt.SetError(result);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
@@ -45,21 +41,21 @@ namespace ChatServerLib
 		auto nextTurnIndex = room->m_UserList[0]->GetSessioIndex() == packetInfo.SessionIndex ? room->m_UserList[1]->GetSessioIndex() : room->m_UserList[0]->GetSessioIndex();
 		room->m_TurnIndex = nextTurnIndex;
 		auto nextTurnUser = m_pRefUserMgr->GetUser(nextTurnIndex).second->GetID().c_str();
-		room->NotifyPutStoneInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
+		room->NotifyPutStoneInfo(packetInfo.SessionIndex, nextTurnUser);
 
 		auto endResult = room->OmokGame->CheckGameEnd(reqPkt->x, reqPkt->y);
 
-		if (endResult == NServerNetLib::ERROR_CODE::NONE) //게임이 끝나지 않았다면 종료
+		if (endResult == ERROR_CODE::NONE) //게임이 끝나지 않았다면 종료
 		{			
 			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUser, NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
-			return NServerNetLib::ERROR_CODE::NONE;
+			return ERROR_CODE::NONE;
 		}
 
 		auto blackUserID = m_pRefUserMgr->GetUser(room->m_BlackStoneUserIndex).second->GetID().c_str();
 		auto whiteUserID = room->m_UserList[0]->GetID().c_str() == blackUserID ? room->m_UserList[1]->GetID().c_str() : room->m_UserList[0]->GetID().c_str();
 
-		if (endResult == NServerNetLib::ERROR_CODE::GAME_RESULT_BLACK_WIN)
+		if (endResult == ERROR_CODE::GAME_RESULT_BLACK_WIN)
 		{
 			strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), blackUserID, NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);

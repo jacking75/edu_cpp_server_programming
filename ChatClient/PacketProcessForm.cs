@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace csharp_test_client
 {
@@ -28,19 +29,26 @@ namespace csharp_test_client
         }
 
         void PacketProcess(PacketData packet)
-        {
+        {   
             var packetType = (PACKET_ID)packet.PacketID;
-            //DevLog.Write("Packet Error:  PacketID:{packet.PacketID.ToString()},  Error: {(ERROR_CODE)packet.Result}");
-            //DevLog.Write("RawPacket: " + packet.PacketID.ToString() + ", " + PacketDump.Bytes(packet.BodyData));
 
             if (PacketFuncDic.ContainsKey(packetType))
             {
-                PacketFuncDic[packetType](packet.BodyData);
+                try
+                {
+                    PacketFuncDic[packetType](packet.BodyData);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("ddd. error:{0}", ex.Message));
+                }
             }
             else
             {
                 DevLog.Write("Unknown Packet Id: " + packet.PacketID.ToString());
-            }         
+            }
+            
+           
         }
 
         void PacketProcess_GameStartResultResponse(byte[] bodyData)

@@ -1,13 +1,9 @@
 #pragma once
 
-#include <deque>
-#include "ErrorCode.h"
 #include "Room.h"
 
 namespace ChatServerLib
 {
-	class User;
-
 	class RoomManager
 	{
 	public:
