@@ -12,14 +12,15 @@ int main()
 	m_pServerConfig.MaxClientCount = 1000;
 	m_pServerConfig.ExtraClientCount = 64;
 
+	m_pServerConfig.BackLogCount = 128;
+
 	m_pServerConfig.MaxClientRecvBufferSize = 8192;
 	m_pServerConfig.MaxClientSendBufferSize = 8192;
 	m_pServerConfig.MaxRoomUserCount = 4;
 	m_pServerConfig.MaxRoomCountByLobby = 5;
 	
 	std::thread logicThread([&]() 
-		{	
-
+	{
 		if (chatServer.Init(m_pServerConfig) != ChatServerLib::ERROR_CODE::NONE)
 		{
 			std::cout << "Init Fail";
@@ -27,13 +28,10 @@ int main()
 		}
 
 		chatServer.Run();
-
-		}
-	);
+	});
 
 	std::cout << "press any key to exit..."<<std::endl;
 
-	getchar();
 
 	chatServer.Stop();
 	logicThread.join();

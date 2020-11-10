@@ -41,7 +41,6 @@ namespace ChatServerLib
             }
             std::cout << "\n"; 
         }
-
         std::cout << "\n"; std::cout << "\n";
     }
 

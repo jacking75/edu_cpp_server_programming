@@ -84,7 +84,7 @@ namespace NCommon
 	//- 룸에 있는 유저에게 새로 들어온 유저 정보 통보
 	struct PktRoomEnterUserInfoNtf
 	{
-		INT32 UserUniqueId;
+		INT64 UserUniqueId;
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
@@ -100,7 +100,7 @@ namespace NCommon
 	//- 룸에서 나가는 유저 통보(로비에 있는 유저에게)
 	struct PktRoomLeaveUserInfoNtf
 	{
-		INT32 UserUniqueId;
+		INT64 UserUniqueId;
 	};
 
 
@@ -121,19 +121,6 @@ namespace NCommon
 		char Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
 	};
 
-	const int DEV_ECHO_DATA_MAX_SIZE = 1024;
-
-	struct PktDevEchoReq
-	{
-		short DataSize;
-		char Datas[DEV_ECHO_DATA_MAX_SIZE];
-	};
-
-	struct PktDevEchoRes : PktBase
-	{
-		short DataSize;
-		char Datas[DEV_ECHO_DATA_MAX_SIZE];
-	};
 
 #pragma pack(pop)
 

@@ -114,7 +114,7 @@ namespace ChatServerLib
 			return errorCode;
 		}
 
-		if (pUser->IsCurDomainInRoom() == false) 
+		if (pUser->IsCurDomainInLogIn() == true) 
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);

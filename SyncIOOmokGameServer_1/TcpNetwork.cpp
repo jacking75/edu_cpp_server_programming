@@ -1,7 +1,7 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TcpNetwork.h"
 #include "PacketDef.h"
-
+#include <iostream>
 
 namespace NServerNetLib
 {
@@ -31,8 +31,9 @@ namespace NServerNetLib
         m_Config = pConfig;
 
         auto initRet = InitServerSocket();
+
         if (initRet != NET_ERROR_CODE::NONE)
-        {
+        {          
             return initRet;
         }
 

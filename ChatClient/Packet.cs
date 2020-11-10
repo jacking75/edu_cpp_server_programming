@@ -40,7 +40,6 @@ namespace csharp_test_client
         }
     }
     
-
     public class LoginReqPacket
     {
         byte[] UserID = new byte[PacketDef.MAX_USER_ID_BYTE_LENGTH];
@@ -131,11 +130,8 @@ namespace csharp_test_client
                 var uniqeudId = BitConverter.ToInt64(bodyData, readPos);
                 readPos += 8;
 
-                var idlen = (SByte)bodyData[readPos];
-                ++readPos;
-
-                var id = Encoding.UTF8.GetString(bodyData, readPos, idlen);
-                readPos += idlen;
+                var id = Encoding.UTF8.GetString(bodyData, readPos, PacketDef.MAX_USER_ID_BYTE_LENGTH + 1);
+                readPos += PacketDef.MAX_USER_ID_BYTE_LENGTH + 1;
 
                 UserUniqueIdList.Add(uniqeudId);
                 UserIDList.Add(id);
@@ -152,26 +148,17 @@ namespace csharp_test_client
         public string UserID;
 
         public bool FromBytes(byte[] bodyData)
-        {
-       
+        {      
             var readPos = 0;
 
             UserUniqueId = BitConverter.ToInt64(bodyData, readPos);
             readPos += 8;
 
-
             var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH + 1;
             byte[] userIdTemp = new byte[userLen];
             Buffer.BlockCopy(bodyData, readPos, userIdTemp, 0, userLen);
-            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
+            UserID = Encoding.UTF8.GetString(userIdTemp);
 
-            /*
-            var idlen = (SByte)bodyData[readPos];
-            ++readPos;
-
-            UserID = Encoding.UTF8.GetString(bodyData, readPos, idlen);
-            readPos += idlen;
-            */
             return true;
         }
     }

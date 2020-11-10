@@ -29,7 +29,6 @@ namespace ChatServerLib
 		m_UserList.clear();
 		m_TurnIndex = -1;
 		m_BlackStoneUserIndex = -1;
-		OmokGame->initType();
 	}
 
 	ERROR_CODE Room::EnterUser(User* pUser)

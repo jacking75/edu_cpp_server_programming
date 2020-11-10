@@ -23,6 +23,13 @@ namespace ChatServerLib
 				{
 					m_pRefUserMgr->GetUser(iter->GetSessioIndex()).second->SetGame();
 					pUser->SetGame();
+
+					//TODO :  검은돌 랜덤 선정
+					pRoom->m_BlackStoneUserIndex = packetInfo.SessionIndex;
+					pRoom->m_TurnIndex = packetInfo.SessionIndex;
+					pRoom->OmokGame->init();
+					pRoom->OmokGame->initType();
+
 					strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1),m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
 					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
 					pRoom->NotifyGameStart(packetInfo.SessionIndex, m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str());

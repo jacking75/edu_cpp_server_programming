@@ -29,26 +29,18 @@ namespace csharp_test_client
         }
 
         void PacketProcess(PacketData packet)
-        {   
+        {
             var packetType = (PACKET_ID)packet.PacketID;
 
             if (PacketFuncDic.ContainsKey(packetType))
             {
-                try
-                {
-                    PacketFuncDic[packetType](packet.BodyData);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(string.Format("ddd. error:{0}", ex.Message));
-                }
+                PacketFuncDic[packetType](packet.BodyData);
             }
             else
             {
                 DevLog.Write("Unknown Packet Id: " + packet.PacketID.ToString());
             }
-            
-           
+
         }
 
         void PacketProcess_GameStartResultResponse(byte[] bodyData)
