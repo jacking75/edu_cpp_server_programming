@@ -8,6 +8,7 @@ namespace ChatServerLib
 	{
 		NCommon::PktMatchRes resPkt;
 		NCommon::PktRoomEnterRes roomResPkt;
+
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -23,6 +24,7 @@ namespace ChatServerLib
 		auto userIndex = pUser->GetIndex();
 
 		auto pRoom = m_pRefRoomMgr->FindProperRoom();
+
 		if (pRoom == nullptr) 
 		{
 			roomResPkt.SetError(ERROR_CODE::MATCHING_FAIL);
@@ -35,7 +37,6 @@ namespace ChatServerLib
 		pRoom->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
  		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
-		//pRoom->SendToAllUser((short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
 		
 		return ERROR_CODE::NONE;
 

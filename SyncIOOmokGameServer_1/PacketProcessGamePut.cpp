@@ -32,14 +32,17 @@ namespace ChatServerLib
 
 		auto result = room->OmokGame->GamePutStone(reqPkt->x, reqPkt->y);
 		room->OmokGame->printTest();
+
 		if (result != ERROR_CODE::NONE)
 		{
 			resPkt.SetError(result);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
+
 		auto nextTurnIndex = room->m_UserList[0]->GetSessioIndex() == packetInfo.SessionIndex ? room->m_UserList[1]->GetSessioIndex() : room->m_UserList[0]->GetSessioIndex();
 		room->m_TurnIndex = nextTurnIndex;
+
 		auto nextTurnUser = m_pRefUserMgr->GetUser(nextTurnIndex).second->GetID().c_str();
 		room->NotifyPutStoneInfo(packetInfo.SessionIndex, nextTurnUser);
 

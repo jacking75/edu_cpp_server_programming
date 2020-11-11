@@ -15,6 +15,7 @@ namespace ChatServerLib
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 
 		auto userIndex = pUser->GetIndex();
+
 		for (auto iter : pRoom->m_UserList)
 		{
 			if (iter->GetIndex() != userIndex)

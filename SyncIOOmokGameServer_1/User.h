@@ -68,16 +68,20 @@ namespace ChatServerLib
 			m_CurDomainState = DOMAIN_STATE::Game;
 		}
 
-		bool IsCurDomainInLogIn() {
+		bool IsCurDomainInLogIn() 
+		{
 			return m_CurDomainState == DOMAIN_STATE::Login ? true : false;
 		}
-		bool IsCurDomainInRoom() {
+		bool IsCurDomainInRoom() 
+		{
 			return m_CurDomainState == DOMAIN_STATE::Room ? true : false;
 		}
-		bool IsCurDomainInReady() {
+		bool IsCurDomainInReady() 
+		{
 			return m_CurDomainState == DOMAIN_STATE::Ready ? true : false;
 		}
-		bool IsCurDomainInGame() {
+		bool IsCurDomainInGame() 
+		{
 			return m_CurDomainState == DOMAIN_STATE::Game ? true : false;
 		}
 

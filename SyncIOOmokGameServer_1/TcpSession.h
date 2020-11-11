@@ -24,9 +24,6 @@ namespace NServerNetLib
 		int     PrevReadPosInRecvBuffer = 0;
 
 		int mIndex = 0;
-
-	private:
-		
 	
 	};
 }

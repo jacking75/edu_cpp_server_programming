@@ -1,7 +1,6 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TcpNetwork.h"
 #include "PacketDef.h"
-#include <iostream>
 
 namespace NServerNetLib
 {
@@ -392,6 +391,7 @@ namespace NServerNetLib
             return NET_ERROR_CODE::SERVER_SOCKET_LISTEN_FAIL;
         }
 
+        return NET_ERROR_CODE::NONE;
     }
 
     NetError TcpNetwork::SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg)

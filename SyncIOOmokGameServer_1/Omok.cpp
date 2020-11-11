@@ -37,7 +37,7 @@ namespace ChatServerLib
         {
             for (int j = 0; j < OmokPanPointNumber; ++j)
             {
-                std::cout << (int)OmokPanPoints[i][j].Type << " ";
+                std::cout << (int)OmokPanPoints[j][i].Type << " ";
             }
             std::cout << "\n"; 
         }

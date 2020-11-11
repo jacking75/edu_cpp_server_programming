@@ -1,5 +1,5 @@
 ﻿#include "ChatServer.h"
-
+#include <iostream>
 namespace ChatServerLib
 {
 	ChatServer::ChatServer()

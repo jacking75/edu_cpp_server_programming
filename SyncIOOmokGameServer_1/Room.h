@@ -54,6 +54,7 @@ namespace ChatServerLib
 
 		int m_BlackStoneUserIndex = -1;
 		int m_TurnIndex = -1;
+
 	private:
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
