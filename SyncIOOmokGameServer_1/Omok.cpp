@@ -19,7 +19,7 @@ namespace ChatServerLib
 	}
 
     void Omok::initType()
-    {
+    {//////
         for (int i = 0; i < OmokPanPointNumber; ++i)
         {
             for (int j = 0; j < OmokPanPointNumber; ++j)
@@ -27,7 +27,7 @@ namespace ChatServerLib
                 OmokPanPoints[i][j].Type = OmokPanPoint::PointType::None;
             }
         }
-
+        
         IsBlackTurn = true;
     }
 
@@ -45,17 +45,23 @@ namespace ChatServerLib
     }
 
     ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
-    {
+    {   
+        auto posResult = CheckPos(xPos, yPos);
+
+        if (posResult != ERROR_CODE::NONE)
+        {
+            return posResult;
+        }
+
         auto &point = OmokPanPoints[yPos][xPos];
+
         if (point.Type != OmokPanPoint::PointType::None)
         {
             return ERROR_CODE::GAME_PUT_ALREADY_EXIST;
         }
+    
+        point.Type = IsBlackTurn == true ? OmokPanPoint::PointType::Black : OmokPanPoint::PointType::White;
 
-        OmokPanPoint::PointType pointType = OmokPanPoint::PointType::None;
-        pointType = IsBlackTurn == true ? OmokPanPoint::PointType::Black : OmokPanPoint::PointType::White;
-      
-        point.Type = pointType;
         IsBlackTurn = !IsBlackTurn;
         
         return ERROR_CODE::NONE;
@@ -69,7 +75,6 @@ namespace ChatServerLib
         {
             return ERROR_CODE::NONE;
         }
-
         
         if (pointType == OmokPanPoint::PointType::Black)
         {
@@ -82,6 +87,15 @@ namespace ChatServerLib
          
     }
 
+    ERROR_CODE Omok::CheckPos(int xPos, int yPos)
+    {
+        if (xPos < 0 || yPos < 0 || xPos >= OmokPanPointNumber || yPos >= OmokPanPointNumber)
+        {
+            return ERROR_CODE::GAME_PUT_POS_ERROR;
+        }
+
+        return ERROR_CODE::NONE;
+    }
 
 
 }

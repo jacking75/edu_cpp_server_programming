@@ -111,9 +111,15 @@ namespace csharp_test_client
         GAME_NOT_YOUR_TURN = 300,
         GAME_PUT_ALREADY_EXIST = 301,
         GAME_PUT_SAM_SAM = 302,
-        GAME_RESULT_BLACK_WIN = 303,
-        GAME_RESULT_WHITE_WIN = 304,
-        NOT_READY_EXIST = 305,
-        NOT_YOUR_TURN = 306
+        GAME_PUT_POS_ERROR = 303,
+
+        GAME_RESULT_BLACK_WIN = 304,
+        GAME_RESULT_WHITE_WIN = 305,
+
+        NOT_READY_EXIST = 306,
+        NOT_YOUR_TURN = 307,
+
+        ALREADY_GAME_STATE = 308,
+        ALREADY_READY_STATE = 309
     }
 }

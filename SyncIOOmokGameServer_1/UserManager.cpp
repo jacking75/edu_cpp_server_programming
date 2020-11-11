@@ -15,6 +15,7 @@ namespace ChatServerLib
 			m_UserObjPoolIndex.push_back(i);
 		}
 	}
+
 	User* UserManager::AllocUserObjPoolIndex()
 	{
 		if (m_UserObjPoolIndex.empty())
@@ -72,12 +73,12 @@ namespace ChatServerLib
 
 		return ERROR_CODE::NONE;
 	}
-
+	//
 	std::pair<ERROR_CODE, User*> UserManager::GetUser(const int sessionIndex)
 	{
 		auto pUser = FindUser(sessionIndex);
 
-		if (pUser == nullptr) 
+		if (pUser == nullptr)
 		{
 			return { ERROR_CODE::USER_MGR_INVALID_SESSION_INDEX, nullptr };
 		}
@@ -96,7 +97,7 @@ namespace ChatServerLib
 
 		return (User*)findIter->second;
 	}
-
+	//
 	User* UserManager::FindUser(const char* pszID)
 	{
 		auto findIter = m_UserIDDic.find(pszID);
@@ -107,5 +108,25 @@ namespace ChatServerLib
 		}
 
 		return (User*)findIter->second;
+	}
+
+	ERROR_CODE UserManager::CheckReady(User* pUser)
+	{
+		if (pUser->IsCurDomainInGame() == true)
+		{
+			return ERROR_CODE::ALREADY_GAME_STATE;
+		}
+
+		if (pUser->IsCurDomainInLogIn() == true)
+		{
+			return ERROR_CODE::ROOM_ENTER_NOT_CREATED;
+		}
+
+		if (pUser->IsCurDomainInReady() == true)
+		{
+			return ERROR_CODE::ALREADY_READY_STATE;
+		}
+
+		return ERROR_CODE::NONE;
 	}
 }

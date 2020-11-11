@@ -10,7 +10,7 @@ namespace ChatServerLib
 		NCommon::PktRoomEnterRes resPkt;
 
 		auto temp = reqPkt->RoomIndex;
-
+		//합치기
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -22,9 +22,8 @@ namespace ChatServerLib
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
-		Room* pRoom = nullptr;
-
-		pRoom = m_pRefRoomMgr->FindRoom(reqPkt->RoomIndex);
+		
+		auto pRoom = m_pRefRoomMgr->FindRoom(reqPkt->RoomIndex);
 
 		if (pRoom == nullptr) 
 		{
@@ -51,7 +50,6 @@ namespace ChatServerLib
 		return ERROR_CODE::NONE;
 	}
 
-	//TODO : 게임중에 나갔을때 처리
 	ERROR_CODE PacketProcess::RoomLeave(PacketInfo packetInfo)
 	{
 		NCommon::PktRoomLeaveRes resPkt;
@@ -86,7 +84,7 @@ namespace ChatServerLib
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
-		auto leaveRet = pRoom->LeaveUser(userIndex);
+		auto leaveRet = pRoom->LeaveUser(userIndex, packetInfo.SessionIndex, pUser->GetID().c_str());
 		if (leaveRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(leaveRet);
@@ -95,7 +93,6 @@ namespace ChatServerLib
 		}
 
 		pUser->LeaveRoom();
-		pRoom->NotifyLeaveUserInfo(packetInfo.SessionIndex,pUser->GetID().c_str());
 
 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 

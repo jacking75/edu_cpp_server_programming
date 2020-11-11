@@ -31,6 +31,7 @@ int main()
 	});
 
 	std::cout << "press any key to exit..."<<std::endl;
+
 	getchar();
 
 	chatServer.Stop();

@@ -21,17 +21,17 @@ namespace ChatServerLib
 			return errorCode;
 		}
 
-		auto room = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
+		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 
-		if (packetInfo.SessionIndex != room->m_TurnIndex)
+		if (packetInfo.SessionIndex != pRoom->m_OmokGame->m_TurnIndex)
 		{
 			resPkt.SetError(ERROR_CODE::NOT_YOUR_TURN);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NOT_YOUR_TURN;
 		}
 
-		auto result = room->OmokGame->GamePutStone(reqPkt->x, reqPkt->y);
-		room->OmokGame->printTest();
+		auto result = pRoom->m_OmokGame->GamePutStone(reqPkt->x, reqPkt->y);
+		pRoom->m_OmokGame->printTest();
 
 		if (result != ERROR_CODE::NONE)
 		{
@@ -40,37 +40,38 @@ namespace ChatServerLib
 			return errorCode;
 		}
 
-		auto nextTurnIndex = room->m_UserList[0]->GetSessioIndex() == packetInfo.SessionIndex ? room->m_UserList[1]->GetSessioIndex() : room->m_UserList[0]->GetSessioIndex();
-		room->m_TurnIndex = nextTurnIndex;
+		auto pNextTurnUser = m_pRefUserMgr->GetUser(std::abs(pUser->GetSessioIndex() - 1)).second;
 
-		auto nextTurnUser = m_pRefUserMgr->GetUser(nextTurnIndex).second->GetID().c_str();
-		room->NotifyPutStoneInfo(packetInfo.SessionIndex, nextTurnUser);
+		pRoom->m_OmokGame->m_TurnIndex = pNextTurnUser->GetSessioIndex();
 
-		auto endResult = room->OmokGame->CheckGameEnd(reqPkt->x, reqPkt->y);
+		auto nextTurnUserID = pNextTurnUser->GetID().c_str();
+		pRoom->NotifyPutStoneInfo(packetInfo.SessionIndex, nextTurnUserID);
+
+		auto endResult = pRoom->m_OmokGame->CheckGameEnd(reqPkt->x, reqPkt->y);
 
 		if (endResult == ERROR_CODE::NONE) //게임이 끝나지 않았다면 종료
 		{			
-			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUser, NCommon::MAX_USER_ID_SIZE);
+			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUserID, NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NONE;
 		}
 
-		auto blackUserID = m_pRefUserMgr->GetUser(room->m_BlackStoneUserIndex).second->GetID().c_str();
-		auto whiteUserID = room->m_UserList[0]->GetID().c_str() == blackUserID ? room->m_UserList[1]->GetID().c_str() : room->m_UserList[0]->GetID().c_str();
+		auto blackUserID = m_pRefUserMgr->GetUser(pRoom->m_OmokGame->m_BlackStoneUserIndex).second->GetID().c_str();
+		auto whiteUserID = pRoom->m_UserList[0]->GetID().c_str() == blackUserID ? pRoom->m_UserList[1]->GetID().c_str() : pRoom->m_UserList[0]->GetID().c_str();
 
 		if (endResult == ERROR_CODE::GAME_RESULT_BLACK_WIN)
 		{
 			strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), blackUserID, NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
-			room->NotifyGameResult(packetInfo.SessionIndex, blackUserID);
-			room->Clear();
+			pRoom->NotifyGameResult(packetInfo.SessionIndex, blackUserID);
+			pRoom->Clear();
 		}
 		else
 		{
 			strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), whiteUserID, NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
-			room->NotifyGameResult(packetInfo.SessionIndex, whiteUserID);
-			room->Clear();
+			pRoom->NotifyGameResult(packetInfo.SessionIndex, whiteUserID);
+			pRoom->Clear();
 		}
 	}
 }

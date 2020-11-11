@@ -13,9 +13,5 @@ namespace ChatServerLib
         };
         PointType Type;
 
-        void OmokPanPointInit()
-        {
-            Type = PointType::None;
-        }
     };
 }

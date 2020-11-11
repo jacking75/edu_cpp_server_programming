@@ -13,6 +13,7 @@
 #include "Define.h"
 #include "TcpSession.h"
 
+
 namespace NServerNetLib
 {
 	enum class SOCKET_CLOSE_CASE : short
@@ -27,39 +28,52 @@ namespace NServerNetLib
 
 	class TcpNetwork
 	{
+
 	public:
+
 		TcpNetwork();
 		 ~TcpNetwork();
 
 		NET_ERROR_CODE Init(const ServerConfig pConfig);
+
 		NetError SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg);
 
 		void Run();
-		void Stop();
+
+		void Release();
 
 		const int backLogLoop = 50;
-		RecvPacketInfo GetReceivePacket();
 
-		
+		RecvPacketInfo GetReceivePacket();
+	
 	protected:
+
 		void RunCheckSelectClients(fd_set& read_set);
-		bool RunCheckSelectResult(const int result);
+
 		int CreateSessionPool(const int maxClientCount);
 
 		NET_ERROR_CODE InitServerSocket();
+
 		NET_ERROR_CODE BindListen(short port, int backlogCount);
+
 		NET_ERROR_CODE NewSession();
+
 		NET_ERROR_CODE SetNonBlockSocket(const SOCKET sock);
+
 		NET_ERROR_CODE RecvSocket(const int sessionIndex);
+
 		NET_ERROR_CODE RecvBufferProcess(const int sessionIndex);
-		NetError FlushSendBuff(const int sessionIndex);
-		NetError SendSocket(const SOCKET fd, const char* pMsg, const int size);
-		void RunProcessWrite(const int sessionIndex, const SOCKET fd, fd_set& write_set);
+
 		void ConnectedSession(const int sessionIndex, const SOCKET fd);
+
 		void CloseSession(const SOCKET_CLOSE_CASE closeCase, const SOCKET sockFD, const int sessionIndex);
+
 		int AllocClientSessionIndex();
+
 		void ReleaseSessionIndex(const int index);
+
 		void AddPacketQueue(const int sessionIndex, const short pktId, const short bodySize, char* pDataPos);
+
 		bool RunProcessReceive(const int sessionIndex, const SOCKET fd, fd_set& read_set);
 
 
@@ -68,11 +82,13 @@ namespace NServerNetLib
 		ServerConfig m_Config;
 
 		SOCKET m_ServerSockfd;
+
 		fd_set m_Readfds;
 
 		int64_t m_ConnectSeq = 0;
 
 		std::vector<TcpSession> m_ClientSessionPool;
+
 		std::deque<int> m_ClientSessionPoolIndex;
 
 		std::deque<RecvPacketInfo> m_PacketQueue;

@@ -6,7 +6,7 @@ namespace ChatServerLib
 	class User
 	{
 	public:
-		enum class DOMAIN_STATE {
+		enum class Domain_State {
 			None = 0,
 			Login = 1,
 			Lobby = 2,
@@ -28,13 +28,13 @@ namespace ChatServerLib
 		{
 			m_SessionIndex = 0;
 			m_ID = "";
-			m_CurDomainState = DOMAIN_STATE::None;
+			m_CurDomainState = Domain_State::None;
 			m_RoomIndex = -1;
 		}
 
 		void Set(const int sessionIndex, const char* pszID)
 		{
-			m_CurDomainState = DOMAIN_STATE::Login;
+			m_CurDomainState = Domain_State::Login;
 			m_SessionIndex = sessionIndex;
 			m_ID = pszID;
 		}
@@ -50,53 +50,53 @@ namespace ChatServerLib
 		void EnterRoom( const short roomIndex)
 		{
 			m_RoomIndex = roomIndex;
-			m_CurDomainState = DOMAIN_STATE::Room;
+			m_CurDomainState = Domain_State::Room;
 		}
 
 		void LeaveRoom()
 		{
-			m_CurDomainState = DOMAIN_STATE::Login;
+			m_CurDomainState = Domain_State::Login;
 		}
 
 		void SetReady()
 		{
-			m_CurDomainState = DOMAIN_STATE::Ready;
+			m_CurDomainState = Domain_State::Ready;
 		}
 
 		void SetGame()
 		{
-			m_CurDomainState = DOMAIN_STATE::Game;
+			m_CurDomainState = Domain_State::Game;
 		}
 
 		bool IsCurDomainInLogIn() 
 		{
-			return m_CurDomainState == DOMAIN_STATE::Login ? true : false;
+			return m_CurDomainState == Domain_State::Login ? true : false;
 		}
 		bool IsCurDomainInRoom() 
 		{
-			return m_CurDomainState == DOMAIN_STATE::Room ? true : false;
+			return m_CurDomainState == Domain_State::Room ? true : false;
 		}
 		bool IsCurDomainInReady() 
 		{
-			return m_CurDomainState == DOMAIN_STATE::Ready ? true : false;
+			return m_CurDomainState == Domain_State::Ready ? true : false;
 		}
 		bool IsCurDomainInGame() 
 		{
-			return m_CurDomainState == DOMAIN_STATE::Game ? true : false;
+			return m_CurDomainState == Domain_State::Game ? true : false;
 		}
 
 
 	protected:
+
 		short m_Index = -1;
 
 		int m_SessionIndex = -1;
 
 		std::string m_ID;
 
-		DOMAIN_STATE m_CurDomainState = DOMAIN_STATE::None;
+		Domain_State m_CurDomainState = Domain_State::None;
 
 		short m_RoomIndex = -1;
-
 		
 	};
 }

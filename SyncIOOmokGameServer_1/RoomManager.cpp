@@ -6,14 +6,15 @@ namespace ChatServerLib
 	{
 		for (int i = 0; i < maxRoomNum; ++i)
 		{
-			m_RoomList.emplace_back(new Room());
+			auto newRoom = new Room();
+			m_RoomList.push_back(newRoom);
 			m_RoomList[i]->Init((short)i, 2, pNetwork);
 		}
 	}
 
 	Room* RoomManager::FindRoom(const int roomIndex)
 	{
-		if (roomIndex > (m_RoomList.size() - 1))
+		if (roomIndex < 0 || roomIndex >= m_RoomList.size())
 		{
 			return nullptr;
 		}

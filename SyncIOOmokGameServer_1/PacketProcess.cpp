@@ -32,7 +32,8 @@ namespace ChatServerLib
 	void PacketProcess::Process(PacketInfo packetInfo)
 	{
 		auto packetId = packetInfo.PacketId;
-		if (packetId < 0 || packetId >255)
+
+		if (packetId < 0 || packetId > (int)NCommon::PACKET_ID::MAX)
 		{
 			return;
 		}
@@ -63,8 +64,7 @@ namespace ChatServerLib
 			auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 			if (pRoom)
 			{
-				pRoom->LeaveUser(pUser->GetIndex());
-				pRoom->NotifyLeaveUserInfo(packetInfo.SessionIndex,pUser->GetID().c_str());
+				pRoom->LeaveUser(pUser->GetIndex(), pUser->GetSessioIndex(), pUser->GetID().c_str());
 			}
 			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}

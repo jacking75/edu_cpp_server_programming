@@ -1,6 +1,7 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TcpNetwork.h"
 #include "PacketDef.h"
+#include <optional>
 
 namespace NServerNetLib
 {
@@ -65,6 +66,7 @@ namespace NServerNetLib
 
         return maxClientCount;
     }
+
     int TcpNetwork::AllocClientSessionIndex()
     {
         if (m_ClientSessionPoolIndex.empty())
@@ -92,10 +94,11 @@ namespace NServerNetLib
 
         auto selectResult = select(0, &read_set, nullptr, nullptr, &timeout);
 
-        if (RunCheckSelectResult(selectResult) == false)
+        if (selectResult == 0 || selectResult == -1)
         {
             return;
         }
+
         if (FD_ISSET(m_ServerSockfd, &read_set))
         {
             NewSession();
@@ -143,13 +146,14 @@ namespace NServerNetLib
     void TcpNetwork::ConnectedSession(const int sessionIndex, const SOCKET fd)
     {
 
-        TcpSession* session = &m_ClientSessionPool[sessionIndex];
+        auto session = &m_ClientSessionPool[sessionIndex];
+
         session->SocketFD = fd;
 
         AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
 
     }
-
+    // std.. optional
     RecvPacketInfo TcpNetwork::GetReceivePacket()
     {
         RecvPacketInfo packetInfo;
@@ -162,6 +166,8 @@ namespace NServerNetLib
 
         return packetInfo;
     }
+
+    
     void TcpNetwork::AddPacketQueue(const int sessionIndex, const short pktId, const short bodySize, char* pDataPos)
     {
         RecvPacketInfo packetInfo;
@@ -172,6 +178,7 @@ namespace NServerNetLib
 
         m_PacketQueue.push_back(packetInfo);
     }
+
     NET_ERROR_CODE TcpNetwork::SetNonBlockSocket(const SOCKET sock)
     {
         unsigned long mode = 1;
@@ -182,20 +189,6 @@ namespace NServerNetLib
         }
 
         return NET_ERROR_CODE::NONE;
-    }
-
-    bool TcpNetwork::RunCheckSelectResult(const int result)
-    {
-        if (result == 0)
-        {
-            return false;
-        }
-        else if (result == -1)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     void TcpNetwork::RunCheckSelectClients(fd_set& read_set)
@@ -415,8 +408,8 @@ namespace NServerNetLib
 
         return result;
     }
-
-    void TcpNetwork::Stop()
+    
+    void TcpNetwork::Release()
     {
         WSACleanup();
     }

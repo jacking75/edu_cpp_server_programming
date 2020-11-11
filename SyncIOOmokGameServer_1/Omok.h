@@ -7,7 +7,7 @@
 namespace ChatServerLib
 {
 	class Omok {
-        const int OmokPanPointNumber = 19;
+     
 
     public:
         Omok() = default;
@@ -21,11 +21,15 @@ namespace ChatServerLib
 
         ERROR_CODE GamePutStone( int xPos, int yPos);
 
+        ERROR_CODE CheckPos(int xPos, int yPos);
+
         void initType();
 
         bool IsBlackTurn = false;
 
-        int OmokTurnUserIndex = -1;
+        int m_BlackStoneUserIndex = -1;
+
+        int m_TurnIndex = -1;
 
         std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
  

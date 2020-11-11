@@ -48,9 +48,9 @@ namespace csharp_test_client
             var responsePkt = new GameStartResPacket();
             responsePkt.FromBytes(bodyData);
 
-            if ((ERROR_CODE)responsePkt.Result == ERROR_CODE.NOT_READY_EXIST)
+            if ((ERROR_CODE)responsePkt.Result != ERROR_CODE.ERROR_NONE)
             {
-                DevLog.Write($"모두 레디상태여야 시작합니다.");
+                DevLog.Write($"{ (ERROR_CODE)responsePkt.Result}");
             }
             else
             {

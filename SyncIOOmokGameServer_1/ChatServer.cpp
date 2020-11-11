@@ -1,5 +1,6 @@
 ﻿#include "ChatServer.h"
 #include <iostream>
+
 namespace ChatServerLib
 {
 	ChatServer::ChatServer()
@@ -11,7 +12,7 @@ namespace ChatServerLib
 	{
 		if (m_pNetwork) 
 		{
-			m_pNetwork->Stop();
+			m_pNetwork->Release();
 		}
 	}
 

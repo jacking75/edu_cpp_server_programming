@@ -1,16 +1,20 @@
 #pragma once
 
 #include "OmokPanPoint.h"
+#include "Omok.h"
 
+//TEMPLETE
 namespace ChatServerLib
 {
+    static const int OmokPanPointNumber = 19;
+
     static int ConfirmHorizontal(std::vector<std::vector<OmokPanPoint>> omokPanPoints, int x, int y, OmokPanPoint::PointType pointType)
     {
         int cnt = 1;
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x + i <= 18 && pointType == omokPanPoints[y][x + i].Type)
+            if (x + i < OmokPanPointNumber && pointType == omokPanPoints[y][x + i].Type)
             {
                 ++cnt;
             }
@@ -40,7 +44,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (y + i <= 18 && pointType == omokPanPoints[y + i][x].Type)
+            if (y + i < OmokPanPointNumber && pointType == omokPanPoints[y + i][x].Type)
             {
                 ++cnt;
             }
@@ -70,7 +74,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x + i <= 18 && y + i <= 18 && pointType == omokPanPoints[y + i][x + i].Type)
+            if (x + i < OmokPanPointNumber && y + i < OmokPanPointNumber && pointType == omokPanPoints[y + i][x + i].Type)
             {
                 ++cnt;
             }
@@ -101,7 +105,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x - i >= 0 && y + i <= 18 && pointType == omokPanPoints[y + i][x - i].Type)
+            if (x - i >= 0 && y + i < OmokPanPointNumber && pointType == omokPanPoints[y + i][x - i].Type)
             {
                 ++cnt;
             }
@@ -113,7 +117,7 @@ namespace ChatServerLib
 
         for (int i = 1; i <= 5; ++i)
         {
-            if (x + i <= 18 && y - i >= 0 && pointType == omokPanPoints[y - i][x + i].Type)
+            if (x + i < OmokPanPointNumber && y - i >= 0 && pointType == omokPanPoints[y - i][x + i].Type)
             {
                 ++cnt;
             }
@@ -138,4 +142,6 @@ namespace ChatServerLib
 
         return false;
     }
+
+    
 }

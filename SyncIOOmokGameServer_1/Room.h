@@ -10,17 +10,16 @@ namespace ChatServerLib
 	class Room
 	{
 	public:
-		enum class ROOM_STATE {
+		enum class Room_State 
+		{
 			None = 0,
 			Game = 1
 		};
 
-		Room();
-		~Room();
+		Room() = default;
+		~Room() = default;
 
 		void Init(const short index, const short maxUserCount, NServerNetLib::TcpNetwork* pNetwork);
-
-		void SetNetwork(NServerNetLib::TcpNetwork* pNetwork);
 
 		void Clear();
 
@@ -32,40 +31,39 @@ namespace ChatServerLib
 
 		ERROR_CODE EnterUser(User* pUser);
 
-		ERROR_CODE LeaveUser(const short userIndex);
+		ERROR_CODE LeaveUser(const short userIndex, const int sessionIndex, const char* pszUserID);
 
 		void SendToAllUser(const short packetId, const short dataSize, char* pData, const int passUserindex = -1);
 
-		void SendChatToAllUser(const short packetId, const short dataSize, char* pData, const int passUserindex);
+		void NotifyEnterUserInfo(const int sessionIndex, const char* pszUserID);
 
-		void NotifyEnterUserInfo(const int userIndex, const char* pszUserID);
-
-		void NotifyLeaveUserInfo(const int userIndex, const char* pszUserID);
+		void NotifyLeaveUserInfo(const int sessionIndex, const char* pszUserID);
 
 		void NotifyChat(const int sessionIndex, const char* pszUserID, const char* pszMsg);
-		void NotifyPutStoneInfo(const int userIndex, const char* pszUserID);
-		void NotifyGameResult(const int userIndex, const char* pszUserID);
-		void NotifyGameStart(const int userIndex, const char* pszUserID);
-		bool IsCurDomainInGame() { return m_CurDomainState == ROOM_STATE::Game ? true : false; };
 
+		void NotifyPutStoneInfo(const int sessionIndex, const char* pszUserID);
 
-		Omok* OmokGame  = new Omok();
+		void NotifyGameResult(const int sessionIndex, const char* pszUserID);
+
+		void NotifyGameStart(const int sessionIndex, const char* pszUserID);
+
+		bool IsCurDomainInGame() { return m_CurDomainState == Room_State::Game ? true : false; };
+
+		std::unique_ptr<Omok> m_OmokGame = std::make_unique<Omok>();
+
 		std::vector<User*> m_UserList;
-
-		int m_BlackStoneUserIndex = -1;
-		int m_TurnIndex = -1;
 
 	private:
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
 
-		ROOM_STATE m_CurDomainState = ROOM_STATE::None;
+		Room_State m_CurDomainState = Room_State::None;
 
 		short m_Index = -1;
+
 		short m_MaxUserCount = -1;
 	
 		bool m_IsUsed = false;
-		std::wstring m_Title;
 	
 	};
 }

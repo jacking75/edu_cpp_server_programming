@@ -11,37 +11,47 @@ namespace ChatServerLib
 		auto errorCode = userInfo.first;
 		auto pUser = userInfo.second;
 
-		pUser->SetReady();
-		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
-
-		auto userIndex = pUser->GetIndex();
-
-		for (auto iter : pRoom->m_UserList)
+		if (errorCode != ERROR_CODE::NONE)
 		{
-			if (iter->GetIndex() != userIndex)
-			{
-				if (iter->IsCurDomainInReady()) 
-				{
-					m_pRefUserMgr->GetUser(iter->GetSessioIndex()).second->SetGame();
-					pUser->SetGame();
+			resPkt.SetError(errorCode);
+			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			return errorCode;
+		}
+		auto checkReadyResult = m_pRefUserMgr->CheckReady(pUser);
 
-					//TODO :  검은돌 랜덤 선정
-					pRoom->m_BlackStoneUserIndex = packetInfo.SessionIndex;
-					pRoom->m_TurnIndex = packetInfo.SessionIndex;
-					pRoom->OmokGame->init();
-					pRoom->OmokGame->initType();
+		if (checkReadyResult != ERROR_CODE::NONE)
+		{
+			resPkt.SetError(checkReadyResult);
+			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			return errorCode;
+		}
 
-					strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1),m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
-					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
-					pRoom->NotifyGameStart(packetInfo.SessionIndex, m_pRefUserMgr->GetUser(pRoom->m_BlackStoneUserIndex).second->GetID().c_str());
-				}
-				else
-				{
-					resPkt.SetError(ERROR_CODE::NOT_READY_EXIST);
-					m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
-				}
-			}
- 		}
+		pUser->SetReady();
+
+		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
+		auto pOpponentUser = m_pRefUserMgr->GetUser(std::abs(pUser->GetSessioIndex() - 1)).second;
+
+		if (pOpponentUser->IsCurDomainInReady() == true)
+		{
+			pOpponentUser->SetGame();
+			pUser->SetGame();
+
+			//TODO :  검은돌 랜덤 선정
+			pRoom->m_OmokGame->m_BlackStoneUserIndex = packetInfo.SessionIndex;
+			pRoom->m_OmokGame->m_TurnIndex = packetInfo.SessionIndex;
+			pRoom->m_OmokGame->init();
+			pRoom->m_OmokGame->initType();
+
+			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1),pUser->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
+			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			pRoom->NotifyGameStart(packetInfo.SessionIndex, pUser->GetID().c_str());
+		}
+		else
+		{
+			resPkt.SetError(ERROR_CODE::NOT_READY_EXIST);
+			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+		}
+	
 
 		return ERROR_CODE::NONE;
 	}
