@@ -13,6 +13,8 @@
 #include "Define.h"
 #include "TcpSession.h"
 #include <optional>
+#include <thread>
+#include <mutex>
 
 
 namespace NServerNetLib
@@ -37,15 +39,19 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE Init(const ServerConfig pConfig);
 
-		NetError SendData(const int sessionIndex, const short packetId, const short bodySize, const char* pMsg);
+		void SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg);
 
-		void Run();
+		NET_ERROR_CODE Run();
 
 		void Release();
 
 		const int backLogLoop = 50;
 
 		std::optional <RecvPacketInfo> GetReceivePacket();
+
+		void SelectProcess();
+
+		void SendProcess();
 	
 	protected:
 
@@ -63,6 +69,8 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE RecvSocket(const int sessionIndex);
 
+		NET_ERROR_CODE SendToClient(const int sessionIndex, char* pSendBuffer, const short bodySize);
+
 		NET_ERROR_CODE RecvBufferProcess(const int sessionIndex);
 
 		void ConnectedSession(const int sessionIndex, const SOCKET fd);
@@ -77,6 +85,15 @@ namespace NServerNetLib
 
 		bool RunProcessReceive(const int sessionIndex, const SOCKET fd, fd_set& read_set);
 
+		bool mIsRunning = false;
+
+		std::unique_ptr<std::thread> mSelectThread;
+
+		std::unique_ptr<std::thread> mSendThread;
+
+		std::mutex mReceivePacketMutex;
+
+		std::mutex mSendPacketMutex;
 
 	protected:
 
@@ -93,5 +110,6 @@ namespace NServerNetLib
 		std::deque<int> m_ClientSessionPoolIndex;
 
 		std::deque<RecvPacketInfo> m_PacketQueue;
+		std::deque<RecvPacketInfo> m_SendPacketQueue;
 	};
 }

@@ -25,7 +25,7 @@ namespace ChatServerLib
 
 		userInfo.second->SetLogin();
 		resPkt.ErrorCode = (short)addRet;
-		auto result = m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}

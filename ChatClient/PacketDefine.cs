@@ -120,6 +120,7 @@ namespace csharp_test_client
         NOT_YOUR_TURN = 307,
 
         ALREADY_GAME_STATE = 308,
-        ALREADY_READY_STATE = 309
+        ALREADY_READY_STATE = 309,
+        USER_STATE_NOT_GAME = 310
     }
 }
