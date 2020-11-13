@@ -110,6 +110,7 @@ namespace NServerNetLib
 		std::deque<int> m_ClientSessionPoolIndex;
 
 		std::deque<RecvPacketInfo> m_PacketQueue;
+
 		std::deque<RecvPacketInfo> m_SendPacketQueue;
 	};
 }

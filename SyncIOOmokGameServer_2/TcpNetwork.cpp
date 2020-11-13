@@ -23,6 +23,11 @@ namespace NServerNetLib
                 delete[] client.pSendBuffer;
             }
         }
+
+        WSACleanup();
+        mIsRunning = false;
+        mSelectThread->join();
+        mSendThread->join();
     }
 
     NET_ERROR_CODE TcpNetwork::Init(const ServerConfig pConfig)
@@ -90,15 +95,8 @@ namespace NServerNetLib
         FD_SET(m_ServerSockfd, &m_Readfds);
 
         mIsRunning = true;
-        mSelectThread = std::make_unique<std::thread>([&]()
-            {
-                SelectProcess();
-            });
-
-        mSendThread = std::make_unique<std::thread>([&]()
-            {
-                SendProcess();
-            });
+        mSelectThread = std::make_unique<std::thread>([&](){SelectProcess();});
+        mSendThread = std::make_unique<std::thread>([&]() {SendProcess();});
 
         return NET_ERROR_CODE::NONE;
     }
@@ -153,6 +151,8 @@ namespace NServerNetLib
 
             send(fd, session.pSendBuffer, totalSize, 0);
 
+            delete[] packet.pRefData;
+
         }
     }
 
@@ -206,7 +206,7 @@ namespace NServerNetLib
 
     std::optional <RecvPacketInfo> TcpNetwork::GetReceivePacket()
     {
-        std::unique_lock<std::mutex> lock(mReceivePacketMutex);
+        std::lock_guard<std::mutex> lock(mReceivePacketMutex);
 
         if (m_PacketQueue.empty() == false)
         {
@@ -445,7 +445,8 @@ namespace NServerNetLib
         packetInfo.SessionIndex = sessionIndex;
         packetInfo.PacketId = packetId;
         packetInfo.PacketBodySize = bodySize;
-        packetInfo.pRefData = pMsg;
+        packetInfo.pRefData = new char[bodySize];
+        memcpy_s(packetInfo.pRefData, bodySize, pMsg, bodySize);
 
         m_SendPacketQueue.push_back(packetInfo);
      

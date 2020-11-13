@@ -28,6 +28,7 @@ namespace NServerNetLib
 		NTF_SYS_RECV_SESSION=4
 
 	};
+
 	struct RecvPacketInfo
 	{
 		int SessionIndex = 0;

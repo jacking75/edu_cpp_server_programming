@@ -37,7 +37,7 @@ namespace ChatServerLib
 
 	ERROR_CODE UserManager::AddUser(const int sessionIndex, const char* pszID)
 	{
-		if (FindUser(pszID).has_value())
+		if (FindUser(pszID).has_value() == true)
 		{
 			return ERROR_CODE::USER_MGR_ID_DUPLICATION;
 		}
@@ -104,7 +104,7 @@ namespace ChatServerLib
 	{
 		auto findIter = m_UserIDDic.find(pszID);
 
-		if (findIter == m_UserIDDic.end())
+		if (findIter == m_UserIDDic.end()) 
 		{
 			return std::nullopt;
 		}
