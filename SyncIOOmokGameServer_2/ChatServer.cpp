@@ -26,7 +26,7 @@ namespace ChatServerLib
 		{
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
-
+		
 		m_pUserMgr = std::make_unique<UserManager>();
 		m_pUserMgr->Init(Config.MaxClientCount);
 
@@ -35,6 +35,8 @@ namespace ChatServerLib
 
 		m_pPacketProc = std::make_unique<PacketProcess>();
 		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(), Config);
+
+		m_IsRun = true;
 
 		return ERROR_CODE::NONE;
 	}
@@ -46,23 +48,33 @@ namespace ChatServerLib
 
 	ERROR_CODE ChatServer::Run()
 	{
-		m_IsRun = true;
 		m_pNetwork->Run();
 
+		mainThread = std::make_unique<std::thread>([&]() {MainProcessThread(); });
+
+		std::cout << "press any key to exit...";
+		getchar();
+
+		Stop();
+		mainThread->join();
+
+		return ERROR_CODE::NONE;
+	}
+
+	void ChatServer::MainProcessThread()
+	{	
 		while (m_IsRun)
 		{
 			auto packetInfo = m_pNetwork->GetReceivePacket();
-				
-			if (packetInfo.has_value() == false) 
+
+			if (packetInfo.has_value() == false)
 			{
 				continue;
 			}
-			else 
+			else
 			{
 				m_pPacketProc->Process(packetInfo.value());
 			}
 		}
-
-		return ERROR_CODE::NONE;
 	}
 }

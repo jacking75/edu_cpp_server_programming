@@ -28,7 +28,9 @@ namespace ChatServerLib
         bool IsBlackTurn = false;
 
         int m_BlackStoneUserIndex = -1;
+
         int m_WhiteStoneUserIndex = -1;
+
         int m_TurnIndex = -1;
 
         std::vector<std::vector<OmokPanPoint>> OmokPanPoints;

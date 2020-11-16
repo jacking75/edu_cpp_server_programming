@@ -32,6 +32,8 @@ namespace NServerNetLib
 		int PrevReadPosInRecvBuffer = 0;
 
 		int mIndex = 0;
+
+		int SendPos = -1;
 	
 	};
 }

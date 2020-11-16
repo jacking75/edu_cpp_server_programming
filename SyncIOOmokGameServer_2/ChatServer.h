@@ -16,6 +16,8 @@ namespace ChatServerLib
 
 		ERROR_CODE Init(const NServerNetLib::ServerConfig pConfig);
 
+		void MainProcessThread();
+
 	private:
 
 		bool m_IsRun = false;
@@ -27,6 +29,8 @@ namespace ChatServerLib
 		std::unique_ptr<RoomManager> m_pRoomMgr;
 
 		std::unique_ptr<PacketProcess> m_pPacketProc;
+
+		std::unique_ptr<std::thread> mainThread;
 
 	};
 }

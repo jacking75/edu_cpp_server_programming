@@ -32,12 +32,6 @@ int main()
 		return 0;
 	}
 	
-
-	std::cout << "press any key to exit..."<<std::endl;
-
-	getchar();
-
-
 	return 0;
 }
 

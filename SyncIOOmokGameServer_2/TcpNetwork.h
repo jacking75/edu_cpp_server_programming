@@ -49,9 +49,9 @@ namespace NServerNetLib
 
 		std::optional <RecvPacketInfo> GetReceivePacket();
 
-		void SelectProcess();
+		void SelectProcessThread();
 
-		void SendProcess();
+		void SendProcessThread();
 	
 	protected:
 
@@ -68,8 +68,6 @@ namespace NServerNetLib
 		NET_ERROR_CODE SetNonBlockSocket(const SOCKET sock);
 
 		NET_ERROR_CODE RecvSocket(const int sessionIndex);
-
-		NET_ERROR_CODE SendToClient(const int sessionIndex, char* pSendBuffer, const short bodySize);
 
 		NET_ERROR_CODE RecvBufferProcess(const int sessionIndex);
 

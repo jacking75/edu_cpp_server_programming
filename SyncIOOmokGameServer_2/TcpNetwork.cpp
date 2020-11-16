@@ -95,13 +95,13 @@ namespace NServerNetLib
         FD_SET(m_ServerSockfd, &m_Readfds);
 
         mIsRunning = true;
-        mSelectThread = std::make_unique<std::thread>([&](){SelectProcess();});
-        mSendThread = std::make_unique<std::thread>([&]() {SendProcess();});
+        mSelectThread = std::make_unique<std::thread>([&](){SelectProcessThread();});
+        mSendThread = std::make_unique<std::thread>([&]() {SendProcessThread();});
 
         return NET_ERROR_CODE::NONE;
     }
 
-    void TcpNetwork::SelectProcess()
+    void TcpNetwork::SelectProcessThread()
     {
         while (mIsRunning)
         {
@@ -126,33 +126,32 @@ namespace NServerNetLib
         }
     }
 
-    void TcpNetwork::SendProcess()
+    void TcpNetwork::SendProcessThread()
     {
         while (mIsRunning)
         {
-            std::unique_lock<std::mutex> lock(mSendPacketMutex);
+           for (int i = 0; i < m_ClientSessionPool.size(); ++i)
+           {
+               std::lock_guard<std::mutex> lock(mSendPacketMutex);
 
-            if (m_SendPacketQueue.empty())
-            {
-                lock.unlock();
-                continue;
-            }
+               auto& session = m_ClientSessionPool[i];
 
-            auto packet = m_SendPacketQueue.front();
-            m_SendPacketQueue.pop_front();
+               if (session.IsConnected() == false)
+               {
+                   continue;
+               }
 
-            auto& session = m_ClientSessionPool[packet.SessionIndex];
-            auto fd = static_cast<SOCKET>(session.SocketFD);
-            auto totalSize = (int16_t)(packet.PacketBodySize + PACKET_HEADER_SIZE);
+               if (session.SendPos == -1)
+               {
+                   continue;
+               }
 
-            PacketHeader pktHeader{ totalSize, packet.PacketId, (uint8_t)0 };
-            memcpy(&session.pSendBuffer[0], (char*)&pktHeader, PACKET_HEADER_SIZE);
-            memcpy(&session.pSendBuffer[PACKET_HEADER_SIZE], packet.pRefData, packet.PacketBodySize);
-
-            send(fd, session.pSendBuffer, totalSize, 0);
-
-            delete[] packet.pRefData;
-
+               SOCKET fd = session.SocketFD;
+               auto sessionIndex = session.mIndex;
+                           
+               send(fd, session.pSendBuffer, session.SendPos, 0);
+               session.SendPos = -1;
+           }
         }
     }
 
@@ -197,7 +196,6 @@ namespace NServerNetLib
     {
 
         auto session = &m_ClientSessionPool[sessionIndex];
-
         session->SocketFD = fd;
 
         AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
@@ -220,6 +218,8 @@ namespace NServerNetLib
 
     void TcpNetwork::AddPacketQueue(const int sessionIndex, const short pktId, const short bodySize, char* pDataPos)
     {
+        std::lock_guard<std::mutex> lock(mReceivePacketMutex);
+
         RecvPacketInfo packetInfo;
         packetInfo.SessionIndex = sessionIndex;
         packetInfo.PacketId = pktId;
@@ -441,14 +441,14 @@ namespace NServerNetLib
     {
         std::lock_guard<std::mutex> lock(mSendPacketMutex);
 
-        RecvPacketInfo packetInfo;
-        packetInfo.SessionIndex = sessionIndex;
-        packetInfo.PacketId = packetId;
-        packetInfo.PacketBodySize = bodySize;
-        packetInfo.pRefData = new char[bodySize];
-        memcpy_s(packetInfo.pRefData, bodySize, pMsg, bodySize);
+        auto& session = m_ClientSessionPool[sessionIndex];
+        auto fd = static_cast<SOCKET>(session.SocketFD);
+        auto totalSize = (int16_t)(bodySize + PACKET_HEADER_SIZE);
+        session.SendPos = totalSize;
 
-        m_SendPacketQueue.push_back(packetInfo);
+        PacketHeader pktHeader{ totalSize, packetId, (uint8_t)0 };
+        memcpy(&session.pSendBuffer[0], (char*)&pktHeader, PACKET_HEADER_SIZE);
+        memcpy(&session.pSendBuffer[PACKET_HEADER_SIZE], pMsg, bodySize);
      
     }
 
