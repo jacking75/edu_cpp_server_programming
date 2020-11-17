@@ -24,7 +24,6 @@ namespace NServerNetLib
             }
         }
 
-        WSACleanup();
         mIsRunning = false;
         mSelectThread->join();
         mSendThread->join();
@@ -130,31 +129,52 @@ namespace NServerNetLib
     {
         while (mIsRunning)
         {
-           for (int i = 0; i < m_ClientSessionPool.size(); ++i)
+           for (int sessionIndex = 0; sessionIndex < m_ClientSessionPool.size(); ++sessionIndex)
            {
-               std::lock_guard<std::mutex> lock(mSendPacketMutex);
-
-               auto& session = m_ClientSessionPool[i];
+               auto& session = m_ClientSessionPool[sessionIndex];
+               auto fd = static_cast<SOCKET>(session.SocketFD);
 
                if (session.IsConnected() == false)
                {
                    continue;
                }
 
-               if (session.SendPos == -1)
-               {
+               auto result = SendSocket(fd, session.pSendBuffer, session.SendSize);
+
+               if (result.has_value() == false) {
                    continue;
                }
 
-               SOCKET fd = session.SocketFD;
-               auto sessionIndex = session.mIndex;
-                           
-               send(fd, session.pSendBuffer, session.SendPos, 0);
-               session.SendPos = -1;
+               auto sendSize = result.value();
+               if (sendSize < session.SendSize)
+               {
+                   memmove(&session.pSendBuffer[0], &session.pSendBuffer[sendSize], session.SendSize - sendSize);
+                   session.SendSize -= sendSize;
+               }
+               else
+               {
+                   session.SendSize = 0;
+               }
            }
         }
     }
 
+    std::optional <int> TcpNetwork::SendSocket(const SOCKET fd, const char* pMsg, const int size)
+    {
+        if (size <= 0)
+        {
+            return std::nullopt;
+        }
+
+        auto result = send(fd, pMsg, size, 0);
+
+        if (result <= 0)
+        {
+            return std::nullopt;
+        }
+
+        return result;
+    }
 
     NET_ERROR_CODE TcpNetwork::NewSession()
     {
@@ -437,18 +457,28 @@ namespace NServerNetLib
         return NET_ERROR_CODE::NONE;
     }
 
-    void TcpNetwork::SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
+    NET_ERROR_CODE TcpNetwork::SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
     {
         std::lock_guard<std::mutex> lock(mSendPacketMutex);
-
         auto& session = m_ClientSessionPool[sessionIndex];
-        auto fd = static_cast<SOCKET>(session.SocketFD);
+        auto pos = session.SendSize;
         auto totalSize = (int16_t)(bodySize + PACKET_HEADER_SIZE);
-        session.SendPos = totalSize;
+
+        if ((pos + totalSize) > m_Config.MaxClientSendBufferSize) {
+            return NET_ERROR_CODE::CLIENT_SEND_BUFFER_FULL;
+        }
 
         PacketHeader pktHeader{ totalSize, packetId, (uint8_t)0 };
-        memcpy(&session.pSendBuffer[0], (char*)&pktHeader, PACKET_HEADER_SIZE);
-        memcpy(&session.pSendBuffer[PACKET_HEADER_SIZE], pMsg, bodySize);
+        memcpy(&session.pSendBuffer[pos], (char*)&pktHeader, PACKET_HEADER_SIZE);
+
+        if (bodySize > 0)
+        {
+            memcpy(&session.pSendBuffer[pos + PACKET_HEADER_SIZE], pMsg, bodySize);
+        }
+
+        session.SendSize += totalSize;
+
+        return NET_ERROR_CODE::NONE;
      
     }
 

@@ -39,13 +39,15 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE Init(const ServerConfig pConfig);
 
-		void SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg);
+		NET_ERROR_CODE SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg);
 
 		NET_ERROR_CODE Run();
 
 		void Release();
 
 		const int backLogLoop = 50;
+
+		std::optional <int>  SendSocket(const SOCKET fd, const char* pMsg, const int size);
 
 		std::optional <RecvPacketInfo> GetReceivePacket();
 

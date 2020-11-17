@@ -15,8 +15,6 @@ namespace NServerNetLib
 
 		RemainingDataSize = 0;
 		PrevReadPosInRecvBuffer = 0;
-
-		SendPos = -1;
 	}
 	
 }

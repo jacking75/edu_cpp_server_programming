@@ -18,7 +18,6 @@ namespace ChatServerLib
 
 	ERROR_CODE ChatServer::Init(const NServerNetLib::ServerConfig Config)
 	{
-
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();
 		auto result = m_pNetwork->Init(Config);
 
@@ -52,10 +51,11 @@ namespace ChatServerLib
 
 		mainThread = std::make_unique<std::thread>([&]() {MainProcessThread(); });
 
-		std::cout << "press any key to exit...";
+		std::cout << "press any key to exit..." << "\n";
 		getchar();
 
 		Stop();
+
 		mainThread->join();
 
 		return ERROR_CODE::NONE;

@@ -33,7 +33,6 @@ namespace NServerNetLib
 
 		int mIndex = 0;
 
-		int SendPos = -1;
 	
 	};
 }
