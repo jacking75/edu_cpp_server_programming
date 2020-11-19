@@ -2,6 +2,7 @@
 
 #include "PacketID.h"
 #include <string>
+#include "ErrorCode.h"
 
 namespace NCommon
 {

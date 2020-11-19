@@ -45,9 +45,7 @@ namespace NServerNetLib
 
 		void Release();
 
-		const int backLogLoop = 50;
-
-		std::optional <int>  SendSocket(const SOCKET fd, const char* pMsg, const int size);
+		const int backLogLoop = 50;	
 
 		std::optional <RecvPacketInfo> GetReceivePacket();
 
@@ -93,8 +91,6 @@ namespace NServerNetLib
 
 		std::mutex mReceivePacketMutex;
 
-		std::mutex mSendPacketMutex;
-
 	protected:
 
 		ServerConfig m_Config;
@@ -105,7 +101,7 @@ namespace NServerNetLib
 
 		int64_t m_ConnectSeq = 0;
 
-		std::vector<TcpSession> m_ClientSessionPool;
+		std::vector<TcpSession*> m_ClientSessionPool;
 
 		std::deque<int> m_ClientSessionPoolIndex;
 

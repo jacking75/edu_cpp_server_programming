@@ -1,6 +1,9 @@
-﻿#include "ErrorCode.h"
-#include "Define.h"
+﻿#include "Define.h"
 #include <basetsd.h>
+#include "NetErrorCode.h"
+#include <optional>
+#include <mutex>
+#include <WinSock2.h>
 
 namespace NServerNetLib
 {
@@ -9,8 +12,8 @@ namespace NServerNetLib
 
 	public:
 
-		TcpSession() = default;
-		~TcpSession() = default;
+		TcpSession() {}
+		~TcpSession() {}
 
 		void Init(const int index);
 
@@ -18,7 +21,7 @@ namespace NServerNetLib
 		{ 
 			return SocketFD != -1 ? true : false;
 		}
-
+	
 		UINT64 SocketFD = -1;
 
 		char* pRecvBuffer = nullptr;
@@ -33,6 +36,13 @@ namespace NServerNetLib
 
 		int mIndex = 0;
 
-	
+		NET_ERROR_CODE SendSessionData(int maxClientSendBufferSize, const short packetId, const short bodySize, char* pMsg);
+
+		std::optional <int> SendSocket(const SOCKET fd, const char* pMsg, const int size);
+
+		NET_ERROR_CODE SendPacket(const SOCKET fd, const char* pMsg, const int size);
+
+		std::mutex sendPacketMutex;
+
 	};
 }

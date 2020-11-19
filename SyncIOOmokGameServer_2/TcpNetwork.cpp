@@ -13,15 +13,16 @@ namespace NServerNetLib
     {
         for (auto& client : m_ClientSessionPool)
         {
-            if (client.pRecvBuffer)
+            if (client->pRecvBuffer)
             {
-                delete[] client.pRecvBuffer;
+                delete[] client->pRecvBuffer;
             }
 
-            if (client.pSendBuffer)
+            if (client->pSendBuffer)
             {
-                delete[] client.pSendBuffer;
+                delete[] client->pSendBuffer;
             }
+            delete client;
         }
 
         mIsRunning = false;
@@ -58,10 +59,10 @@ namespace NServerNetLib
     {
         for (int i = 0; i < maxClientCount; ++i)
         {
-            TcpSession session;
-            session.Init(i);
-            session.pRecvBuffer = new char[m_Config.MaxClientRecvBufferSize];
-            session.pSendBuffer = new char[m_Config.MaxClientSendBufferSize];
+            TcpSession* session = new TcpSession;
+            session->Init(i);
+            session->pRecvBuffer = new char[m_Config.MaxClientRecvBufferSize];
+            session->pSendBuffer = new char[m_Config.MaxClientSendBufferSize];
 
             m_ClientSessionPool.push_back(session);
             m_ClientSessionPoolIndex.push_back(i);
@@ -85,7 +86,7 @@ namespace NServerNetLib
     void TcpNetwork::ReleaseSessionIndex(const int index)
     {
         m_ClientSessionPoolIndex.push_back(index);
-        m_ClientSessionPool[index].Init(index);
+        m_ClientSessionPool[index]->Init(index);
     }
 
     NET_ERROR_CODE TcpNetwork::Run()
@@ -130,50 +131,19 @@ namespace NServerNetLib
         while (mIsRunning)
         {
            for (int sessionIndex = 0; sessionIndex < m_ClientSessionPool.size(); ++sessionIndex)
-           {
+           {	
                auto& session = m_ClientSessionPool[sessionIndex];
-               auto fd = static_cast<SOCKET>(session.SocketFD);
+               auto fd = static_cast<SOCKET>(session->SocketFD);
 
-               if (session.IsConnected() == false)
+               if (session->IsConnected() == false)
                {
                    continue;
                }
 
-               auto result = SendSocket(fd, session.pSendBuffer, session.SendSize);
+               session->SendPacket(fd, session->pSendBuffer, session->SendSize);
 
-               if (result.has_value() == false) {
-                   continue;
-               }
-
-               auto sendSize = result.value();
-               if (sendSize < session.SendSize)
-               {
-                   memmove(&session.pSendBuffer[0], &session.pSendBuffer[sendSize], session.SendSize - sendSize);
-                   session.SendSize -= sendSize;
-               }
-               else
-               {
-                   session.SendSize = 0;
-               }
            }
         }
-    }
-
-    std::optional <int> TcpNetwork::SendSocket(const SOCKET fd, const char* pMsg, const int size)
-    {
-        if (size <= 0)
-        {
-            return std::nullopt;
-        }
-
-        auto result = send(fd, pMsg, size, 0);
-
-        if (result <= 0)
-        {
-            return std::nullopt;
-        }
-
-        return result;
     }
 
     NET_ERROR_CODE TcpNetwork::NewSession()
@@ -215,7 +185,7 @@ namespace NServerNetLib
     void TcpNetwork::ConnectedSession(const int sessionIndex, const SOCKET fd)
     {
 
-        auto session = &m_ClientSessionPool[sessionIndex];
+        auto& session = m_ClientSessionPool[sessionIndex];
         session->SocketFD = fd;
 
         AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
@@ -267,13 +237,13 @@ namespace NServerNetLib
         {
             auto& session = m_ClientSessionPool[i];
 
-            if (session.IsConnected() == false)
+            if (session->IsConnected() == false)
             {
                 continue;
             }
 
-            SOCKET fd = session.SocketFD;
-            auto sessionIndex = session.mIndex;
+            SOCKET fd = session->SocketFD;
+            auto sessionIndex = session->mIndex;
 
             auto retReceive = RunProcessReceive(sessionIndex, fd, read_set);
 
@@ -310,12 +280,12 @@ namespace NServerNetLib
         auto& session = m_ClientSessionPool[sessionIndex];
         auto readPos = 0;
 
-        const auto dataSize = session.RemainingDataSize;
+        const auto dataSize = session->RemainingDataSize;
         PacketHeader* pPktHeader;
 
         while ((dataSize - readPos) >= PACKET_HEADER_SIZE)
         {
-            pPktHeader = (PacketHeader*)&session.pRecvBuffer[readPos];
+            pPktHeader = (PacketHeader*)&session->pRecvBuffer[readPos];
             readPos += PACKET_HEADER_SIZE;
             auto bodySize = (int16_t)(pPktHeader->TotalSize - PACKET_HEADER_SIZE);
 
@@ -333,12 +303,12 @@ namespace NServerNetLib
 
             }
 
-            AddPacketQueue(sessionIndex, pPktHeader->Id, bodySize, &session.pRecvBuffer[readPos]);
+            AddPacketQueue(sessionIndex, pPktHeader->Id, bodySize, &session->pRecvBuffer[readPos]);
             readPos += bodySize;
         }
 
-        session.RemainingDataSize -= readPos;
-        session.PrevReadPosInRecvBuffer = readPos;
+        session->RemainingDataSize -= readPos;
+        session->PrevReadPosInRecvBuffer = readPos;
 
         return NET_ERROR_CODE::NONE;
     }
@@ -346,22 +316,22 @@ namespace NServerNetLib
     NET_ERROR_CODE TcpNetwork::RecvSocket(const int sessionIndex)
     {
         auto& session = m_ClientSessionPool[sessionIndex];
-        auto fd = static_cast<SOCKET>(session.SocketFD);
+        auto fd = static_cast<SOCKET>(session->SocketFD);
 
-        if (session.IsConnected() == false)
+        if (session->IsConnected() == false)
         {
             return NET_ERROR_CODE::RECV_PROCESS_NOT_CONNECTED;
         }
 
         int recvPos = 0;
 
-        if (session.RemainingDataSize > 0)
+        if (session->RemainingDataSize > 0)
         {
-            memcpy(session.pRecvBuffer, &session.pRecvBuffer[session.PrevReadPosInRecvBuffer], session.RemainingDataSize);
-            recvPos += session.RemainingDataSize;
+            memcpy(session->pRecvBuffer, &session->pRecvBuffer[session->PrevReadPosInRecvBuffer], session->RemainingDataSize);
+            recvPos += session->RemainingDataSize;
         }
 
-        auto recvSize = recv(fd, &session.pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
+        auto recvSize = recv(fd, &session->pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
 
         if (recvSize == 0)
         {
@@ -381,7 +351,7 @@ namespace NServerNetLib
                 return NET_ERROR_CODE::NONE;
             }
         }
-        session.RemainingDataSize += recvSize;
+        session->RemainingDataSize += recvSize;
 
         return NET_ERROR_CODE::NONE;
     }
@@ -396,7 +366,7 @@ namespace NServerNetLib
             return;
         }
 
-        if (m_ClientSessionPool[sessionIndex].IsConnected() == false) {
+        if (m_ClientSessionPool[sessionIndex]->IsConnected() == false) {
             return;
         }
 
@@ -459,27 +429,10 @@ namespace NServerNetLib
 
     NET_ERROR_CODE TcpNetwork::SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
     {
-        std::lock_guard<std::mutex> lock(mSendPacketMutex);
         auto& session = m_ClientSessionPool[sessionIndex];
-        auto pos = session.SendSize;
-        auto totalSize = (int16_t)(bodySize + PACKET_HEADER_SIZE);
-
-        if ((pos + totalSize) > m_Config.MaxClientSendBufferSize) {
-            return NET_ERROR_CODE::CLIENT_SEND_BUFFER_FULL;
-        }
-
-        PacketHeader pktHeader{ totalSize, packetId, (uint8_t)0 };
-        memcpy(&session.pSendBuffer[pos], (char*)&pktHeader, PACKET_HEADER_SIZE);
-
-        if (bodySize > 0)
-        {
-            memcpy(&session.pSendBuffer[pos + PACKET_HEADER_SIZE], pMsg, bodySize);
-        }
-
-        session.SendSize += totalSize;
-
-        return NET_ERROR_CODE::NONE;
-     
+        auto result = session->SendSessionData(m_Config.MaxClientSendBufferSize,packetId, bodySize, pMsg);
+        
+        return result;
     }
 
     void TcpNetwork::Release()
