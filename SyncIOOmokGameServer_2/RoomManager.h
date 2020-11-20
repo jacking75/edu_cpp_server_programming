@@ -8,6 +8,7 @@ namespace ChatServerLib
 	class RoomManager
 	{
 	public:
+
 		RoomManager() = default;
 		~RoomManager() = default;
 

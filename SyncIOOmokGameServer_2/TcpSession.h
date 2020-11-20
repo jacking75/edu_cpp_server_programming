@@ -38,11 +38,13 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE SendSessionData(int maxClientSendBufferSize, const short packetId, const short bodySize, char* pMsg);
 
-		std::optional <int> SendSocket(const SOCKET fd, const char* pMsg, const int size);
-
 		NET_ERROR_CODE SendPacket(const SOCKET fd, const char* pMsg, const int size);
 
-		std::mutex sendPacketMutex;
 
+	private :
+
+		std::optional <int> SendSocket(const SOCKET fd, const char* pMsg, const int size);
+
+		std::mutex sendPacketMutex;
 	};
 }

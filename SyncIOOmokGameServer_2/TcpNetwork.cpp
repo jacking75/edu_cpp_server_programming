@@ -107,7 +107,7 @@ namespace NServerNetLib
         {
             fd_set read_set = m_Readfds;
 
-            timeval timeout{ 0, 1000 }; //tv_sec, tv_usec
+            timeval timeout{ 0, 1000 };
 
             auto selectResult = select(0, &read_set, nullptr, nullptr, &timeout);
 
@@ -133,13 +133,13 @@ namespace NServerNetLib
            for (int sessionIndex = 0; sessionIndex < m_ClientSessionPool.size(); ++sessionIndex)
            {	
                auto& session = m_ClientSessionPool[sessionIndex];
-               auto fd = static_cast<SOCKET>(session->SocketFD);
-
+             
                if (session->IsConnected() == false)
                {
                    continue;
                }
 
+               auto fd = static_cast<SOCKET>(session->SocketFD);
                session->SendPacket(fd, session->pSendBuffer, session->SendSize);
 
            }

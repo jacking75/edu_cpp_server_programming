@@ -19,7 +19,7 @@ namespace ChatServerLib
 	}
 
     void Omok::initType()
-    {//////
+    {
         for (int i = 0; i < OmokPanPointNumber; ++i)
         {
             for (int j = 0; j < OmokPanPointNumber; ++j)

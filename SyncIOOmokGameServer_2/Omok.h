@@ -21,8 +21,6 @@ namespace ChatServerLib
 
         ERROR_CODE GamePutStone( int xPos, int yPos);
 
-        ERROR_CODE CheckPos(int xPos, int yPos);
-
         void initType();
 
         bool IsBlackTurn = false;
@@ -33,7 +31,11 @@ namespace ChatServerLib
 
         int m_TurnIndex = -1;
 
+    private:
+
         std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
+
+        ERROR_CODE CheckPos(int xPos, int yPos);
  
 	};
 

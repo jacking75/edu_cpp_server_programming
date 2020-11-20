@@ -45,15 +45,14 @@ namespace NServerNetLib
 
 		void Release();
 
-		const int backLogLoop = 50;	
-
 		std::optional <RecvPacketInfo> GetReceivePacket();
+
+
+	private:
 
 		void SelectProcessThread();
 
 		void SendProcessThread();
-	
-	protected:
 
 		void RunCheckSelectClients(fd_set& read_set);
 
@@ -71,8 +70,6 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE RecvBufferProcess(const int sessionIndex);
 
-		void ConnectedSession(const int sessionIndex, const SOCKET fd);
-
 		void CloseSession(const SOCKET_CLOSE_CASE closeCase, const SOCKET sockFD, const int sessionIndex);
 
 		int AllocClientSessionIndex();
@@ -83,6 +80,8 @@ namespace NServerNetLib
 
 		bool RunProcessReceive(const int sessionIndex, const SOCKET fd, fd_set& read_set);
 
+		void ConnectedSession(const int sessionIndex, const SOCKET fd);
+
 		bool mIsRunning = false;
 
 		std::unique_ptr<std::thread> mSelectThread;
@@ -90,8 +89,6 @@ namespace NServerNetLib
 		std::unique_ptr<std::thread> mSendThread;
 
 		std::mutex mReceivePacketMutex;
-
-	protected:
 
 		ServerConfig m_Config;
 
@@ -108,5 +105,6 @@ namespace NServerNetLib
 		std::deque<RecvPacketInfo> m_PacketQueue;
 
 		std::deque<RecvPacketInfo> m_SendPacketQueue;
+
 	};
 }

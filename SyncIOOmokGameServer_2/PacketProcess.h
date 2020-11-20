@@ -17,6 +17,7 @@ namespace ChatServerLib
 		PacketFunc PacketFuncArray[(int)NCommon::PACKET_ID::MAX];
 
 	public:
+
 		PacketProcess() = default;
 		~PacketProcess() = default;
 
