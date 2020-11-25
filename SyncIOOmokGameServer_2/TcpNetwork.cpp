@@ -13,15 +13,7 @@ namespace NServerNetLib
     {
         for (auto& client : m_ClientSessionPool)
         {
-            if (client->pRecvBuffer)
-            {
-                delete[] client->pRecvBuffer;
-            }
-
-            if (client->pSendBuffer)
-            {
-                delete[] client->pSendBuffer;
-            }
+            client->DeleteClientBuffer();
             delete client;
         }
 
@@ -61,8 +53,7 @@ namespace NServerNetLib
         {
             TcpSession* session = new TcpSession;
             session->Init(i);
-            session->pRecvBuffer = new char[m_Config.MaxClientRecvBufferSize];
-            session->pSendBuffer = new char[m_Config.MaxClientSendBufferSize];
+            session->NewSessionBuffer(m_Config.MaxClientRecvBufferSize, m_Config.MaxClientSendBufferSize);
 
             m_ClientSessionPool.push_back(session);
             m_ClientSessionPoolIndex.push_back(i);
@@ -139,8 +130,7 @@ namespace NServerNetLib
                    continue;
                }
 
-               auto fd = static_cast<SOCKET>(session->SocketFD);
-               session->SendPacket(fd, session->pSendBuffer, session->SendSize);
+               session->FlushSendBuffer();
 
            }
         }
@@ -300,7 +290,6 @@ namespace NServerNetLib
                 {
                     return NET_ERROR_CODE::RECV_CLIENT_MAX_PACKET;
                 }
-
             }
 
             AddPacketQueue(sessionIndex, pPktHeader->Id, bodySize, &session->pRecvBuffer[readPos]);
@@ -316,44 +305,15 @@ namespace NServerNetLib
     NET_ERROR_CODE TcpNetwork::RecvSocket(const int sessionIndex)
     {
         auto& session = m_ClientSessionPool[sessionIndex];
-        auto fd = static_cast<SOCKET>(session->SocketFD);
 
         if (session->IsConnected() == false)
         {
             return NET_ERROR_CODE::RECV_PROCESS_NOT_CONNECTED;
         }
 
-        int recvPos = 0;
+        auto recvResult = session->RecvSessionData();
 
-        if (session->RemainingDataSize > 0)
-        {
-            memcpy(session->pRecvBuffer, &session->pRecvBuffer[session->PrevReadPosInRecvBuffer], session->RemainingDataSize);
-            recvPos += session->RemainingDataSize;
-        }
-
-        auto recvSize = recv(fd, &session->pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
-
-        if (recvSize == 0)
-        {
-            return NET_ERROR_CODE::RECV_REMOTE_CLOSE;
-        }
-
-        if (recvSize < 0)
-        {
-            auto netError = WSAGetLastError();
-
-            if (netError != WSAEWOULDBLOCK)
-            {
-                return NET_ERROR_CODE::RECV_API_ERROR;
-            }
-            else
-            {
-                return NET_ERROR_CODE::NONE;
-            }
-        }
-        session->RemainingDataSize += recvSize;
-
-        return NET_ERROR_CODE::NONE;
+        return recvResult;
     }
 
     void TcpNetwork::CloseSession(const SOCKET_CLOSE_CASE closeCase, const SOCKET sockFD, const int sessionIndex)

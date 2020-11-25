@@ -1,11 +1,11 @@
 ﻿#include <iostream>
 #include <thread>
 
-#include "ChatServer.h"
+#include "OmokServer.h"
 
 int main()
 {
-	ChatServerLib::ChatServer chatServer;
+	ChatServerLib::OmokServer omokServer;
 	
 	NServerNetLib::ServerConfig m_pServerConfig = NServerNetLib::ServerConfig();
 	m_pServerConfig.Port = 32452;
@@ -21,20 +21,20 @@ int main()
 	
 	std::thread logicThread([&]() 
 	{
-		if (chatServer.Init(m_pServerConfig) != ChatServerLib::ERROR_CODE::NONE)
+		if (omokServer.Init(m_pServerConfig) != ChatServerLib::ERROR_CODE::NONE)
 		{
 			std::cout << "Init Fail";
 			return 0;
 		}
 
-		chatServer.Run();
+		omokServer.Run();
 	});
 
 	std::cout << "press any key to exit..."<<std::endl;
 
 	getchar();
 
-	chatServer.Stop();
+	omokServer.Stop();
 	logicThread.join();
 
 	return 0;

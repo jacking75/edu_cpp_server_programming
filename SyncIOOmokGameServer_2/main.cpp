@@ -1,11 +1,11 @@
 ﻿#include <iostream>
 #include <thread>
 
-#include "ChatServer.h"
+#include "OmokServer.h"
 
 int main()
 {
-	ChatServerLib::ChatServer chatServer;
+	ChatServerLib::OmokServer omokServer;
 	
 	NServerNetLib::ServerConfig m_pServerConfig = NServerNetLib::ServerConfig();
 	m_pServerConfig.Port = 32452;
@@ -20,13 +20,13 @@ int main()
 	m_pServerConfig.MaxRoomCountByLobby = 5;
 	
 
-	if (chatServer.Init(m_pServerConfig) != ChatServerLib::ERROR_CODE::NONE)
+	if (omokServer.Init(m_pServerConfig) != ChatServerLib::ERROR_CODE::NONE)
 	{
 		std::cout << "Init Fail";
 		return 0;
 	}
 
-	if (chatServer.Run() != ChatServerLib::ERROR_CODE::NONE)
+	if (omokServer.Run() != ChatServerLib::ERROR_CODE::NONE)
 	{
 		std::cout << "Run Fail";
 		return 0;

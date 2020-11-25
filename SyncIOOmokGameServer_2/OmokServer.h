@@ -4,11 +4,11 @@
 
 namespace ChatServerLib
 {
-	class ChatServer
+	class OmokServer
 	{
 	public:
-		ChatServer();
-		~ChatServer();
+		OmokServer();
+		~OmokServer();
 
 		ERROR_CODE Run();
 

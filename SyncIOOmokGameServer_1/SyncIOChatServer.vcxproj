@@ -24,6 +24,7 @@
     <ProjectGuid>{92ceeaef-f8f8-4085-8c89-36f4655c9e17}</ProjectGuid>
     <RootNamespace>SyncIOChatServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SyncIOOmokGameServer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,7 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChatServer.cpp" />
+    <ClCompile Include="OmokServer.cpp" />
     <ClCompile Include="Omok.cpp" />
     <ClCompile Include="PacketProcessGamePut.cpp" />
     <ClCompile Include="PacketProcessGameReady.cpp" />
@@ -156,7 +157,7 @@
     <ClCompile Include="UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChatServer.h" />
+    <ClInclude Include="OmokServer.h" />
     <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="NetErrorCode.h" />
     <ClInclude Include="Omok.h" />

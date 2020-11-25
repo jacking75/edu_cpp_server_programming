@@ -1,8 +1,6 @@
 ﻿#include "TcpSession.h"
 
 
-
-
 namespace NServerNetLib
 {	
 
@@ -44,11 +42,11 @@ namespace NServerNetLib
 		return NET_ERROR_CODE::NONE;
 	}
 
-	NET_ERROR_CODE TcpSession::SendPacket(const SOCKET fd, const char* pMsg, const int size)
+	NET_ERROR_CODE TcpSession::FlushSendBuffer()
 	{
 		std::lock_guard<std::mutex> lock(sendPacketMutex);
 
-		auto result = SendSocket(fd, pMsg, size);
+		auto result = SendSocket();
 
 		if (result.has_value() == false) {
 			return NET_ERROR_CODE::SEND_SIZE_ZERO;
@@ -68,14 +66,16 @@ namespace NServerNetLib
 		return NET_ERROR_CODE::NONE;
 	}
 
-	std::optional <int> TcpSession::SendSocket(const SOCKET fd, const char* pMsg, const int size)
+	std::optional <int> TcpSession::SendSocket()
 	{
-		if (size <= 0)
+		auto fd = static_cast<SOCKET>(SocketFD);
+
+		if (SendSize <= 0)
 		{
 			return std::nullopt;
 		}
 
-		auto result = send(fd, pMsg, size, 0);
+		auto result = send(fd, pSendBuffer, SendSize, 0);
 
 		if (result <= 0)
 		{
@@ -83,6 +83,55 @@ namespace NServerNetLib
 		}
 
 		return result;
+	}
+
+	NET_ERROR_CODE TcpSession::RecvSessionData()
+	{
+		int recvPos = 0;
+		auto fd = static_cast<SOCKET>(SocketFD);
+
+		if (RemainingDataSize > 0)
+		{
+			memcpy(pRecvBuffer, &pRecvBuffer[PrevReadPosInRecvBuffer], RemainingDataSize);
+			recvPos += RemainingDataSize;
+		}
+
+		auto recvSize = recv(fd, &pRecvBuffer[recvPos], (MAX_PACKET_BODY_SIZE * 2), 0);
+
+		if (recvSize == 0)
+		{
+			return NET_ERROR_CODE::RECV_REMOTE_CLOSE;
+		}
+
+		if (recvSize < 0)
+		{
+			auto netError = WSAGetLastError();
+
+			if (netError != WSAEWOULDBLOCK)
+			{
+				return NET_ERROR_CODE::RECV_API_ERROR;
+			}
+			else
+			{
+				return NET_ERROR_CODE::NONE;
+			}
+		}
+
+		RemainingDataSize += recvSize;
+
+		return NET_ERROR_CODE::NONE;
+	}
+
+	void TcpSession::DeleteClientBuffer()
+	{
+		delete[] pRecvBuffer;
+		delete[] pSendBuffer;
+	}
+
+	void TcpSession::NewSessionBuffer(int maxClientRecvBufferSize, int maxClientSendBufferSize)
+	{
+		pRecvBuffer = new char[maxClientRecvBufferSize];
+		pSendBuffer = new char[maxClientSendBufferSize];
 	}
 	
 }

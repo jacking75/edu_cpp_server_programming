@@ -3,7 +3,7 @@
 #include "OmokPanPoint.h"
 #include "Omok.h"
 
-//TEMPLETE
+
 namespace ChatServerLib
 {
     static const int OmokPanPointNumber = 19;

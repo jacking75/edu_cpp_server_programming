@@ -1,14 +1,14 @@
-﻿#include "ChatServer.h"
+﻿#include "OmokServer.h"
 #include <iostream>
 
 namespace ChatServerLib
 {
-	ChatServer::ChatServer()
+	OmokServer::OmokServer()
 	{
 
 	}
 
-	ChatServer::~ChatServer()
+	OmokServer::~OmokServer()
 	{
 		if (m_pNetwork) 
 		{
@@ -16,7 +16,7 @@ namespace ChatServerLib
 		}
 	}
 
-	ERROR_CODE ChatServer::Init(const NServerNetLib::ServerConfig Config)
+	ERROR_CODE OmokServer::Init(const NServerNetLib::ServerConfig Config)
 	{
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();
 		auto result = m_pNetwork->Init(Config);
@@ -40,12 +40,12 @@ namespace ChatServerLib
 		return ERROR_CODE::NONE;
 	}
 	
-	void ChatServer::Stop()
+	void OmokServer::Stop()
 	{
 		m_IsRun = false;
 	}
 
-	ERROR_CODE ChatServer::Run()
+	ERROR_CODE OmokServer::Run()
 	{
 		m_pNetwork->Run();
 
@@ -61,7 +61,7 @@ namespace ChatServerLib
 		return ERROR_CODE::NONE;
 	}
 
-	void ChatServer::MainProcessThread()
+	void OmokServer::MainProcessThread()
 	{	
 		while (m_IsRun)
 		{
