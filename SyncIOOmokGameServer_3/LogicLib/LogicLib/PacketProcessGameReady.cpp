@@ -30,6 +30,7 @@ namespace ChatServerLib
 
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 		auto pOpponentUser = packetInfo.SessionIndex == pRoom.value()->m_UserList[0]->GetSessioIndex() ? pRoom.value()->m_UserList[1] : pRoom.value()->m_UserList[0];
+		auto roomUserIndex = packetInfo.SessionIndex == pRoom.value()->m_UserList[0]->GetSessioIndex() ? 1 : 0;
 
 		if (pOpponentUser->IsCurDomainInReady() == true)
 		{
@@ -37,8 +38,8 @@ namespace ChatServerLib
 			pUser->SetGame();
 
 			//TODO :  검은돌 랜덤 선정
-			pRoom.value()->m_OmokGame->m_BlackStoneUserIndex = packetInfo.SessionIndex;
-			pRoom.value()->m_OmokGame->m_WhiteStoneUserIndex = pOpponentUser->GetSessioIndex();
+			pRoom.value()->m_OmokGame->m_BlackStoneUserIndex = std::abs(1 - roomUserIndex);
+			pRoom.value()->m_OmokGame->m_WhiteStoneUserIndex = roomUserIndex;
 			pRoom.value()->m_OmokGame->m_TurnIndex = packetInfo.SessionIndex;
 			pRoom.value()->m_OmokGame->init();
 			pRoom.value()->m_OmokGame->initType();

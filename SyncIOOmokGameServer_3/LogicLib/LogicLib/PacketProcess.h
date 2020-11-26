@@ -50,5 +50,9 @@ namespace ChatServerLib
 		UserManager* m_pRefUserMgr;
 
 		RoomManager* m_pRefRoomMgr;
+
+		std::string SetWinUserID(Room* pRoom, ERROR_CODE endResult);
+
+		std::pair<ERROR_CODE, std::string> PutStone(Room* pRoom, int x, int y, int sessionIndex)
 	};
 }

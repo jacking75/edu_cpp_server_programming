@@ -36,34 +36,58 @@ namespace ChatServerLib
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NOT_YOUR_TURN;
 		}
-
-		auto result = pRoom.value()->m_OmokGame->GamePutStone(reqPkt->x, reqPkt->y);
-		pRoom.value()->m_OmokGame->printTest();
-
-		if (result != ERROR_CODE::NONE)
+		
+		auto putStoneResult = PutStone(pRoom.value(), reqPkt->x, reqPkt->y , packetInfo.SessionIndex);
+		
+		if (putStoneResult.first != ERROR_CODE::NONE)
 		{
-			resPkt.SetError(result);
+			resPkt.SetError(putStoneResult.first);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
-			return errorCode;
+			return putStoneResult.first;
 		}
 
-		auto pNextTurnUser = packetInfo.SessionIndex == pRoom.value()->m_UserList[0]->GetSessioIndex() ? pRoom.value()->m_UserList[1] : pRoom.value()->m_UserList[0];
-		pRoom.value()->m_OmokGame->m_TurnIndex = pNextTurnUser->GetSessioIndex();
-
-		auto nextTurnUserID = pNextTurnUser->GetID().c_str();
-		pRoom.value()->NotifyPutStoneInfo(packetInfo.SessionIndex, nextTurnUserID);
-
+		auto nextTurnUserID = putStoneResult.second.c_str();
 		auto endResult = pRoom.value()->m_OmokGame->CheckGameEnd(reqPkt->x, reqPkt->y);
 
 		if (endResult == ERROR_CODE::NONE) //게임이 끝나지 않았다면 종료
-		{			
-			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUserID, NCommon::MAX_USER_ID_SIZE);
+		{
+			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUserID , NCommon::MAX_USER_ID_SIZE);
 			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NONE;
 		}
 
-		auto blackUserID = m_pRefUserMgr->GetUser(pRoom.value()->m_OmokGame->m_BlackStoneUserIndex).second->GetID().c_str();
-		auto whiteUserID = m_pRefUserMgr->GetUser(pRoom.value()->m_OmokGame->m_WhiteStoneUserIndex).second->GetID().c_str();
+		auto winUserID = SetWinUserID(pRoom.value(), endResult);
+
+		strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), winUserID.c_str(), NCommon::MAX_USER_ID_SIZE);
+		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
+		pRoom.value()->NotifyGameResult(packetInfo.SessionIndex, winUserID.c_str());
+		pRoom.value()->Clear();
+	}
+
+	std::pair<ERROR_CODE,std::string> PacketProcess::PutStone(Room* pRoom, int x , int y , int sessionIndex)
+	{
+		auto result = pRoom->m_OmokGame->GamePutStone(x,y);
+		pRoom->m_OmokGame->printTest();
+
+		if (result != ERROR_CODE::NONE)
+		{
+			return { result,"" };
+		}
+
+		auto pNextTurnUser = sessionIndex == pRoom->m_UserList[0]->GetSessioIndex() ? pRoom->m_UserList[1] : pRoom->m_UserList[0];
+		pRoom->m_OmokGame->m_TurnIndex = pNextTurnUser->GetSessioIndex();
+
+		auto nextTurnUserID = pNextTurnUser->GetID().c_str();
+		pRoom->NotifyPutStoneInfo(sessionIndex, nextTurnUserID);
+
+		return { ERROR_CODE::NONE ,nextTurnUserID };
+		
+	}
+
+	std::string PacketProcess::SetWinUserID(Room* pRoom , ERROR_CODE endResult)
+	{
+		auto blackUserID = pRoom->m_UserList[pRoom->m_OmokGame->m_BlackStoneUserIndex]->GetID();
+		auto whiteUserID = pRoom->m_UserList[pRoom->m_OmokGame->m_WhiteStoneUserIndex]->GetID();
 
 		auto winUserID = blackUserID;
 
@@ -72,9 +96,6 @@ namespace ChatServerLib
 			winUserID = whiteUserID;
 		}
 
-		strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), winUserID, NCommon::MAX_USER_ID_SIZE);
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
-		pRoom.value()->NotifyGameResult(packetInfo.SessionIndex, winUserID);
-		pRoom.value()->Clear();
+		return winUserID;
 	}
 }
