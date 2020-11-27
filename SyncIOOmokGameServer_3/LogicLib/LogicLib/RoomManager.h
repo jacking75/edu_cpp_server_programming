@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Room.h"
-
+#include <functional>
 namespace ChatServerLib
 {
 
@@ -17,6 +17,8 @@ namespace ChatServerLib
 		std::optional <Room*> FindProperRoom();
 
 		std::optional <Room*> FindRoom(const int roomIndex);
+
+		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
 	private:
 

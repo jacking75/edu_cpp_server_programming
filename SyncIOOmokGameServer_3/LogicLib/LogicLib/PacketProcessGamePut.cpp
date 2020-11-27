@@ -17,14 +17,14 @@ namespace ChatServerLib
 		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 
 		if (pUser->IsCurDomainInGame() == false)
 		{
 			resPkt.SetError(ERROR_CODE::USER_STATE_NOT_GAME);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 
@@ -33,7 +33,7 @@ namespace ChatServerLib
 		if (packetInfo.SessionIndex != pRoom.value()->m_OmokGame->m_TurnIndex)
 		{
 			resPkt.SetError(ERROR_CODE::NOT_YOUR_TURN);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NOT_YOUR_TURN;
 		}
 		
@@ -42,24 +42,25 @@ namespace ChatServerLib
 		if (putStoneResult.first != ERROR_CODE::NONE)
 		{
 			resPkt.SetError(putStoneResult.first);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return putStoneResult.first;
 		}
 
 		auto nextTurnUserID = putStoneResult.second.c_str();
+
 		auto endResult = pRoom.value()->m_OmokGame->CheckGameEnd(reqPkt->x, reqPkt->y);
 
 		if (endResult == ERROR_CODE::NONE) //게임이 끝나지 않았다면 종료
 		{
 			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), nextTurnUserID , NCommon::MAX_USER_ID_SIZE);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::NONE;
 		}
 
 		auto winUserID = SetWinUserID(pRoom.value(), endResult);
 
 		strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), winUserID.c_str(), NCommon::MAX_USER_ID_SIZE);
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
 		pRoom.value()->NotifyGameResult(packetInfo.SessionIndex, winUserID.c_str());
 		pRoom.value()->Clear();
 	}

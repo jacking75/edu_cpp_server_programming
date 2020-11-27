@@ -61,7 +61,7 @@ namespace ChatServerLib
 				continue;
 			}
 
-			m_pRefNetwork->SendData(pUser->GetSessioIndex(), packetId, dataSize, pData);
+			SendPacketFunc(pUser->GetSessioIndex(), packetId, dataSize, pData);
 		}
 	}
 

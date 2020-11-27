@@ -3,7 +3,7 @@
 #include "User.h"
 #include "Omok.h"
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
-
+#include <functional>
 
 namespace ChatServerLib
 {
@@ -52,6 +52,9 @@ namespace ChatServerLib
 		std::unique_ptr<Omok> m_OmokGame = std::make_unique<Omok>();
 
 		std::vector<User*> m_UserList;
+
+		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
+
 
 	private:
 

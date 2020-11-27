@@ -5,7 +5,6 @@ namespace ChatServerLib
 {	
 	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr,NServerNetLib::ServerConfig pConfig)
 	{		
-		m_pRefNetwork = pNetwork;
 		m_pRefUserMgr = pUserMgr;
 		m_pRefRoomMgr = pRoomMgr;
 

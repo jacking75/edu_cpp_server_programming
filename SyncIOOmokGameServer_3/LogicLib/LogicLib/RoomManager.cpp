@@ -11,9 +11,9 @@ namespace ChatServerLib
 			auto newRoom = new Room();
 			m_RoomList.push_back(newRoom);
 			m_RoomList[i]->Init((short)i, 2, pNetwork);
+			m_RoomList[i]->SendPacketFunc = SendPacketFunc;
 		}
 	}
-
 
 	std::optional <Room*> RoomManager::FindRoom(const int roomIndex)
 	{

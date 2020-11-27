@@ -25,16 +25,23 @@ namespace ChatServerLib
 		{
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
-		
+
+		auto sendPacketFunc = [&](const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
+		{
+			m_pNetwork->SendData(sessionIndex, packetId, bodySize, pMsg);
+		};
+
 		m_pUserMgr = std::make_unique<UserManager>();
 		m_pUserMgr->Init(Config.MaxClientCount);
 
 		m_pRoomMgr = std::make_unique<RoomManager>();
+		m_pRoomMgr->SendPacketFunc = sendPacketFunc;
 		m_pRoomMgr->Init(Config.MaxRoomCountByLobby, m_pNetwork.get());
 
 		m_pPacketProc = std::make_unique<PacketProcess>();
+		m_pPacketProc->SendPacketFunc = sendPacketFunc;
 		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(), Config);
-
+	
 		m_IsRun = true;
 
 		return ERROR_CODE::NONE;

@@ -19,7 +19,7 @@ namespace ChatServerLib
 		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 		
@@ -28,7 +28,7 @@ namespace ChatServerLib
 		if (pRoom.has_value() == false) 
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
@@ -37,7 +37,7 @@ namespace ChatServerLib
 		if (enterRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(enterRet);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 			return enterRet;
 		}
 
@@ -45,7 +45,7 @@ namespace ChatServerLib
 
 		pRoom.value()->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}
@@ -62,7 +62,7 @@ namespace ChatServerLib
 		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 
@@ -71,7 +71,7 @@ namespace ChatServerLib
 		if (pUser->IsCurDomainInLogIn() == true)
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
 	
@@ -80,7 +80,7 @@ namespace ChatServerLib
 		if (pRoom.has_value() == false) 
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
@@ -88,13 +88,13 @@ namespace ChatServerLib
 		if (leaveRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(leaveRet);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return leaveRet;
 		}
 
 		pUser->LeaveRoom();
 
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}
@@ -112,14 +112,14 @@ namespace ChatServerLib
 		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 
 		if (pUser->IsCurDomainInLogIn() == true) 
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN;
 		}
 
@@ -127,13 +127,12 @@ namespace ChatServerLib
 		if (pRoom.has_value() == false) 
 		{
 			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
-	    pRoom.value()->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);
-		
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+	    pRoom.value()->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);	
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}

@@ -19,13 +19,13 @@ namespace ChatServerLib
 		if (addRet != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(addRet);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
 			return addRet;
 		}
 
 		userInfo.second->SetLogin();
 		resPkt.ErrorCode = (short)addRet;
-		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}

@@ -6,7 +6,7 @@
 #include "RoomManager.h"
 #include "../../ServerNetLib/ServerNetLib/Define.h"
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
-
+#include <functional>
 
 namespace ChatServerLib
 {		
@@ -43,9 +43,9 @@ namespace ChatServerLib
 
 		ERROR_CODE GameReady(PacketInfo packetInfo);
 
-	private:
+		std::function<void(const int, const short, const short, char*)> SendPacketFunc;		
 
-		NServerNetLib::TcpNetwork* m_pRefNetwork;
+	private:
 
 		UserManager* m_pRefUserMgr;
 
@@ -53,6 +53,8 @@ namespace ChatServerLib
 
 		std::string SetWinUserID(Room* pRoom, ERROR_CODE endResult);
 
-		std::pair<ERROR_CODE, std::string> PutStone(Room* pRoom, int x, int y, int sessionIndex)
+		std::pair<ERROR_CODE, std::string> PutStone(Room* pRoom, int x, int y, int sessionIndex);
+
+		ERROR_CODE UserSetGame(User* pUser, int sessionIndex);
 	};
 }

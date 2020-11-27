@@ -17,7 +17,7 @@ namespace ChatServerLib
 		if (errorCode != ERROR_CODE::NONE) 
 		{
 			resPkt.SetError(errorCode);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
 			return errorCode;
 		}
 
@@ -26,7 +26,7 @@ namespace ChatServerLib
 		if (pRoom.has_value() == false) 
 		{
 			roomResPkt.SetError(ERROR_CODE::MATCHING_FAIL);
-			m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(roomResPkt), (char*)&roomResPkt);
+			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(roomResPkt), (char*)&roomResPkt);
 			return errorCode;
 		}
 
@@ -34,7 +34,7 @@ namespace ChatServerLib
 		pUser->EnterRoom(pRoom.value()->GetIndex());
 		pRoom.value()->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
- 		m_pRefNetwork->SendData(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
 		
 		return ERROR_CODE::NONE;
 
