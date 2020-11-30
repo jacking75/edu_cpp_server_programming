@@ -1,0 +1,64 @@
+﻿  Building Custom Rule C:/Users/eehluhy/Downloads/hiredis-1.0.0/hiredis-1.0.0/CMakeLists.txt
+  alloc.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\alloc.c(40,17): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\alloc.c(59,21): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
+  async.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(57,54): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(76,33): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(77,33): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(447,17): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _stricmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(454,17): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _stricmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(499,13): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(500,13): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(766,20): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(791,16): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\async.c(799,16): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+  dict.c
+  hiredis.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(333,54): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(482,42): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(501,34): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(612,18): warning C4244: 'return': 'unsigned __int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(638,31): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(651,19): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\hiredis.c(940,48): warning C4244: '=': 'ssize_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  net.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(275,14): warning C4267: '함수': 'size_t'에서 'socklen_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(320,9): warning C4267: '함수': 'size_t'에서 'socklen_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(324,9): warning C4267: '함수': 'size_t'에서 'socklen_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(460,21): warning C4267: '함수': 'size_t'에서 'socklen_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(483,13): warning C4267: '함수': 'size_t'에서 'socklen_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\net.c(609,4): warning C4102: 'oom': 참조되지 않은 레이블입니다.
+  read.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(127,1): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(217,39): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(233,32): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(302,21): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _stricmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(304,28): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _stricmp. See online help for details.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(363,38): warning C4267: '=': 'size_t'에서 'unsigned long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(386,29): warning C4244: '+=': '__int64'에서 'unsigned long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(399,49): warning C4312: '형식 캐스트': 'long'에서 더 큰 'void *'(으)로의 변환입니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\read.c(497,45): warning C4312: '형식 캐스트': 'long'에서 더 큰 'void *'(으)로의 변환입니다.
+  sds.c
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(101,52): warning C4267: '=': 'size_t'에서 'unsigned char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(106,30): warning C4267: '=': 'size_t'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(107,32): warning C4267: '=': 'size_t'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(113,30): warning C4267: '=': 'size_t'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(114,32): warning C4267: '=': 'size_t'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(120,30): warning C4267: '=': 'size_t'에서 'uint32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(121,32): warning C4267: '=': 'size_t'에서 'uint32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(177,1): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(459,13): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(488,13): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(587,18): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(615,23): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(632,27): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(650,27): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(758,1): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(765,1): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\eehluhy\Downloads\hiredis-1.0.0\hiredis-1.0.0\sds.c(789,31): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  sockcompat.c
+  코드를 생성하고 있습니다...
+  Auto build dll exports
+     C:/Users/eehluhy/Desktop/새 폴더/Debug/hiredis.lib 라이브러리 및 C:/Users/eehluhy/Desktop/새 폴더/Debug/hiredis.exp 개체를 생성하고 있습니다.
+  hiredis.vcxproj -> C:\Users\eehluhy\Desktop\새 폴더\Debug\hiredis.dll
