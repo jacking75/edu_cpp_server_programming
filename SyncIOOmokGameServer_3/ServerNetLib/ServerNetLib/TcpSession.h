@@ -42,8 +42,6 @@ namespace NServerNetLib
 
 		NET_ERROR_CODE FlushSendBuffer();
 
-		NET_ERROR_CODE RecvBuffer(int sessionIndex);
-
 		void DeleteClientBuffer();
 
 		void NewSessionBuffer(int maxClientRecvBufferSize, int maxClientSendBufferSize);
@@ -52,8 +50,6 @@ namespace NServerNetLib
 	private :
 
 		std::optional <int> SendSocket();
-
-		std::optional <int> RecvSocket();
 
 		std::mutex sendPacketMutex;
 	};

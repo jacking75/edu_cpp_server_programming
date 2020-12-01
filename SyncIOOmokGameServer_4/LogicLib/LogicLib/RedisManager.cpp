@@ -38,6 +38,7 @@ namespace OmokServerLib
 		while (m_Connection != nullptr)
 		{
 			std::unique_lock<std::mutex> lock(m_Mutex);
+
 			if (m_RequestQueue.empty())
 			{
 				lock.unlock();
@@ -51,6 +52,7 @@ namespace OmokServerLib
 			CommandResponse result;
 			result.m_ErrorCode = ERROR_CODE::NONE;
 
+			
 			std::string commandString = CommandRequestToString(request);
 			if (commandString == "")
 			{
@@ -60,6 +62,7 @@ namespace OmokServerLib
 			}
 
 			redisReply* reply = (redisReply*)redisCommand(m_Connection, commandString.c_str());
+			
 			if (reply == nullptr)
 			{
 				result.m_ErrorCode = ERROR_CODE::REDIS_GET_FAIL;
@@ -67,6 +70,7 @@ namespace OmokServerLib
 				freeReplyObject(reply);
 				continue;
 			}
+
 			if (reply->str == nullptr)
 			{
 				result.m_Result = "";
@@ -74,7 +78,9 @@ namespace OmokServerLib
 				freeReplyObject(reply);
 				continue;
 			}
+
 			result.m_Result = reply->str;
+
 			if (reply->type == REDIS_REPLY_ERROR)
 			{
 				result.m_ErrorCode = ERROR_CODE::REDIS_GET_FAIL;
@@ -119,46 +125,19 @@ namespace OmokServerLib
 
 	std::string RedisManager::CommandRequestToString(const CommandRequest& request)
 	{
-		switch (request.m_CommandType)
+
+		if (request.m_CommandBodySize < sizeof(Get))
 		{
-		case CommandType::SET:
-		{
-			if (sizeof(Set) > request.m_CommandBodySize)
-			{
-				return "";
-			}
-
-			std::ostringstream outputStream;
-			outputStream << "SET ";
-
-			Set* set = reinterpret_cast<Set*>(request.m_CommandBody);
-			outputStream << set->m_Key << " " << set->m_Value;
-
-			if (set->m_ExpireTime != 0)
-			{
-				outputStream << " EX " << set->m_ExpireTime;
-			}
-
-			return outputStream.str();
-		}
-		case CommandType::GET:
-		{
-			if (request.m_CommandBodySize < sizeof(Get))
-			{
-				return "";
-			}
-
-			std::ostringstream outputStream;
-			outputStream << "GET ";
-
-			Get* get = reinterpret_cast<Get*>(request.m_CommandBody);
-			outputStream << get->m_Key;
-
-			return outputStream.str();
-		}
+			return "";
 		}
 
-		return "";
+		std::string output = "GET";
+
+		Get* get = reinterpret_cast<Get*>(request.m_CommandBody);
+		auto resultString = output + get->m_Key;
+
+		return resultString;
+
 	}
 
 

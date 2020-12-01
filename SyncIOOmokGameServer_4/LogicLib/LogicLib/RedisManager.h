@@ -4,12 +4,14 @@
 #include <queue>
 #include <mutex>
 #include "RedisProtocol.h"
+#include <hiredis.h>
 
 namespace OmokServerLib
 {
 	class RedisManager
 	{
 	public:
+
 		ERROR_CODE Connect(const char* ipAddress, const int portNum);
 
 		void Disconnect();
