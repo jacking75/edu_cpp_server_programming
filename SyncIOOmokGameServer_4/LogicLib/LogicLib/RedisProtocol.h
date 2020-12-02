@@ -9,9 +9,11 @@ namespace OmokServerLib
 	const int VALUE_MAX_SIZE = 4096;
 	const int REQUEST_MAX_SIZE = 4096;
 	const int RESULT_MAX_SIZE = 4096;
+	const int REDIS_TASK_ID_MAX = 100;
 
 	struct CommandRequest
 	{
+		int RedisTaskID = 0;
 		char* m_CommandBody = nullptr;
 		int m_CommandBodySize = 0;
 	};
@@ -27,4 +29,9 @@ namespace OmokServerLib
 		char m_Key[KEY_MAX_SIZE] = { 0, };
 	};
 
+	enum class RedisTaskID : short
+	{
+		confirmLogin = 1
+
+	};
 }

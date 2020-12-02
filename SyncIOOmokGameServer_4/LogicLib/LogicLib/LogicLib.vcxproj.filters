@@ -48,6 +48,9 @@
     <ClCompile Include="UserManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="RedisHandler.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="RedisManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -89,10 +92,13 @@
     <ClInclude Include="PacketProcess.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="RedisManager.h">
+    <ClInclude Include="RedisProtocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="RedisProtocol.h">
+    <ClInclude Include="RedisHandler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RedisManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

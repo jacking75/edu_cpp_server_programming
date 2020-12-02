@@ -47,7 +47,7 @@ namespace OmokServerLib
 
 	}
 
-	OmokServerLib::ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
+	ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
 	{
 		std::cout << "Client Connect [ " << packetInfo.SessionIndex << " ]" << std::endl;
 

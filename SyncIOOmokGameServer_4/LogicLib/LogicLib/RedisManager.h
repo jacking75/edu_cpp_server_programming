@@ -1,33 +1,41 @@
 #pragma once
 #include "ErrorCode.h"
-#include <basetsd.h>
-#include <queue>
-#include <mutex>
-#include "RedisProtocol.h"
 #include <hiredis.h>
+#include <mutex>
+#include <queue>
+#include <basetsd.h>
+#include "RedisProtocol.h"
+#include "RedisHandler.h"
 
 namespace OmokServerLib
 {
 	class RedisManager
 	{
+		using PacketInfo = CommandRequest;
+		typedef ERROR_CODE(RedisManager::* PacketFunc)(PacketInfo);
+		PacketFunc PacketFuncArray[REDIS_TASK_ID_MAX];
+
 	public:
 
 		ERROR_CODE Connect(const char* ipAddress, const int portNum);
 
 		void Disconnect();
 
-		void ExecuteCommandAsync(const CommandRequest& request);
+		void Stop();
 
-		CommandResponse GetCommandResult();
+		void RedisProcessThread();
+
+		void Init();
+
+		void Process(PacketInfo packetInfo);
+
+	public:
+
+		ERROR_CODE ConfirmLogin(PacketInfo packinfo);
+
+		bool GetCommandResult();
 
 	private:
-
-		void ExecuteCommandProcess();
-
-		std::string CommandRequestToString(const CommandRequest& request);
-
-	private:
-
 		redisContext* m_Connection = nullptr;
 
 		std::unique_ptr<std::thread> m_RedisThread = nullptr;
@@ -40,7 +48,7 @@ namespace OmokServerLib
 		UINT32 m_ReceiveCheckTick = 0;
 		UINT32 m_ReceiveCheckTimeOut = 0;
 
+		bool m_IsRun = false;
 	};
 
 }
-

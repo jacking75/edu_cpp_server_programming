@@ -26,6 +26,11 @@ namespace OmokServerLib
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 
+		auto sendPacketFunc = [&](const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
+		{
+			m_pNetwork->SendData(sessionIndex, packetId, bodySize, pMsg);
+		};
+
 		m_pRedisMgr = std::make_unique<RedisManager>();
 		auto redisResult = m_pRedisMgr->Connect(Config.RedisAddress.c_str(), Config.RedisPortNum);
 
@@ -33,11 +38,7 @@ namespace OmokServerLib
 		{
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
-
-		auto sendPacketFunc = [&](const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
-		{
-			m_pNetwork->SendData(sessionIndex, packetId, bodySize, pMsg);
-		};
+		m_pRedisMgr->SendPacketFunc = sendPacketFunc;
 
 		m_pUserMgr = std::make_unique<UserManager>();
 		m_pUserMgr->Init(Config.MaxClientCount);
