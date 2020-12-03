@@ -95,9 +95,6 @@
     <ClInclude Include="RedisProtocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="RedisHandler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="RedisManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

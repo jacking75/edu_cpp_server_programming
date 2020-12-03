@@ -1,21 +1,24 @@
 #pragma once
+#include <optional>
 #include "ErrorCode.h"
-#include <hiredis.h>
 #include <mutex>
 #include <queue>
 #include <basetsd.h>
 #include "RedisProtocol.h"
-#include "RedisHandler.h"
+#include <hiredis.h>
+#include <functional>
 
 namespace OmokServerLib
 {
 	class RedisManager
 	{
-		using PacketInfo = CommandRequest;
-		typedef ERROR_CODE(RedisManager::* PacketFunc)(PacketInfo);
+		using RedisRequestInfo = CommandRequest;
+		typedef ERROR_CODE(RedisManager::* PacketFunc)(RedisRequestInfo);
 		PacketFunc PacketFuncArray[REDIS_TASK_ID_MAX];
 
 	public:
+		RedisManager();
+		~RedisManager();
 
 		ERROR_CODE Connect(const char* ipAddress, const int portNum);
 
@@ -27,26 +30,27 @@ namespace OmokServerLib
 
 		void Init();
 
-		void Process(PacketInfo packetInfo);
+		void Process(RedisRequestInfo redisRequestInfo);
+
+		void InsertRedisRequestQueue(RedisRequestInfo redisRequestInfo);
+
+		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
 	public:
 
-		ERROR_CODE ConfirmLogin(PacketInfo packinfo);
+		ERROR_CODE ConfirmLogin(RedisRequestInfo redisRequestInfo);
 
-		bool GetCommandResult();
+		std::optional <CommandRequest> GetCommandResult();
+
 
 	private:
+
 		redisContext* m_Connection = nullptr;
 
 		std::unique_ptr<std::thread> m_RedisThread = nullptr;
 		std::mutex m_Mutex;;
 
-		std::queue<CommandRequest> m_RequestQueue;
-		std::queue<CommandResponse> m_ResponseQueue;
-
-		UINT32 m_SendCheckTick = 0;
-		UINT32 m_ReceiveCheckTick = 0;
-		UINT32 m_ReceiveCheckTimeOut = 0;
+		std::deque<CommandRequest> m_RedisRequestQueue;
 
 		bool m_IsRun = false;
 	};

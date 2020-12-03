@@ -13,6 +13,14 @@ namespace OmokServerLib
 		auto reqPkt = (NCommon::PktLogInReq*)packetInfo.pRefData;
 		NCommon::PktLogInRes resPkt;
 
+		CommandRequest redisRequestInfo;
+		redisRequestInfo.sessionIndex = packetInfo.SessionIndex;
+		redisRequestInfo.redisTaskID = (int)RedisTaskID::confirmLogin;
+		redisRequestInfo.CommandBody = packetInfo.pRefData;
+
+		m_pRefRedisMgr->InsertRedisRequestQueue(redisRequestInfo);
+
+		/*
   		auto addRet = m_pRefUserMgr->AddUser(packetInfo.SessionIndex, reqPkt->szID);
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 		
@@ -26,6 +34,7 @@ namespace OmokServerLib
 		userInfo.second->SetLogin();
 		resPkt.ErrorCode = (short)addRet;
 		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+		*/
 
 		return ERROR_CODE::NONE;
 	}

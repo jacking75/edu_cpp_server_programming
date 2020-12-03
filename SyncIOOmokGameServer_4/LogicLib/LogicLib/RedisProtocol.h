@@ -13,20 +13,9 @@ namespace OmokServerLib
 
 	struct CommandRequest
 	{
-		int RedisTaskID = 0;
-		char* m_CommandBody = nullptr;
-		int m_CommandBodySize = 0;
-	};
-
-	struct CommandResponse
-	{
-		ERROR_CODE m_ErrorCode = ERROR_CODE::NONE;
-		std::string m_Result;
-	};
-
-	struct Get
-	{
-		char m_Key[KEY_MAX_SIZE] = { 0, };
+		int sessionIndex = -1;
+		int redisTaskID = 0;
+		char* CommandBody = nullptr;
 	};
 
 	enum class RedisTaskID : short

@@ -2,7 +2,6 @@
 
 namespace OmokServerLib
 {
-	//큐만들기
 	RedisManager::RedisManager()
 	{
 
@@ -50,16 +49,17 @@ namespace OmokServerLib
 
 	}
 
-	void RedisManager::Process(PacketInfo packetInfo)
-	{
-		auto packetId = packetInfo.RedisTaskID;
 
-		if (PacketFuncArray[packetId] == nullptr)
+	void RedisManager::Process(RedisRequestInfo redisRequestInfo)
+	{
+		auto redisTaskID = redisRequestInfo.redisTaskID;
+
+		if (PacketFuncArray[redisTaskID] == nullptr)
 		{
 			return;
 		}
 
-		(this->*PacketFuncArray[packetId])(packetInfo);
+		(this->*PacketFuncArray[redisTaskID])(redisRequestInfo);
 
 	}
 
@@ -68,7 +68,7 @@ namespace OmokServerLib
 		m_IsRun = false;
 	}
 
-	/*
+
 	void RedisManager::RedisProcessThread()
 	{
 		while (m_IsRun)
@@ -86,7 +86,11 @@ namespace OmokServerLib
 		}
 	}
 
-	*/
+	void RedisManager::InsertRedisRequestQueue(RedisRequestInfo redisRequestInfo)
+	{
+		m_RedisRequestQueue.push_back(redisRequestInfo);
+	}
+	
 	void RedisManager::Disconnect()
 	{
 		m_RedisThread->join();
