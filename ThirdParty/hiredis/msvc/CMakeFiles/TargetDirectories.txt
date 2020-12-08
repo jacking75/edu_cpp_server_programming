@@ -1,0 +1,6 @@
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/hiredis.dir
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/INSTALL.dir
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/RUN_TESTS.dir
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/hiredis-test.dir
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/ALL_BUILD.dir
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/ZERO_CHECK.dir

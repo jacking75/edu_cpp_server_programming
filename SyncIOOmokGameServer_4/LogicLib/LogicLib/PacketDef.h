@@ -123,13 +123,7 @@ namespace NCommon
 		char Msg[MAX_ROOM_CHAT_MSG_SIZE + 1] = { 0, };
 	};
 
-	std::string RedisKeyForm(char* userId)
-	{
-		return std::string{ std::string{"Login##"} + userId };
-	}
 
 #pragma pack(pop)
-
-
 
 }

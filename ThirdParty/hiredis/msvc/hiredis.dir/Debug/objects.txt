@@ -1,0 +1,8 @@
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/alloc.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/async.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/dict.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/hiredis.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/net.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/read.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/sds.obj
+C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/hiredis.dir/Debug/sockcompat.obj

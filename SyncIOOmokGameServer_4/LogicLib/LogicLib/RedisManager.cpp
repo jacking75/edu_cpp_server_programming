@@ -1,4 +1,11 @@
+#pragma comment(lib, "hiredis")
+#pragma warning(push)
+#pragma warning(disable : 4200)
+#include <hiredis.h>
+#pragma warning(pop)
 #include "RedisManager.h"
+#include "PacketDef.h"
+
 
 namespace OmokServerLib
 {
@@ -41,7 +48,7 @@ namespace OmokServerLib
 		{
 			PacketFuncArray[i] = nullptr;
 		}
-		
+
 		PacketFuncArray[(int)RedisTaskID::confirmLogin] = &RedisManager::ConfirmLogin;
 
 		m_IsRun = true;
@@ -77,6 +84,7 @@ namespace OmokServerLib
 
 			if (packetInfo.has_value() == false)
 			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
 			}
 			else
@@ -90,7 +98,7 @@ namespace OmokServerLib
 	{
 		m_RedisRequestQueue.push_back(redisRequestInfo);
 	}
-	
+
 	void RedisManager::Disconnect()
 	{
 		m_RedisThread->join();
@@ -99,5 +107,47 @@ namespace OmokServerLib
 			redisFree(m_Connection);
 		}
 		m_Connection = nullptr;
+	}
+
+	ERROR_CODE RedisManager::ConfirmLogin(RedisRequestInfo redisRequestInfo)
+	{
+		auto reqPkt = (NCommon::PktLogInReq*)redisRequestInfo.CommandBody;
+		NCommon::PktLogInRes resPkt;
+
+		std::string userId(reqPkt->szID);
+		auto commandString = "GET " + userId;
+
+		redisReply* reply = (redisReply*)redisCommand(m_Connection, commandString.c_str());
+
+		if (reply == nullptr || reply->str == nullptr || reply->type == REDIS_REPLY_ERROR)
+		{
+			resPkt.SetError(ERROR_CODE::REDIS_GET_FAIL);
+			freeReplyObject(reply);
+			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+			return ERROR_CODE::REDIS_GET_FAIL;
+		}
+
+		if (reply->str == reqPkt->szPW)
+		{
+			resPkt.SetError(ERROR_CODE::NONE);
+			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+		}
+
+		freeReplyObject(reply);
+		return ERROR_CODE::NONE;
+	}
+
+	std::optional <CommandRequest> RedisManager::GetCommandResult()
+	{
+		std::lock_guard<std::mutex> lock(m_Mutex);
+
+		if (m_RedisRequestQueue.empty() == false)
+		{
+			CommandRequest packetInfo = m_RedisRequestQueue.front();
+			m_RedisRequestQueue.pop_front();
+			return packetInfo;
+		}
+
+		return std::nullopt;
 	}
 }

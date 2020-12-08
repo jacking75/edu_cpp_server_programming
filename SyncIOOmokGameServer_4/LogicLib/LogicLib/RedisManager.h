@@ -1,12 +1,17 @@
 #pragma once
-#include <optional>
+
 #include "ErrorCode.h"
+#include <optional>
+
+
 #include <mutex>
 #include <queue>
 #include <basetsd.h>
 #include "RedisProtocol.h"
-#include <hiredis.h>
 #include <functional>
+
+
+struct redisContext;
 
 namespace OmokServerLib
 {

@@ -1,0 +1,10 @@
+^C:\USERS\EEHLUHY\DESKTOP\C++\EDU_COM2US_CPP_SERVER_TRAINING\THIRDPARTY\HIREDIS\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis -BC:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc --check-stamp-file C:/Users/eehluhy/Desktop/c++/edu_com2us_cpp_server_Training/ThirdParty/hiredis/msvc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
