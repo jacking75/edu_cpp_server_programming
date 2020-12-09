@@ -121,6 +121,14 @@ namespace csharp_test_client
 
         ALREADY_GAME_STATE = 308,
         ALREADY_READY_STATE = 309,
-        USER_STATE_NOT_GAME = 310
+        USER_STATE_NOT_GAME = 310,
+
+
+        REDIS_ALREADY_CONNECT_STATE = 320,
+        REDIS_CONNECT_FAIL = 321,
+        REDIS_COMMAND_FAIL = 322,
+        REDIS_GET_FAIL = 323,
+        REDIS_RECEIVE_TIME_OUT = 324,
+        REDIS_LOGIN_PW_INCORRECT = 325
     }
 }
