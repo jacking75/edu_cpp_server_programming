@@ -18,11 +18,16 @@ namespace OmokServerLib
 
 	ERROR_CODE OmokServer::Init(const NServerNetLib::ServerConfig Config)
 	{
+		m_pLogger = std::make_unique<NServerNetLib::Logger>();
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();
-		auto result = m_pNetwork->Init(Config);
+
+		m_pLogger->info("LoadConfig Port : {} , BackLog : {} ", Config.Port, Config.BackLogCount);
+
+		auto result = m_pNetwork->Init(Config, m_pLogger.get());
 
 		if (result != NServerNetLib::NET_ERROR_CODE::NONE)
 		{
+			m_pLogger->info("Network Init Fail");
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 
@@ -36,6 +41,7 @@ namespace OmokServerLib
 
 		if (redisResult != ERROR_CODE::NONE)
 		{
+			m_pLogger->info("Redis Connect Fail");
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 		m_pRedisMgr->SendPacketFunc = sendPacketFunc;
@@ -49,9 +55,11 @@ namespace OmokServerLib
 
 		m_pPacketProc = std::make_unique<PacketProcess>();
 		m_pPacketProc->SendPacketFunc = sendPacketFunc;
-		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(),m_pRedisMgr.get(), Config);
+		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(),m_pRedisMgr.get(), m_pLogger.get(), Config);
 	
 		m_IsRun = true;
+
+		m_pLogger->info("Init Success. Server Run");
 
 		return ERROR_CODE::NONE;
 	}

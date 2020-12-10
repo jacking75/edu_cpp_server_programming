@@ -3,11 +3,12 @@
 
 namespace OmokServerLib
 {	
-	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::ServerConfig pConfig)
+	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, NServerNetLib::ServerConfig pConfig)
 	{		
 		m_pRefUserMgr = pUserMgr;
 		m_pRefRoomMgr = pRoomMgr;
 		m_pRefRedisMgr = pRedisMgr;
+		m_pRefLogger = pLogger;
 
 		using netLibPacketId = NServerNetLib::PACKET_ID;
 		using commonPacketId = NCommon::PACKET_ID;
@@ -49,14 +50,12 @@ namespace OmokServerLib
 
 	ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
 	{
-		std::cout << "Client Connect [ " << packetInfo.SessionIndex << " ]" << std::endl;
-
+	//	std::cout << "Client Connect [ " << packetInfo.SessionIndex << " ]" << std::endl;
 		return ERROR_CODE::NONE;
 	}
 	
 	ERROR_CODE PacketProcess::NtfSysCloseSession(PacketInfo packetInfo)
 	{
-		std::cout << "Close Session [ " << packetInfo.SessionIndex << " ]" << std::endl;
 		auto pUser = std::get<1>(m_pRefUserMgr->GetUser(packetInfo.SessionIndex));
 
 		if (pUser) 
@@ -68,6 +67,8 @@ namespace OmokServerLib
 			}
 			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}
+
+		m_pRefLogger->info("NtfSysCloseSession | Close Session [{}]", packetInfo.SessionIndex);
 
 		return ERROR_CODE::NONE;
 	}

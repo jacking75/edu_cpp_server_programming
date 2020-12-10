@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <thread>
-
 #include "../../LogicLib/LogicLib/OmokServer.h"
+
 
 int main()
 {
@@ -25,13 +25,11 @@ int main()
 
 	if (omokServer.Init(m_pServerConfig) != OmokServerLib::ERROR_CODE::NONE)
 	{
-		std::cout << "Init Fail";
 		return 0;
 	}
 
 	if (omokServer.Run() != OmokServerLib::ERROR_CODE::NONE)
 	{
-		std::cout << "Run Fail";
 		return 0;
 	}
 	

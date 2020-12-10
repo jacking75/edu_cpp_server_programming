@@ -21,10 +21,11 @@ namespace NServerNetLib
         mSendThread->join();
     }
 
-    NET_ERROR_CODE TcpNetwork::Init(const ServerConfig pConfig)
+    NET_ERROR_CODE TcpNetwork::Init(const ServerConfig pConfig, Logger* pLogger)
     {
         m_Config = pConfig;
-
+        m_pRefLogger = pLogger;
+        
         auto initRet = InitServerSocket();
 
         if (initRet != NET_ERROR_CODE::NONE)
@@ -42,6 +43,8 @@ namespace NServerNetLib
         FD_SET(m_ServerSockfd, &m_Readfds);
 
         auto sessionPoolSize = CreateSessionPool(pConfig.MaxClientCount + pConfig.ExtraClientCount);
+
+        m_pRefLogger->info("Network Init | SessionPoolSize : {}", sessionPoolSize);
 
         return NET_ERROR_CODE::NONE;
     }
@@ -150,6 +153,12 @@ namespace NServerNetLib
 
             if (client_sockfd == INVALID_SOCKET)
             {
+                if (WSAGetLastError() == WSAEWOULDBLOCK)
+                {
+                    return NET_ERROR_CODE::ACCEPT_API_WSAEWOULDBLOCK;
+                }
+
+                m_pRefLogger->error("NewSession | Wrong socket cannot accept");
                 return NET_ERROR_CODE::ACCEPT_API_ERROR;
             }
 
@@ -157,6 +166,7 @@ namespace NServerNetLib
             auto newSessionIndex = AllocClientSessionIndex();
             if (newSessionIndex < 0)
             {
+                m_pRefLogger->error("NewSession | client_sockfd({})  >= MAX_SESSION", client_sockfd);
                 CloseSession(SOCKET_CLOSE_CASE::SESSION_POOL_EMPTY, client_sockfd, -1);
                 return NET_ERROR_CODE::ACCEPT_MAX_SESSION_COUNT;
             }
@@ -178,7 +188,7 @@ namespace NServerNetLib
         session->SocketFD = fd;
 
         AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
-
+        m_pRefLogger->info("ConnectedSession | New Session. FD({}), m_ConnectSeq({})", fd, m_ConnectSeq);
     }
 
     std::optional <RecvPacketInfo> TcpNetwork::GetReceivePacket()
@@ -383,6 +393,7 @@ namespace NServerNetLib
             return NET_ERROR_CODE::SERVER_SOCKET_LISTEN_FAIL;
         }
 
+        m_pRefLogger->info("BindListen | Listen. ServerSockfd({})", m_ServerSockfd);
         return NET_ERROR_CODE::NONE;
     }
 

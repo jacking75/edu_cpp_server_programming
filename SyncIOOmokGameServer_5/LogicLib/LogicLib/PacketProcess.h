@@ -26,7 +26,7 @@ namespace OmokServerLib
 
 		ERROR_CODE NtfSysCloseSession(PacketInfo packetInfo);
 
-		void Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::ServerConfig pConfig);
+		void Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, NServerNetLib::ServerConfig pConfig);
 
 		void Process(PacketInfo packetInfo);
 
@@ -53,6 +53,8 @@ namespace OmokServerLib
 		RoomManager* m_pRefRoomMgr;
 
 		RedisManager* m_pRefRedisMgr;
+
+		NServerNetLib::Logger* m_pRefLogger;
 
 		std::string SetWinUserID(Room* pRoom, ERROR_CODE endResult);
 

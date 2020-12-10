@@ -15,7 +15,7 @@
 #include <optional>
 #include <thread>
 #include <mutex>
-
+#include "logger.h"
 
 namespace NServerNetLib
 {
@@ -37,7 +37,7 @@ namespace NServerNetLib
 		TcpNetwork();
 		 ~TcpNetwork();
 
-		NET_ERROR_CODE Init(const ServerConfig pConfig);
+		NET_ERROR_CODE Init(const ServerConfig pConfig, Logger* pLogger);
 
 		NET_ERROR_CODE SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg);
 
@@ -105,6 +105,8 @@ namespace NServerNetLib
 		std::deque<RecvPacketInfo> m_PacketQueue;
 
 		std::deque<RecvPacketInfo> m_SendPacketQueue;
+
+		Logger* m_pRefLogger;
 
 	};
 }
