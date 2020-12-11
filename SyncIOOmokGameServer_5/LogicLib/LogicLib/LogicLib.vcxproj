@@ -167,6 +167,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConnectedUserManager.h" />
     <ClCompile Include="Omok.cpp" />
     <ClCompile Include="OmokServer.cpp" />
     <ClCompile Include="PacketProcess.cpp" />

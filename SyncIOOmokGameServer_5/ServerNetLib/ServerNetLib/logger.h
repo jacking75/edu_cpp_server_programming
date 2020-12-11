@@ -8,7 +8,6 @@ namespace NServerNetLib
 {
 	class Logger
 	{
-		// singleton
 	private:
 		static Logger* m_instance;
 		static std::once_flag m_initFlag;
@@ -20,7 +19,6 @@ namespace NServerNetLib
 			return m_instance;
 		}
 
-		// function
 	private:
 		std::shared_ptr<spdlog::logger>	m_loggerConsole;
 

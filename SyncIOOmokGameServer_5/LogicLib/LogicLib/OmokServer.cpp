@@ -27,7 +27,7 @@ namespace OmokServerLib
 
 		if (result != NServerNetLib::NET_ERROR_CODE::NONE)
 		{
-			m_pLogger->info("Network Init Fail");
+			m_pLogger->error("Network Init Fail");
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 
@@ -41,7 +41,7 @@ namespace OmokServerLib
 
 		if (redisResult != ERROR_CODE::NONE)
 		{
-			m_pLogger->info("Redis Connect Fail");
+			m_pLogger->error("Redis Connect Fail");
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 		m_pRedisMgr->SendPacketFunc = sendPacketFunc;
@@ -89,6 +89,7 @@ namespace OmokServerLib
 	{	
 		while (m_IsRun)
 		{
+			m_pPacketProc->StateCheck();
 			auto packetInfo = m_pNetwork->GetReceivePacket();
 
 			if (packetInfo.has_value() == false)

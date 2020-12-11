@@ -35,9 +35,7 @@ namespace OmokServerLib
 			Disconnect();
 			return ERROR_CODE::REDIS_CONNECT_FAIL;
 		}
-
 		Init();
-
 		return ERROR_CODE::NONE;
 	}
 
@@ -134,6 +132,7 @@ namespace OmokServerLib
 			resPkt.SetError(ERROR_CODE::NONE);
 			freeReplyObject(reply);
 			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
+			//m_pConnectedUserManager.SetLogin(redisRequestInfo.sessionIndex);
 			return ERROR_CODE::NONE;
 		}
 

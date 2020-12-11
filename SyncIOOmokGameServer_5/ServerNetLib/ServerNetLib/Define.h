@@ -19,6 +19,8 @@ namespace NServerNetLib
 		std::string RedisAddress;
 		int RedisPortNum;
 
+		bool IsLoginCheck;
+
 	};
 
 	const int MAX_IP_LEN = 32; // IP 문자열 최대 길이

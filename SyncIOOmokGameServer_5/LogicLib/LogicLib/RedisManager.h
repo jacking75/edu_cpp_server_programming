@@ -9,6 +9,7 @@
 #include <basetsd.h>
 #include "RedisProtocol.h"
 #include <functional>
+#include "ConnectedUserManager.h"
 
 
 struct redisContext;
@@ -53,6 +54,7 @@ namespace OmokServerLib
 		redisContext* m_Connection = nullptr;
 
 		std::unique_ptr<std::thread> m_RedisThread = nullptr;
+
 		std::mutex m_Mutex;;
 
 		std::deque<CommandRequest> m_RedisRequestQueue;

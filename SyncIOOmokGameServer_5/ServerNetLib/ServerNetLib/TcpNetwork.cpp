@@ -405,6 +405,15 @@ namespace NServerNetLib
         return result;
     }
 
+    void TcpNetwork::ForcingClose(const int sessionIndex)
+    {
+        if (m_ClientSessionPool[sessionIndex]->IsConnected() == false) {
+            return;
+        }
+
+        CloseSession(SOCKET_CLOSE_CASE::FORCING_CLOSE, m_ClientSessionPool[sessionIndex]->SocketFD, sessionIndex);
+    }
+
     void TcpNetwork::Release()
     {
         WSACleanup();

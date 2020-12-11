@@ -47,6 +47,9 @@ namespace NServerNetLib
 
 		std::optional <RecvPacketInfo> GetReceivePacket();
 
+		int ClientSessionPoolSize()  { return (int)m_ClientSessionPool.size(); }
+
+		void ForcingClose(const int sessionIndex);
 
 	private:
 

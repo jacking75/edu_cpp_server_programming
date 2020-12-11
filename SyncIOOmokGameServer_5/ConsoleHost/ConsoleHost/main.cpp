@@ -21,7 +21,7 @@ int main()
 
 	m_pServerConfig.RedisAddress = "127.0.0.1";
 	m_pServerConfig.RedisPortNum = 6379;
-	
+	m_pServerConfig.IsLoginCheck = false;
 
 	if (omokServer.Init(m_pServerConfig) != OmokServerLib::ERROR_CODE::NONE)
 	{

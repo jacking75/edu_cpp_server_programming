@@ -8,6 +8,7 @@
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
 #include <functional>
 #include "RedisManager.h"
+#include "ConnectedUserManager.h"
 
 namespace OmokServerLib
 {		
@@ -46,6 +47,8 @@ namespace OmokServerLib
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;		
 
+		void StateCheck();
+
 	private:
 
 		UserManager* m_pRefUserMgr;
@@ -53,6 +56,8 @@ namespace OmokServerLib
 		RoomManager* m_pRefRoomMgr;
 
 		RedisManager* m_pRefRedisMgr;
+
+		std::unique_ptr<ConnectedUserManager> m_pConnectedUserManager;
 
 		NServerNetLib::Logger* m_pRefLogger;
 
