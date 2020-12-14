@@ -188,7 +188,7 @@ namespace NServerNetLib
         session->SocketFD = fd;
 
         AddPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
-        m_pRefLogger->info("ConnectedSession | New Session. FD({}), m_ConnectSeq({})", fd, m_ConnectSeq);
+        m_pRefLogger->info("ConnectedSession | New Session. FD({})", fd);
     }
 
     std::optional <RecvPacketInfo> TcpNetwork::GetReceivePacket()

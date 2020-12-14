@@ -9,17 +9,6 @@ namespace NServerNetLib
 	class Logger
 	{
 	private:
-		static Logger* m_instance;
-		static std::once_flag m_initFlag;
-
-	public:
-		static Logger* getInstance()
-		{
-			std::call_once(m_initFlag, []() { m_instance = new Logger(); });
-			return m_instance;
-		}
-
-	private:
 		std::shared_ptr<spdlog::logger>	m_loggerConsole;
 
 	public:

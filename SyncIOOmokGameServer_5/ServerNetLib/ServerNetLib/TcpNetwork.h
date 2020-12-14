@@ -99,8 +99,6 @@ namespace NServerNetLib
 
 		fd_set m_Readfds;
 
-		int64_t m_ConnectSeq = 0;
-
 		std::vector<TcpSession*> m_ClientSessionPool;
 
 		std::deque<int> m_ClientSessionPoolIndex;

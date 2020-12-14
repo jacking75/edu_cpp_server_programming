@@ -1,7 +1,6 @@
 #pragma once
 #include <ctime>
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
-#include <iostream>
 
 
 namespace OmokServerLib
@@ -34,8 +33,6 @@ namespace OmokServerLib
 			{
 				ConnectedUserList.emplace_back(ConnectedUser());
 			}
-
-			m_IsLoginCheck = pConfig.IsLoginCheck;
 		}
 
 		void SetConnectSession(const int sessionIndex)
@@ -56,7 +53,6 @@ namespace OmokServerLib
 		void LoginCheck()
 		{
 			auto curTime = std::chrono::system_clock::now();
-
 			auto curSecTime = std::chrono::system_clock::to_time_t(curTime);
 
 			const auto maxSessionCount = (int)ConnectedUserList.size();
@@ -78,7 +74,7 @@ namespace OmokServerLib
 				}
 
 				auto diff = curSecTime - ConnectedUserList[i].m_ConnectedTime;
-				if (diff >= 10)
+				if (diff >= 300)
 				{
 					m_pRefLogger->error("{} | Login Wait Time Over. sessionIndex [{}].", __FUNCTION__, i);
 					m_pRefNetwork->ForcingClose(i);
@@ -92,9 +88,6 @@ namespace OmokServerLib
 
 		std::vector<ConnectedUser> ConnectedUserList;
 
-		bool m_IsLoginCheck = false;
-
-		std::chrono::system_clock::time_point m_LatestLoginCheckTime = std::chrono::system_clock::now();
 		int m_LatestLogincheckIndex = -1;
 	};
 
