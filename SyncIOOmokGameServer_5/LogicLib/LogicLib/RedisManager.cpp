@@ -5,7 +5,7 @@
 #pragma warning(pop)
 #include "RedisManager.h"
 #include "PacketDef.h"
-
+#include "User.h"
 namespace OmokServerLib
 {
 	RedisManager::RedisManager()
@@ -35,12 +35,15 @@ namespace OmokServerLib
 			Disconnect();
 			return ERROR_CODE::REDIS_CONNECT_FAIL;
 		}
-		Init();
+
+
 		return ERROR_CODE::NONE;
 	}
 
-	void RedisManager::Init()
+	void RedisManager::Init(UserManager* pUserMgr)
 	{
+		m_pRefUserMgr = pUserMgr;
+
 		for (int i = 0; i < (int)REDIS_TASK_ID_MAX; ++i)
 		{
 			PacketFuncArray[i] = nullptr;
@@ -129,10 +132,13 @@ namespace OmokServerLib
 
 		if (userRedisPW == userInputPW)
 		{
+			auto addRet = m_pRefUserMgr->AddUser(redisRequestInfo.sessionIndex, reqPkt->szID);
+			auto userInfo = m_pRefUserMgr->GetUser(redisRequestInfo.sessionIndex);
+			userInfo.second->SetLogin();
+
 			resPkt.SetError(ERROR_CODE::NONE);
 			freeReplyObject(reply);
 			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
-			//m_pConnectedUserManager.SetLogin(redisRequestInfo.sessionIndex);
 			return ERROR_CODE::NONE;
 		}
 

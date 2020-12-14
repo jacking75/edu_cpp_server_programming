@@ -34,6 +34,7 @@ namespace OmokServerLib
 		{
 			strncpy_s(resPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pUser->GetID().c_str(), NCommon::MAX_USER_ID_SIZE);
 			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 		}
 		else
 		{
@@ -43,8 +44,6 @@ namespace OmokServerLib
 
 		return ERROR_CODE::NONE;
 	}
-
-
 
 	ERROR_CODE PacketProcess::UserSetGame(User* pUser, int sessionIndex)
 	{

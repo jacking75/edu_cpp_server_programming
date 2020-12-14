@@ -21,8 +21,8 @@ namespace OmokServerLib
 	class ConnectedUserManager
 	{
 	public:
-		ConnectedUserManager() {}
-		~ConnectedUserManager() {}
+		ConnectedUserManager() = default;
+		~ConnectedUserManager() = default;
 
 		void Init(const int maxSessionCount, NServerNetLib::TcpNetwork* pNetwork, NServerNetLib::ServerConfig pConfig, NServerNetLib::Logger* pLogger)
 		{

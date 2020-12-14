@@ -72,6 +72,10 @@ namespace NCommon
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
+	struct PktTimeOutTurnChange : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+	};
 	
 	struct PktPutStoneRes : PktBase
 	{

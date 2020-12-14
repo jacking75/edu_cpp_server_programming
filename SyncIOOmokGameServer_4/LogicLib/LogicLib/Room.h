@@ -47,6 +47,8 @@ namespace OmokServerLib
 
 		void NotifyGameStart(const int sessionIndex, const char* pszUserID);
 
+		void NotifyTimeOutTurnChange(const int sessionIndex, const char* pszUserID);
+
 		void SetRoomStateGame() { m_CurDomainState = Room_State::Game; };
 
 		bool IsCurDomainInGame() { return m_CurDomainState == Room_State::Game ? true : false; };
@@ -57,6 +59,9 @@ namespace OmokServerLib
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
+		void SetTime();
+
+		time_t m_setTurnTime = 0;
 
 	private:
 
@@ -69,6 +74,6 @@ namespace OmokServerLib
 		short m_MaxUserCount = -1;
 	
 		bool m_IsUsed = false;
-	
+
 	};
 }

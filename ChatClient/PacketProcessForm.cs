@@ -26,6 +26,7 @@ namespace csharp_test_client
             PacketFuncDic.Add(PACKET_ID.PUT_STONE_RES, PacketProcess_PutStoneResponse);
             PacketFuncDic.Add(PACKET_ID.GAME_END_RESULT, PacketProcess_GameEndResultResponse);
             PacketFuncDic.Add(PACKET_ID.GAME_START_RES, PacketProcess_GameStartResultResponse);
+            PacketFuncDic.Add(PACKET_ID.Time_Out_Turn_Change, PacketProcess_TimeOutTurnChangeResultResponse);
         }
 
         void PacketProcess(PacketData packet)
@@ -79,8 +80,16 @@ namespace csharp_test_client
             }
 
             else { DevLog.Write($"다음 턴 :  {responsePkt.UserID}"); }
-
         }
+
+        void PacketProcess_TimeOutTurnChangeResultResponse(byte[] bodyData)
+        {
+            var responsePkt = new PutStoneResPacket();
+            responsePkt.FromBytes(bodyData);
+            DevLog.Write($"TIME OUT!!! 다음 턴 :  {responsePkt.UserID}");
+            
+        }
+
 
         void PacketProcess_MatchUserResponse(byte[] bodyData)
         {

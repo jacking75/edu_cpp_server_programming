@@ -57,6 +57,8 @@ namespace NCommon
 		GAME_START_REQ = 118,
 		GAME_START_RES = 119,
 
+		Time_Out_Turn_Change = 120,
+
 		MAX = 256
 	};
 }

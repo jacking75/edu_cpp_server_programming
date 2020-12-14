@@ -9,6 +9,7 @@
 #include <basetsd.h>
 #include "RedisProtocol.h"
 #include <functional>
+#include "UserManager.h"
 
 
 struct redisContext;
@@ -41,6 +42,8 @@ namespace OmokServerLib
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
+		void Init(UserManager* pUserMgr);
+
 	public:
 
 		ERROR_CODE ConfirmLogin(RedisRequestInfo redisRequestInfo);
@@ -58,6 +61,8 @@ namespace OmokServerLib
 		std::deque<CommandRequest> m_RedisRequestQueue;
 
 		bool m_IsRun = false;
+
+		UserManager* m_pRefUserMgr;
 	};
 
 }

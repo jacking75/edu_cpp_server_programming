@@ -31,17 +31,18 @@ namespace OmokServerLib
 			m_pNetwork->SendData(sessionIndex, packetId, bodySize, pMsg);
 		};
 
+		m_pUserMgr = std::make_unique<UserManager>();
+		m_pUserMgr->Init(Config.MaxClientCount);
+
 		m_pRedisMgr = std::make_unique<RedisManager>();
 		auto redisResult = m_pRedisMgr->Connect(Config.RedisAddress.c_str(), Config.RedisPortNum);
 
 		if (redisResult != ERROR_CODE::NONE)
 		{
-			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
+			return ERROR_CODE::REDIS_CONNECT_FAIL;
 		}
+		m_pRedisMgr->Init(m_pUserMgr.get());
 		m_pRedisMgr->SendPacketFunc = sendPacketFunc;
-
-		m_pUserMgr = std::make_unique<UserManager>();
-		m_pUserMgr->Init(Config.MaxClientCount);
 
 		m_pRoomMgr = std::make_unique<RoomManager>();
 		m_pRoomMgr->SendPacketFunc = sendPacketFunc;

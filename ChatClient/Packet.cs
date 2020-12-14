@@ -225,6 +225,23 @@ namespace csharp_test_client
         }
     }
 
+    public class PktTimeOutTurnChange
+    {
+        public Int16 Result;
+        public string UserID;
+        public bool FromBytes(byte[] bodyData)
+        {
+            Result = BitConverter.ToInt16(bodyData, 0);
+
+            var userLen = PacketDef.MAX_USER_ID_BYTE_LENGTH + 1;
+            byte[] userIdTemp = new byte[userLen];
+            Buffer.BlockCopy(bodyData, 2, userIdTemp, 0, userLen);
+            UserID = Encoding.GetEncoding(949).GetString(userIdTemp);
+
+            return true;
+        }
+    }
+
     public class GameStartResPacket
     {
         public Int16 Result;

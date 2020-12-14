@@ -20,6 +20,12 @@ namespace OmokServerLib
 		m_CurDomainState = Room_State::None;
 	}
 
+	void Room::SetTime()
+	{
+		auto curTime = std::chrono::system_clock::now();
+		m_setTurnTime = std::chrono::system_clock::to_time_t(curTime);
+	}
+
 	ERROR_CODE Room::EnterUser(User* pUser)
 	{
 		if (m_UserList.size() == m_MaxUserCount) 
@@ -119,6 +125,15 @@ namespace OmokServerLib
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
 
 		SendToAllUser((short)NCommon::PACKET_ID::GAME_START_RES, sizeof(pkt), (char*)&pkt, sessionIndex);
+	}
+
+	void Room::NotifyTimeOutTurnChange(const int sessionIndex, const char* pszUserID)
+	{
+		NCommon::PktTimeOutTurnChange pkt;
+
+		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+
+		SendToAllUser((short)NCommon::PACKET_ID::Time_Out_Turn_Change, sizeof(pkt), (char*)&pkt, -1);
 	}
 
 }
