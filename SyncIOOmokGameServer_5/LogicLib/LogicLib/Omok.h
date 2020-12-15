@@ -6,20 +6,22 @@
 
 namespace OmokServerLib
 {
-	class Omok {
-     
+    class Omok {
+
 
     public:
         Omok() = default;
         ~Omok() = default;
 
-       void init();
+        void init();
 
-       void printTest();
+        void printTest();
 
         ERROR_CODE CheckGameEnd(int xPos, int yPos);
 
-        ERROR_CODE GamePutStone( int xPos, int yPos);
+        ERROR_CODE GamePutStone(int xPos, int yPos);
+
+        bool CheckTimeOut();
 
         void initType();
 
@@ -31,12 +33,18 @@ namespace OmokServerLib
 
         int m_TurnIndex = -1;
 
+        void SetUserTurnTime();
+
+        void ClearUserTurnTime();
+
     private:
+
+        int64_t m_UserTurnTime;
 
         std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
 
         ERROR_CODE CheckPos(int xPos, int yPos);
- 
-	};
+
+    };
 
 }

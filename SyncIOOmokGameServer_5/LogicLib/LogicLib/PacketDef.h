@@ -38,12 +38,12 @@ namespace NCommon
 
 	struct PktMatchReq
 	{
-		
+
 	};
 
 	struct PktMatchRes : PktBase
 	{
-		
+
 	};
 
 
@@ -72,7 +72,11 @@ namespace NCommon
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
 	};
 
-	
+	struct PktTimeOutTurnChange : PktBase
+	{
+		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
+	};
+
 	struct PktPutStoneRes : PktBase
 	{
 		char UserID[MAX_USER_ID_SIZE + 1] = { 0, };
@@ -96,7 +100,7 @@ namespace NCommon
 
 	struct PktRoomLeaveRes : PktBase
 	{
-	
+
 	};
 
 	//- 룸에서 나가는 유저 통보(로비에 있는 유저에게)

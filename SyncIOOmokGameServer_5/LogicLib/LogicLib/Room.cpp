@@ -68,6 +68,22 @@ namespace OmokServerLib
 		}
 	}
 
+	void Room::CheckTurnTimeOut()
+	{
+		if (m_CurDomainState == Room_State::Game)
+		{
+			if (m_OmokGame->CheckTimeOut())
+			{
+				auto nextTurnUserIndex = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetSessioIndex() : m_UserList[0]->GetSessioIndex();
+				auto nextTurnUserID = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetID().c_str() : m_UserList[0]->GetID().c_str();
+				m_OmokGame->m_TurnIndex = nextTurnUserIndex;
+				m_OmokGame->IsBlackTurn = !m_OmokGame->IsBlackTurn;
+				NotifyTimeOutTurnChange(nextTurnUserIndex, nextTurnUserID);
+				m_OmokGame->SetUserTurnTime();
+			}
+		}
+	}
+
 	void Room::NotifyEnterUserInfo(const int sessionIndex, const char* pszUserID)
 	{
 		NCommon::PktRoomEnterUserInfoNtf pkt;
@@ -119,6 +135,15 @@ namespace OmokServerLib
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
 
 		SendToAllUser((short)NCommon::PACKET_ID::GAME_START_RES, sizeof(pkt), (char*)&pkt, sessionIndex);
+	}
+
+	void Room::NotifyTimeOutTurnChange(const int sessionIndex, const char* pszUserID)
+	{
+		NCommon::PktTimeOutTurnChange pkt;
+
+		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+
+		SendToAllUser((short)NCommon::PACKET_ID::TIME_OUT_TURN_CHANGE, sizeof(pkt), (char*)&pkt, -1);
 	}
 
 }

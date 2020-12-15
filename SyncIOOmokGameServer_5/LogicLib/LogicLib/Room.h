@@ -10,7 +10,7 @@ namespace OmokServerLib
 	class Room
 	{
 	public:
-		enum class Room_State 
+		enum class Room_State
 		{
 			None = 0,
 			Game = 1
@@ -47,16 +47,19 @@ namespace OmokServerLib
 
 		void NotifyGameStart(const int sessionIndex, const char* pszUserID);
 
+		void NotifyTimeOutTurnChange(const int sessionIndex, const char* pszUserID);
+
 		void SetRoomStateGame() { m_CurDomainState = Room_State::Game; };
 
 		bool IsCurDomainInGame() { return m_CurDomainState == Room_State::Game ? true : false; };
+
+		void CheckTurnTimeOut();
 
 		std::unique_ptr<Omok> m_OmokGame = std::make_unique<Omok>();
 
 		std::vector<User*> m_UserList;
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
-
 
 	private:
 
@@ -67,8 +70,8 @@ namespace OmokServerLib
 		short m_Index = -1;
 
 		short m_MaxUserCount = -1;
-	
+
 		bool m_IsUsed = false;
-	
+
 	};
 }

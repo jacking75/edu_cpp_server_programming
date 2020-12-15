@@ -37,4 +37,12 @@ namespace OmokServerLib
 		}
 		return std::nullopt;
 	}
+
+	void RoomManager::CheckRoomGameTime()
+	{
+		for (auto room : m_RoomList)
+		{
+			room->CheckTurnTimeOut();
+		}
+	}
 }

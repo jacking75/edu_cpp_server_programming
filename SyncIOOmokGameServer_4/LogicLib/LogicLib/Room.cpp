@@ -20,12 +20,6 @@ namespace OmokServerLib
 		m_CurDomainState = Room_State::None;
 	}
 
-	void Room::SetTime()
-	{
-		auto curTime = std::chrono::system_clock::now();
-		m_setTurnTime = std::chrono::system_clock::to_time_t(curTime);
-	}
-
 	ERROR_CODE Room::EnterUser(User* pUser)
 	{
 		if (m_UserList.size() == m_MaxUserCount) 
@@ -71,6 +65,22 @@ namespace OmokServerLib
 			}
 
 			SendPacketFunc(pUser->GetSessioIndex(), packetId, dataSize, pData);
+		}
+	}
+
+	void Room::CheckTurnTimeOut()
+	{
+		if (m_CurDomainState == Room_State::Game)
+		{
+			if (m_OmokGame->CheckTimeOut())
+			{
+				auto nextTurnUserIndex = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetSessioIndex() : m_UserList[0]->GetSessioIndex();
+				auto nextTurnUserID = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetID().c_str() : m_UserList[0]->GetID().c_str();
+				m_OmokGame->m_TurnIndex = nextTurnUserIndex;
+				m_OmokGame->IsBlackTurn = !m_OmokGame->IsBlackTurn;
+				NotifyTimeOutTurnChange(nextTurnUserIndex, nextTurnUserID);
+				m_OmokGame->SetUserTurnTime();
+			}
 		}
 	}
 
@@ -133,7 +143,7 @@ namespace OmokServerLib
 
 		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::Time_Out_Turn_Change, sizeof(pkt), (char*)&pkt, -1);
+		SendToAllUser((short)NCommon::PACKET_ID::TIME_OUT_TURN_CHANGE, sizeof(pkt), (char*)&pkt, -1);
 	}
 
 }

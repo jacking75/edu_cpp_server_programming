@@ -82,6 +82,7 @@ namespace OmokServerLib
 	{	
 		while (m_IsRun)
 		{
+			m_pRoomMgr->CheckRoomGameTime();
 			auto packetInfo = m_pNetwork->GetReceivePacket();
 
 			if (packetInfo.has_value() == false)

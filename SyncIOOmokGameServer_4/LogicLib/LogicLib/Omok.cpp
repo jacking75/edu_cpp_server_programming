@@ -3,6 +3,7 @@
 #include "Omok.h"
 #include "OmokLogic.h"
 #include <iostream>
+#include <mutex>
 
 namespace OmokServerLib
 {
@@ -97,6 +98,29 @@ namespace OmokServerLib
         return ERROR_CODE::NONE;
     }
 
+    void Omok::SetUserTurnTime()
+    {
+        auto curTime = std::chrono::system_clock::now();
+        m_UserTurnTime = std::chrono::system_clock::to_time_t(curTime);
+    }
 
+    void Omok::ClearUserTurnTime()
+    {
+        m_UserTurnTime = -1;
+    }
+
+    bool Omok::CheckTimeOut()
+    {
+        auto curTime = std::chrono::system_clock::now();
+        auto curSecTime = std::chrono::system_clock::to_time_t(curTime);
+
+        auto diff = curSecTime - m_UserTurnTime;
+        if (diff >= 60)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
 

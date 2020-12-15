@@ -9,6 +9,7 @@
 #include <functional>
 #include "RedisManager.h"
 #include "ConnectedUserManager.h"
+#include "CheckTimeOutManager.h"
 
 namespace OmokServerLib
 {		
@@ -57,7 +58,7 @@ namespace OmokServerLib
 
 		RedisManager* m_pRefRedisMgr;
 
-		std::unique_ptr<ConnectedUserManager> m_pConnectedUserManager;
+		std::unique_ptr<ConnectedUserManager> m_pRefConUserMgr;
 
 		NServerNetLib::Logger* m_pRefLogger;
 

@@ -10,8 +10,8 @@ namespace OmokServerLib
 		m_pRefRedisMgr = pRedisMgr;
 		m_pRefLogger = pLogger;
 
-		m_pConnectedUserManager = std::make_unique<ConnectedUserManager>();
-		m_pConnectedUserManager->Init(pNetwork->ClientSessionPoolSize(), pNetwork, pConfig, pLogger);
+		m_pRefConUserMgr = std::make_unique<ConnectedUserManager>();
+		m_pRefConUserMgr->Init(pNetwork->ClientSessionPoolSize(), pNetwork, pConfig, pLogger);
 
 		using netLibPacketId = NServerNetLib::PACKET_ID;
 		using commonPacketId = NCommon::PACKET_ID;
@@ -53,12 +53,13 @@ namespace OmokServerLib
 
 	void PacketProcess::StateCheck()
 	{
-		m_pConnectedUserManager->LoginCheck();
+		m_pRefConUserMgr->LoginCheck();
+		m_pRefRoomMgr->CheckRoomGameTime();
 	}
 
 	ERROR_CODE PacketProcess::NtfSysConnectSession(PacketInfo packetInfo)
 	{
-		m_pConnectedUserManager->SetConnectSession(packetInfo.SessionIndex);
+		m_pRefConUserMgr->SetConnectSession(packetInfo.SessionIndex);
 		return ERROR_CODE::NONE;
 	}
 	
@@ -76,7 +77,7 @@ namespace OmokServerLib
 			m_pRefUserMgr->RemoveUser(packetInfo.SessionIndex);
 		}
 
-		m_pConnectedUserManager->SetDisConnectSession(packetInfo.SessionIndex);
+		m_pRefConUserMgr->SetDisConnectSession(packetInfo.SessionIndex);
 		m_pRefLogger->info("NtfSysCloseSession | Close Session [{}]", packetInfo.SessionIndex);
 
 		return ERROR_CODE::NONE;

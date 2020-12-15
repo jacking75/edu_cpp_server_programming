@@ -21,6 +21,8 @@ namespace OmokServerLib
 
         ERROR_CODE GamePutStone( int xPos, int yPos);
 
+        bool CheckTimeOut();
+
         void initType();
 
         bool IsBlackTurn = false;
@@ -31,7 +33,13 @@ namespace OmokServerLib
 
         int m_TurnIndex = -1;
 
+        void SetUserTurnTime();
+
+        void ClearUserTurnTime();
+
     private:
+
+        int64_t m_UserTurnTime;
 
         std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
 

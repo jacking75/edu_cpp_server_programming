@@ -20,6 +20,8 @@ namespace OmokServerLib
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
+		void CheckRoomGameTime();
+
 	private:
 
 		std::vector<Room*> m_RoomList;

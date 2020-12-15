@@ -53,15 +53,13 @@ namespace OmokServerLib
 
 		bool IsCurDomainInGame() { return m_CurDomainState == Room_State::Game ? true : false; };
 
+		void CheckTurnTimeOut();
+
 		std::unique_ptr<Omok> m_OmokGame = std::make_unique<Omok>();
 
 		std::vector<User*> m_UserList;
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
-
-		void SetTime();
-
-		time_t m_setTurnTime = 0;
 
 	private:
 
