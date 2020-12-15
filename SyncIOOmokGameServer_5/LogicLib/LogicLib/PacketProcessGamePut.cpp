@@ -70,7 +70,6 @@ namespace OmokServerLib
 	std::pair<ERROR_CODE,std::string> PacketProcess::PutStone(Room* pRoom, int x , int y , int sessionIndex)
 	{
 		auto result = pRoom->m_OmokGame->GamePutStone(x,y);
-		pRoom->m_OmokGame->printTest();
 
 		if (result != ERROR_CODE::NONE)
 		{

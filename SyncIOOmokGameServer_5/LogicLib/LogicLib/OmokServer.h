@@ -24,6 +24,7 @@ namespace OmokServerLib
 		bool m_IsRun = false;
 
 		std::unique_ptr<NServerNetLib::TcpNetwork> m_pNetwork;
+
 		std::unique_ptr<NServerNetLib::Logger> m_pLogger;
 
 		std::unique_ptr<UserManager> m_pUserMgr;

@@ -63,7 +63,6 @@ namespace OmokServerLib
 			pRoom.value()->m_OmokGame->m_WhiteStoneUserIndex = roomUserIndex;
 			pRoom.value()->m_OmokGame->m_TurnIndex = sessionIndex;
 			pRoom.value()->m_OmokGame->init();
-			pRoom.value()->m_OmokGame->initType();
 			pRoom.value()->NotifyGameStart(sessionIndex, pUser->GetID().c_str());
 
 			pRoom.value()->m_OmokGame->SetUserTurnTime();

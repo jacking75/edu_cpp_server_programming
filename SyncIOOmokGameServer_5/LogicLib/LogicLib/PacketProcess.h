@@ -9,7 +9,6 @@
 #include <functional>
 #include "RedisManager.h"
 #include "ConnectedUserManager.h"
-#include "CheckTimeOutManager.h"
 
 namespace OmokServerLib
 {		

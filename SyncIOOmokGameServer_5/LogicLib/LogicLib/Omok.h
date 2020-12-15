@@ -15,8 +15,6 @@ namespace OmokServerLib
 
         void init();
 
-        void printTest();
-
         ERROR_CODE CheckGameEnd(int xPos, int yPos);
 
         ERROR_CODE GamePutStone(int xPos, int yPos);

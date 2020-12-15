@@ -84,6 +84,7 @@ namespace OmokServerLib
 
 	private:
 		NServerNetLib::Logger* m_pRefLogger;
+
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
 
 		std::vector<ConnectedUser> ConnectedUserList;

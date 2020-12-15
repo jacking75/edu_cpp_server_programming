@@ -17,6 +17,7 @@ namespace OmokServerLib
         }
 
         IsBlackTurn = true;
+        initType();
 	}
 
     void Omok::initType()
@@ -28,21 +29,6 @@ namespace OmokServerLib
                 OmokPanPoints[i][j].Type = OmokPanPoint::PointType::None;
             }
         }
-        
-        IsBlackTurn = true;
-    }
-
-    void Omok::printTest() {
-
-        for (int i = 0; i < OmokPanPointNumber; ++i)
-        {
-            for (int j = 0; j < OmokPanPointNumber; ++j)
-            {
-                std::cout << (int)OmokPanPoints[j][i].Type << " ";
-            }
-            std::cout << "\n"; 
-        }
-        std::cout << "\n"; std::cout << "\n";
     }
 
     ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
