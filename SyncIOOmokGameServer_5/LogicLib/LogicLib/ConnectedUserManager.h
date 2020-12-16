@@ -57,6 +57,8 @@ namespace OmokServerLib
 
 			const auto maxSessionCount = (int)ConnectedUserList.size();
 
+			//TODO 최흥배
+			// m_LatestLogincheckIndex 는 왜 있는지 모르겠습니다
 			if (m_LatestLogincheckIndex >= maxSessionCount)
 			{
 				m_LatestLogincheckIndex = -1;

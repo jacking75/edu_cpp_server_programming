@@ -16,6 +16,8 @@ namespace OmokServerLib
 		};
 
 	public:
+		//TODO 최흥배
+		// default 사용이 좋지 않을까요?
 		User() {}
 		virtual ~User() {}
 
@@ -91,6 +93,8 @@ namespace OmokServerLib
 		}
 
 
+		//TODO 최흥배
+		// protected 사용하는 이유가 있나요?
 	protected:
 
 		short m_Index = -1;

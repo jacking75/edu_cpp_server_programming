@@ -23,6 +23,8 @@ namespace OmokServerLib
 		PacketFunc PacketFuncArray[REDIS_TASK_ID_MAX];
 
 	public:
+		//TODO √÷»ÔπË
+		// default ?
 		RedisManager();
 		~RedisManager();
 

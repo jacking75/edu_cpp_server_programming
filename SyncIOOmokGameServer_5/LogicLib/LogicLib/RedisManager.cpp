@@ -111,6 +111,9 @@ namespace OmokServerLib
 
 	ERROR_CODE RedisManager::ConfirmLogin(RedisRequestInfo redisRequestInfo)
 	{
+		//TODO 최흥배
+		// hiredis를 바로 사용하니 redis 때문에 코드가 복잡합니다.
+		// https://docs.google.com/presentation/d/1i6B6M-WQUy75XtjONqmHxj31nppODb7i8cFXVWW8qDc/edit?usp=sharing 의 35페이지에 소개한 redis_client 라이브러리를 사용하죠
 		auto reqPkt = (NCommon::PktLogInReq*)redisRequestInfo.CommandBody;
 		NCommon::PktLogInRes resPkt;
 
