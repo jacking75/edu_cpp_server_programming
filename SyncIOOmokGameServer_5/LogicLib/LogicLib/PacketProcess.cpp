@@ -3,15 +3,13 @@
 
 namespace OmokServerLib
 {	
-	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, NServerNetLib::ServerConfig pConfig)
+	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, ConnectedUserManager* m_pConUserMgr, NServerNetLib::ServerConfig pConfig)
 	{		
 		m_pRefUserMgr = pUserMgr;
 		m_pRefRoomMgr = pRoomMgr;
 		m_pRefRedisMgr = pRedisMgr;
 		m_pRefLogger = pLogger;
-
-		m_pRefConUserMgr = std::make_unique<ConnectedUserManager>();
-		m_pRefConUserMgr->Init(pNetwork->ClientSessionPoolSize(), pNetwork, pConfig, pLogger);
+		m_pRefConUserMgr = m_pConUserMgr;
 
 		using netLibPacketId = NServerNetLib::PACKET_ID;
 		using commonPacketId = NCommon::PACKET_ID;

@@ -6,12 +6,10 @@
 #include "RedisManager.h"
 #include "PacketDef.h"
 #include "User.h"
+
+//TODO : LNK2005 오류가 나는데 어떻게 해결해야할지 모르겠습니다...
 namespace OmokServerLib
 {
-	RedisManager::RedisManager()
-	{
-
-	}
 
 	RedisManager::~RedisManager()
 	{
@@ -20,29 +18,18 @@ namespace OmokServerLib
 
 	ERROR_CODE RedisManager::Connect(const char* ipAddress, const int portNum)
 	{
-		if (m_Connection != nullptr)
-		{
-			return ERROR_CODE::REDIS_ALREADY_CONNECT_STATE;
-		}
-
-		m_Connection = redisConnect(ipAddress, portNum);
-		if (m_Connection == nullptr)
+		if (!con->connect(ipAddress, portNum))
 		{
 			return ERROR_CODE::REDIS_CONNECT_FAIL;
 		}
-		if (m_Connection->err)
-		{
-			Disconnect();
-			return ERROR_CODE::REDIS_CONNECT_FAIL;
-		}
-
 
 		return ERROR_CODE::NONE;
 	}
 
-	void RedisManager::Init(UserManager* pUserMgr)
+	void RedisManager::Init(UserManager* pUserMgr, ConnectedUserManager* pConUserMgr)
 	{
 		m_pRefUserMgr = pUserMgr;
+		m_pRefConUserMgr = pConUserMgr;
 
 		for (int i = 0; i < (int)REDIS_TASK_ID_MAX; ++i)
 		{
@@ -53,7 +40,6 @@ namespace OmokServerLib
 
 		m_IsRun = true;
 		m_RedisThread = std::make_unique<std::thread>([&] {RedisProcessThread(); });
-
 	}
 
 
@@ -102,53 +88,39 @@ namespace OmokServerLib
 	void RedisManager::Disconnect()
 	{
 		m_RedisThread->join();
-		if (m_Connection != nullptr)
-		{
-			redisFree(m_Connection);
-		}
-		m_Connection = nullptr;
 	}
 
 	ERROR_CODE RedisManager::ConfirmLogin(RedisRequestInfo redisRequestInfo)
 	{
-		//TODO 최흥배
-		// hiredis를 바로 사용하니 redis 때문에 코드가 복잡합니다.
-		// https://docs.google.com/presentation/d/1i6B6M-WQUy75XtjONqmHxj31nppODb7i8cFXVWW8qDc/edit?usp=sharing 의 35페이지에 소개한 redis_client 라이브러리를 사용하죠
 		auto reqPkt = (NCommon::PktLogInReq*)redisRequestInfo.CommandBody;
 		NCommon::PktLogInRes resPkt;
 
-		std::string userId(reqPkt->szID);
-		auto commandString = "GET " + userId;
-
-		redisReply* reply = (redisReply*)redisCommand(m_Connection, commandString.c_str());
-
-		if (reply == nullptr || reply->str == nullptr || reply->type == REDIS_REPLY_ERROR)
+		std::string userID = reqPkt->szID;
+		std::string password;
+		
+		if (con->get(userID, password) == false)
 		{
 			resPkt.SetError(ERROR_CODE::REDIS_GET_FAIL);
-			freeReplyObject(reply);
 			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
 			return ERROR_CODE::REDIS_GET_FAIL;
 		}
 
-		std::string userInputPW(reqPkt->szPW);
-		std::string userRedisPW(reply->str);
-
-		if (userRedisPW == userInputPW)
+		if (password == reqPkt->szPW)
 		{
 			auto addRet = m_pRefUserMgr->AddUser(redisRequestInfo.sessionIndex, reqPkt->szID);
 			auto userInfo = m_pRefUserMgr->GetUser(redisRequestInfo.sessionIndex);
+
 			userInfo.second->SetLogin();
+			m_pRefConUserMgr->SetLogin(redisRequestInfo.sessionIndex);
 
 			resPkt.SetError(ERROR_CODE::NONE);
-			freeReplyObject(reply);
 			SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
 			return ERROR_CODE::NONE;
 		}
 
-		freeReplyObject(reply);
 		resPkt.SetError(ERROR_CODE::REDIS_LOGIN_PW_INCORRECT);
 		SendPacketFunc(redisRequestInfo.sessionIndex, (short)NCommon::PACKET_ID::LOGIN_IN_RES, sizeof(NCommon::PktLogInRes), (char*)&resPkt);
-
+		
 		return ERROR_CODE::NONE;
 	}
 

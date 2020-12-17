@@ -53,20 +53,35 @@ namespace OmokServerLib
 		void LoginCheck()
 		{
 			auto curTime = std::chrono::system_clock::now();
+			auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - m_LatestLoginCheckTime);
+
+			if (diffTime.count() < 100)
+			{
+				return;
+			}
+			else
+			{
+				m_LatestLoginCheckTime = curTime;
+			}
+
 			auto curSecTime = std::chrono::system_clock::to_time_t(curTime);
 
 			const auto maxSessionCount = (int)ConnectedUserList.size();
 
-			//TODO 최흥배
-			// m_LatestLogincheckIndex 는 왜 있는지 모르겠습니다
-			if (m_LatestLogincheckIndex >= maxSessionCount)
+			if (m_LatestLogincheckIndex >= maxSessionCount) 
 			{
 				m_LatestLogincheckIndex = -1;
 			}
 
 			++m_LatestLogincheckIndex;
 
-			for (; m_LatestLogincheckIndex < maxSessionCount; ++m_LatestLogincheckIndex)
+			auto lastCheckIndex = m_LatestLogincheckIndex + 200;
+			if (lastCheckIndex > maxSessionCount)
+			{
+				lastCheckIndex = maxSessionCount;
+			}
+
+			for (; m_LatestLogincheckIndex < lastCheckIndex; ++m_LatestLogincheckIndex)
 			{
 				auto i = m_LatestLogincheckIndex;
 
@@ -90,6 +105,8 @@ namespace OmokServerLib
 		NServerNetLib::TcpNetwork* m_pRefNetwork;
 
 		std::vector<ConnectedUser> ConnectedUserList;
+
+		std::chrono::system_clock::time_point m_LatestLoginCheckTime = std::chrono::system_clock::now();
 
 		int m_LatestLogincheckIndex = -1;
 	};

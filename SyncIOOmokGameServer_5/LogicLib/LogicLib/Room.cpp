@@ -14,11 +14,17 @@ namespace OmokServerLib
 
 	void Room::Clear()
 	{
-		m_UserList[0]->LeaveRoom();
-		m_UserList[1]->LeaveRoom();
 		m_UserList.clear();
 		m_CurDomainState = Room_State::None;
 	}
+
+	void Room::EndGame()
+	{
+		m_UserList[0]->LeaveRoom();
+		m_UserList[1]->LeaveRoom();
+		m_CurDomainState = Room_State::None;
+	}
+
 
 	ERROR_CODE Room::EnterUser(User* pUser)
 	{
@@ -46,18 +52,11 @@ namespace OmokServerLib
 
 		if (m_UserList.empty())
 		{
-			//TODO 최흥배
-			// 버그 아닌가요? m_UserList의 요소를 다 지웠는데 Clear()에서는 m_UserList[0]->LeaveRoom(); 이렇게 접근하고 있습니다
 			Clear();
-
-			//TODO 최흥배 
-			// 여기에 들어오면 return 해야겠네요 
-			// 유저가 아무도 없으니 NotifyLeaveUserInfo는 의미 없겠죠
+			return ERROR_CODE::NONE;
 		}
 
-
 		NotifyLeaveUserInfo(sessionIndex, pszUserID);
-
 		return ERROR_CODE::NONE;
 	}
 	
@@ -81,11 +80,16 @@ namespace OmokServerLib
 		{
 			if (m_OmokGame->CheckTimeOut())
 			{
-				//TODO 최흥배
-				// 가독성이 너무 좋지 않습니다.
-				auto nextTurnUserIndex = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetSessioIndex() : m_UserList[0]->GetSessioIndex();
-				auto nextTurnUserID = m_OmokGame->m_TurnIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1]->GetID().c_str() : m_UserList[0]->GetID().c_str();
+				auto curTurnIndex = m_OmokGame->m_TurnIndex;
 
+				auto firstUserIndex = m_UserList[0]->GetSessioIndex();
+				auto firstUserID = m_UserList[0]->GetID().c_str();
+
+				auto secondUserIndex = m_UserList[1]->GetSessioIndex();
+				auto secondUserID = m_UserList[1]->GetID().c_str();
+
+				auto nextTurnUserIndex = curTurnIndex == firstUserIndex ? secondUserIndex : firstUserIndex;
+				auto nextTurnUserID = curTurnIndex == firstUserIndex ? secondUserID : firstUserID;
 
 				m_OmokGame->m_TurnIndex = nextTurnUserIndex;
 				m_OmokGame->IsBlackTurn = !m_OmokGame->IsBlackTurn;

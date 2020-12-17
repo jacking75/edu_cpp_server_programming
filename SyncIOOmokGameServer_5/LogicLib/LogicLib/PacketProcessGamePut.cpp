@@ -63,8 +63,8 @@ namespace OmokServerLib
 		strncpy_s(gameResPkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), winUserID.c_str(), NCommon::MAX_USER_ID_SIZE);
 		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(gameResPkt), (char*)&gameResPkt);
 		pRoom.value()->NotifyGameResult(packetInfo.SessionIndex, winUserID.c_str());
+		pRoom.value()->EndGame();
 		pRoom.value()->Clear();
-		pRoom.value()->m_OmokGame->ClearUserTurnTime();
 	}
 
 	std::pair<ERROR_CODE,std::string> PacketProcess::PutStone(Room* pRoom, int x , int y , int sessionIndex)

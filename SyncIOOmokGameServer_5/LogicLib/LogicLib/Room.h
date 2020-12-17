@@ -23,6 +23,8 @@ namespace OmokServerLib
 
 		void Clear();
 
+		void EndGame();
+
 		short GetIndex() { return m_Index; }
 
 		bool IsUsed() { return m_IsUsed; }

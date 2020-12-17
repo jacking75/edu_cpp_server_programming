@@ -54,8 +54,6 @@ namespace OmokServerLib
 	{
 		NCommon::PktRoomLeaveRes resPkt;
 
-		//TODO 최흥배
-		// 이 부분 코드 다른 요청 처리할 때도 비슷한 코드가 있네요. 코드 중복이 많습니다. 함수로 만들어서 중복을 제거해주세요
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -85,7 +83,6 @@ namespace OmokServerLib
 			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
-		//
 
 		auto leaveRet = pRoom.value()->LeaveUser(userIndex, packetInfo.SessionIndex, pUser->GetID().c_str());
 		if (leaveRet != ERROR_CODE::NONE) 

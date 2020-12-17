@@ -3,6 +3,7 @@
 #include "ErrorCode.h"
 #include "OmokPanPoint.h"
 #include <vector>
+#include <chrono>
 
 namespace OmokServerLib
 {
@@ -33,13 +34,12 @@ namespace OmokServerLib
 
         void SetUserTurnTime();
 
-        void ClearUserTurnTime();
-
     private:
+        const int timeOut = 20000;
 
-        int64_t m_UserTurnTime;
+        std::chrono::system_clock::time_point m_UserTurnTime = std::chrono::system_clock::now();
 
-        std::vector<std::vector<OmokPanPoint>> OmokPanPoints;
+        std::vector<std::vector<PointType>> OmokPanPoints;
 
         ERROR_CODE CheckPos(int xPos, int yPos);
 

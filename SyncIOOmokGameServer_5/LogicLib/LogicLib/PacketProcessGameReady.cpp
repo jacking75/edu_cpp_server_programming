@@ -58,7 +58,7 @@ namespace OmokServerLib
 			pUser->SetGame();
 			pRoom.value()->SetRoomStateGame();
 
-			//TODO :  검은돌 랜덤 선정
+			//검은돌 랜덤 선정
 			pRoom.value()->m_OmokGame->m_BlackStoneUserIndex = std::abs(1 - roomUserIndex);
 			pRoom.value()->m_OmokGame->m_WhiteStoneUserIndex = roomUserIndex;
 			pRoom.value()->m_OmokGame->m_TurnIndex = sessionIndex;

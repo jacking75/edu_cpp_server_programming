@@ -35,6 +35,8 @@ namespace OmokServerLib
 
 		std::unique_ptr<RedisManager> m_pRedisMgr;
 
+		std::unique_ptr<ConnectedUserManager> m_pRefConUserMgr;
+
 		std::unique_ptr<std::thread> mainThread;
 
 	};

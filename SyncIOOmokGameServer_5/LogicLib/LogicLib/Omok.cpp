@@ -3,7 +3,7 @@
 #include "Omok.h"
 #include "OmokLogic.h"
 #include <iostream>
-#include <chrono>
+#include <algorithm>
 
 namespace OmokServerLib
 {
@@ -11,8 +11,8 @@ namespace OmokServerLib
     {
         for (int i = 0; i < OmokPanPointNumber; ++i)
         { 
-            std::vector<OmokPanPoint> elem; 
-            elem.resize(OmokPanPointNumber); 
+            std::vector<PointType> elem;
+            elem.resize(OmokPanPointNumber);
             OmokPanPoints.push_back(elem);
         }
 
@@ -20,17 +20,20 @@ namespace OmokServerLib
         initType();
 	}
 
+    // TODO : fill 오류해결
     void Omok::initType()
     {
+      //std::fill(&OmokPanPoints[0][0], &OmokPanPoints[OmokPanPointNumber - 1][OmokPanPointNumber], PointType::None);
+       
+      //이전코드
         for (int i = 0; i < OmokPanPointNumber; ++i)
         {
-            //TODO 최흥배
-            // for문 사용하지 말고 fill 함수나 memset으로 채워주세요
             for (int j = 0; j < OmokPanPointNumber; ++j)
             {
-                OmokPanPoints[i][j].Type = OmokPanPoint::PointType::None;
+                OmokPanPoints[i][j] = PointType::None;
             }
         }
+        
     }
 
     ERROR_CODE Omok::GamePutStone(int xPos, int yPos)
@@ -44,12 +47,12 @@ namespace OmokServerLib
 
         auto &point = OmokPanPoints[yPos][xPos];
 
-        if (point.Type != OmokPanPoint::PointType::None)
+        if (point != PointType::None)
         {
             return ERROR_CODE::GAME_PUT_ALREADY_EXIST;
         }
     
-        point.Type = IsBlackTurn == true ? OmokPanPoint::PointType::Black : OmokPanPoint::PointType::White;
+        point = IsBlackTurn == true ? PointType::Black : PointType::White;
 
         IsBlackTurn = !IsBlackTurn;
         
@@ -58,14 +61,14 @@ namespace OmokServerLib
 
     ERROR_CODE Omok::CheckGameEnd(int xPos, int yPos)
     {
-        auto pointType = IsBlackTurn == true ? OmokPanPoint::PointType::White : OmokPanPoint::PointType::Black;
+        auto pointType = IsBlackTurn == true ? PointType::White : PointType::Black;
 
         if (ConfirmOmok(OmokPanPoints, xPos, yPos, pointType) == false)
         {
             return ERROR_CODE::NONE;
         }
         
-        if (pointType == OmokPanPoint::PointType::Black)
+        if (pointType == PointType::Black)
         {
             return ERROR_CODE::GAME_RESULT_BLACK_WIN;
         }
@@ -88,27 +91,16 @@ namespace OmokServerLib
 
     void Omok::SetUserTurnTime()
     {
-        auto curTime = std::chrono::system_clock::now();
-        m_UserTurnTime = std::chrono::system_clock::to_time_t(curTime);
-    }
-
-    void Omok::ClearUserTurnTime()
-    {
-        m_UserTurnTime = -1;
+        m_UserTurnTime = std::chrono::system_clock::now();
     }
 
     bool Omok::CheckTimeOut()
     {
         auto curTime = std::chrono::system_clock::now();
-        auto curSecTime = std::chrono::system_clock::to_time_t(curTime);
+        auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - m_UserTurnTime);
 
-        auto diff = curSecTime - m_UserTurnTime;
-     
-        //TODO 최흥배 
-        // 5라는 매직넘버 사용하면 안됩니다.
-        // 그리고 초 보다는 밀리세컨드 단위로 조사하는 것이 좋습니다
-        // 시간도 보통 10초 정도는 줘야합니다. 5초는 너무 작네요. 만약 5초가 아니고 5분이라면 너무 길고요
-        if (diff >= 5)
+
+        if (diffTime.count() >= timeOut)
         {
             return true;
         }
