@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include "PacketProcess.h"
+#include "PacketDef.h"
 
 namespace OmokServerLib
 {	
@@ -79,6 +80,60 @@ namespace OmokServerLib
 		m_pRefLogger->info("NtfSysCloseSession | Close Session [{}]", packetInfo.SessionIndex);
 
 		return ERROR_CODE::NONE;
+	}
+
+	void PacketProcess::SendPacketSetError(int sessionIndex, NCommon::PACKET_ID packetID, ERROR_CODE errorCode)
+	{
+		if (packetID == NCommon::PACKET_ID::PUT_STONE_RES)
+		{
+			NCommon::PktPutStoneRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
+		else if (packetID == NCommon::PACKET_ID::GAME_START_RES)
+		{
+			NCommon::PktGameReadyRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
+		else if (packetID == NCommon::PACKET_ID::MATCH_USER_RES)
+		{
+			NCommon::PktMatchRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+
+		}
+		else if (packetID == NCommon::PACKET_ID::ROOM_ENTER_RES)
+		{
+			NCommon::PktRoomEnterRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
+		else if (packetID == NCommon::PACKET_ID::ROOM_LEAVE_RES)
+		{
+			NCommon::PktRoomLeaveRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
+		else if (packetID == NCommon::PACKET_ID::ROOM_CHAT_RES)
+		{
+			NCommon::PktRoomChatRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
+
 	}
 
 }

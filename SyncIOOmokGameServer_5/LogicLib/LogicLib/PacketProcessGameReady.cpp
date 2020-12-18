@@ -13,16 +13,14 @@ namespace OmokServerLib
 
 		if (errorCode != ERROR_CODE::NONE)
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::GAME_START_RES, errorCode);
 			return errorCode;
 		}
 		auto checkReadyResult = m_pRefUserMgr->CheckReady(pUser);
 
 		if (checkReadyResult != ERROR_CODE::NONE)
 		{
-			resPkt.SetError(checkReadyResult);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::GAME_START_RES, checkReadyResult);
 			return errorCode;
 		}
 
@@ -37,8 +35,7 @@ namespace OmokServerLib
 		}
 		else
 		{
-			resPkt.SetError(ERROR_CODE::NOT_READY_EXIST);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::GAME_START_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::GAME_START_RES, ERROR_CODE::NOT_READY_EXIST);
 		}
 
 		return ERROR_CODE::NONE;

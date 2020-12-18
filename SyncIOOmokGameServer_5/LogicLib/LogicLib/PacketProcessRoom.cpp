@@ -18,8 +18,7 @@ namespace OmokServerLib
 		
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, errorCode);
 			return errorCode;
 		}
 		
@@ -27,8 +26,7 @@ namespace OmokServerLib
 
 		if (pRoom.has_value() == false) 
 		{
-			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
@@ -36,8 +34,7 @@ namespace OmokServerLib
 
 		if (enterRet != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(enterRet);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, enterRet);
 			return enterRet;
 		}
 
@@ -61,8 +58,7 @@ namespace OmokServerLib
 
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, errorCode);
 			return errorCode;
 		}
 
@@ -70,8 +66,7 @@ namespace OmokServerLib
 
 		if (pUser->IsCurDomainInLogIn() == true)
 		{
-			resPkt.SetError(ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
 			return ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
 	
@@ -79,16 +74,14 @@ namespace OmokServerLib
 
 		if (pRoom.has_value() == false) 
 		{
-			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 
 		auto leaveRet = pRoom.value()->LeaveUser(userIndex, packetInfo.SessionIndex, pUser->GetID().c_str());
 		if (leaveRet != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(leaveRet);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, leaveRet);
 			return leaveRet;
 		}
 
@@ -111,23 +104,20 @@ namespace OmokServerLib
 
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, errorCode);
 			return errorCode;
 		}
 
 		if (pUser->IsCurDomainInLogIn() == true) 
 		{
-			resPkt.SetError(ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
 			return ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN;
 		}
 
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
 		if (pRoom.has_value() == false) 
 		{
-			resPkt.SetError(ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 

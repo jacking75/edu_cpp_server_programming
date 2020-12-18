@@ -45,6 +45,8 @@ namespace OmokServerLib
 
 		ERROR_CODE GameReady(PacketInfo packetInfo);
 
+		void SendPacketSetError(int sessionIndex, NCommon::PACKET_ID packetID, ERROR_CODE errorCode);
+
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;		
 
 		void StateCheck();

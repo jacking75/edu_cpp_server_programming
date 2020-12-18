@@ -8,7 +8,7 @@ namespace NServerNetLib
 		unsigned short Port;
 		int BackLogCount;
 		int MaxClientCount;
-		int ExtraClientCount; // 가능하면 로그인에서 짜르도록 MaxClientCount + 여유분을 준비한다.
+		int ExtraClientCount;
 
 		short MaxClientRecvBufferSize;
 		short MaxClientSendBufferSize;

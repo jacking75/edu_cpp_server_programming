@@ -7,7 +7,6 @@ namespace OmokServerLib
 	ERROR_CODE PacketProcess::MatchUser(PacketInfo packetInfo)
 	{
 		NCommon::PktMatchRes resPkt;
-		NCommon::PktRoomEnterRes roomResPkt;
 
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
@@ -16,8 +15,7 @@ namespace OmokServerLib
 
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::MATCH_USER_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::MATCH_USER_RES, errorCode);
 			return errorCode;
 		}
 
@@ -25,8 +23,7 @@ namespace OmokServerLib
 
 		if (pRoom.has_value() == false) 
 		{
-			roomResPkt.SetError(ERROR_CODE::MATCHING_FAIL);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(roomResPkt), (char*)&roomResPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, ERROR_CODE::MATCHING_FAIL);
 			return errorCode;
 		}
 

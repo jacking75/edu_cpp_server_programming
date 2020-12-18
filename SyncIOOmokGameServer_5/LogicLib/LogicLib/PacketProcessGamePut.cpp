@@ -16,15 +16,13 @@ namespace OmokServerLib
 		
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			resPkt.SetError(errorCode);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::PUT_STONE_RES, errorCode);
 			return errorCode;
 		}
 
 		if (pUser->IsCurDomainInGame() == false)
 		{
-			resPkt.SetError(ERROR_CODE::USER_STATE_NOT_GAME);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::PUT_STONE_RES, ERROR_CODE::USER_STATE_NOT_GAME);
 			return errorCode;
 		}
 
@@ -32,8 +30,7 @@ namespace OmokServerLib
 
 		if (packetInfo.SessionIndex != pRoom.value()->m_OmokGame->m_TurnIndex)
 		{
-			resPkt.SetError(ERROR_CODE::NOT_YOUR_TURN);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::PUT_STONE_RES, ERROR_CODE::NOT_YOUR_TURN);
 			return ERROR_CODE::NOT_YOUR_TURN;
 		}
 		
@@ -41,8 +38,7 @@ namespace OmokServerLib
 		
 		if (putStoneResult.first != ERROR_CODE::NONE)
 		{
-			resPkt.SetError(putStoneResult.first);
-			SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::PUT_STONE_RES, sizeof(resPkt), (char*)&resPkt);
+			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::PUT_STONE_RES, putStoneResult.first);
 			return putStoneResult.first;
 		}
 
