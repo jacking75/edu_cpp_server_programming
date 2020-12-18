@@ -8,11 +8,15 @@
 #include <functional>
 #include "UserManager.h"
 #include "ConnectedUserManager.h"
-#include "../../../ThirdParty/RedisCpp-hiredis/CRedisConn.h"
 
+
+namespace RedisCpp
+{
+	class CRedisConn;
+}
 
 namespace OmokServerLib
-{
+{	
 	class RedisManager
 	{
 		using RedisRequestInfo = CommandRequest;

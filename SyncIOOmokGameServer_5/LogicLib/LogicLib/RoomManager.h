@@ -1,6 +1,9 @@
 #pragma once
 
+//TODO 최흥배
+// 전반 선언으로 해주세요
 #include "Room.h"
+
 #include <functional>
 namespace OmokServerLib
 {
@@ -12,6 +15,10 @@ namespace OmokServerLib
 		RoomManager() = default;
 		~RoomManager() = default;
 
+		//TODO 최흥배
+		// 아마 다른 헤더 파일에서 TcpNetwork 관련 헤더 파일을 include 해서 이 파일에서 include 하지 않아도 빌드 에러가 나지 않습니다.
+		// 그러나 이런 경우 다른 파일에서 헤더 포함을 수정하면 여기에서 빌드 에러가 나올 수 있습니다.
+		// 전방 선언을 하고 cpp에서 TcpNetwork 헤더 파일을 include 하세요
 		void Init(const int maxRoomNum, NServerNetLib::TcpNetwork* pNetwork);
 
 		std::optional <Room*> FindProperRoom();

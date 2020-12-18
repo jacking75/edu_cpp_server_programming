@@ -4,6 +4,9 @@
 
 namespace OmokServerLib
 {
+    //TODO 최흥배
+    // 왜 static을 사용했나요?
+
     static const int OmokPanPointNumber = 19;
 
     static int ConfirmHorizontal(std::vector<std::vector<PointType>> &omokPanPoints, int x, int y, PointType pointType)

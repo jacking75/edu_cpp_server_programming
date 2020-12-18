@@ -10,6 +10,9 @@ namespace OmokServerLib
 	
 	ERROR_CODE PacketProcess::Login(PacketInfo packetInfo)
 	{
+		//TODO 최흥배
+		// 이미 로그인 한 유저인데 또 로그인 요청을 보낸 경우 잘 방어하고 있나요?
+
 		auto reqPkt = (NCommon::PktLogInReq*)packetInfo.pRefData;
 		NCommon::PktLogInRes resPkt;
 

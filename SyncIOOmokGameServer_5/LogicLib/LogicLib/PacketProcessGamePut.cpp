@@ -9,6 +9,9 @@ namespace OmokServerLib
 		NCommon::PktPutStoneRes resPkt;
 		NCommon::PktGameResultNtf gameResPkt;
 
+		//TODO 최흥배
+		//중복 코드
+		//
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -27,6 +30,7 @@ namespace OmokServerLib
 		}
 
 		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
+		//
 
 		if (packetInfo.SessionIndex != pRoom.value()->m_OmokGame->m_TurnIndex)
 		{
@@ -61,6 +65,8 @@ namespace OmokServerLib
 		pRoom.value()->NotifyGameResult(packetInfo.SessionIndex, winUserID.c_str());
 		pRoom.value()->EndGame();
 		pRoom.value()->Clear();
+
+		return ERROR_CODE::NONE;
 	}
 
 	std::pair<ERROR_CODE,std::string> PacketProcess::PutStone(Room* pRoom, int x , int y , int sessionIndex)

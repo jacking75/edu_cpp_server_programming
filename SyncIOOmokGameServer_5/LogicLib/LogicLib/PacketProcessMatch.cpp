@@ -8,6 +8,9 @@ namespace OmokServerLib
 	{
 		NCommon::PktMatchRes resPkt;
 
+		//TODO 최흥배
+		// 다른 패킷 처리 함수에서 비슷한 코드가 있습니다. 중복을 제거해주세요
+		//
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -26,6 +29,7 @@ namespace OmokServerLib
 			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, ERROR_CODE::MATCHING_FAIL);
 			return errorCode;
 		}
+		//
 
 		pRoom.value()->EnterUser(pUser);
 		pUser->EnterRoom(pRoom.value()->GetIndex());

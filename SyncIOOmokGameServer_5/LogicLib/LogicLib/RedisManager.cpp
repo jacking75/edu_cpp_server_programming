@@ -1,16 +1,17 @@
+#include "RedisManager.h"
+#include "PacketDef.h"
+#include "User.h"
+
+#include "../../../ThirdParty/RedisCpp-hiredis/CRedisConn.h"
 #pragma comment(lib, "hiredis")
 #pragma warning(push)
 #pragma warning(disable : 4200)
 #include <hiredis.h>
 #pragma warning(pop)
-#include "RedisManager.h"
-#include "PacketDef.h"
-#include "User.h"
 
-//TODO : LNK2005 오류가 나는데 어떻게 해결해야할지 모르겠습니다...
+
 namespace OmokServerLib
 {
-
 	RedisManager::~RedisManager()
 	{
 		Disconnect();
@@ -18,6 +19,8 @@ namespace OmokServerLib
 
 	ERROR_CODE RedisManager::Connect(const char* ipAddress, const int portNum)
 	{
+		con = new RedisCpp::CRedisConn;
+
 		if (!con->connect(ipAddress, portNum))
 		{
 			return ERROR_CODE::REDIS_CONNECT_FAIL;
