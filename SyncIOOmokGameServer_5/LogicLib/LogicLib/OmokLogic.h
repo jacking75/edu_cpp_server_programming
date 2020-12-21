@@ -1,11 +1,18 @@
 #pragma once
-#include "OmokPanPoint.h"
 #include "Omok.h"
 
 namespace OmokServerLib
 {
     //TODO 최흥배
     // 왜 static을 사용했나요?
+    // -> 전에 static으로 해서 class 만들지 않아도 된다고 피드백 주셨었습니다 ~! 
+
+    enum class PointType
+    {
+        None,
+        Black = 1,
+        White = 2,
+    };
 
     static const int OmokPanPointNumber = 19;
 

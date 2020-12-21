@@ -13,12 +13,12 @@ namespace OmokServerLib
 
 	//TODO 최흥배
 	// 네이밍 일관선이 없습니다. 첫 시작을 대문자로 시작하지 않네요
-
+	// -> 해결
 	struct CommandRequest
 	{
 		int sessionIndex = -1;
 		int redisTaskID = 0;
-		char* CommandBody = nullptr;
+		char* commandBody = nullptr;
 	};
 
 	enum class RedisTaskID : short

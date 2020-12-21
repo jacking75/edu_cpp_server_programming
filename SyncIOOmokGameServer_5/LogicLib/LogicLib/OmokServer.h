@@ -8,7 +8,7 @@ namespace OmokServerLib
 	class OmokServer
 	{
 	public:
-		OmokServer();
+		OmokServer() = default;
 		~OmokServer();
 
 		ERROR_CODE Run();

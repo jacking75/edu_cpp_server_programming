@@ -1,9 +1,7 @@
 #pragma once
 
-//TODO 최흥배
-// 이 프로젝트의 네임스페이스와 이름이 다르네요 ???
 
-namespace NCommon
+namespace OmokServerLib
 {
 	enum class PACKET_ID : short
 	{

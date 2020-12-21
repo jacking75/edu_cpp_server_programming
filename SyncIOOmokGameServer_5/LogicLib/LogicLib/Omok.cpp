@@ -7,6 +7,8 @@
 
 namespace OmokServerLib
 {
+    const int timeOut = 20000;
+
     void Omok::init()
     {
         for (int i = 0; i < OmokPanPointNumber; ++i)

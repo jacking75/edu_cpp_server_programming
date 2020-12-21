@@ -4,7 +4,7 @@
 #include <string>
 #include "ErrorCode.h"
 
-namespace NCommon
+namespace OmokServerLib
 {
 #pragma pack(push, 1)
 	struct PktHeader

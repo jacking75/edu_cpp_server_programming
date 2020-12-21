@@ -45,6 +45,16 @@ namespace OmokServerLib
 			ConnectedUserList[sessionIndex].m_IsLoginSuccess = true;
 		}
 
+		bool CheckUserLogin(const int sessionIndex)
+		{
+			if (ConnectedUserList[sessionIndex].m_IsLoginSuccess == true)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		void SetDisConnectSession(const int sessionIndex)
 		{
 			ConnectedUserList[sessionIndex].Clear();
@@ -57,7 +67,8 @@ namespace OmokServerLib
 
 			//TODO 최흥배
 			// 매직넘버
-			if (diffTime.count() < 100)
+			// -> 해결
+			if (diffTime.count() < checkIndexTime)
 			{
 				return;
 			}
@@ -79,7 +90,8 @@ namespace OmokServerLib
 
 			//TODO 최흥배
 			//매직넘버
-			auto lastCheckIndex = m_LatestLogincheckIndex + 200;
+			// -> 해결
+			auto lastCheckIndex = m_LatestLogincheckIndex + checkIndexRangeCount;
 			if (lastCheckIndex > maxSessionCount)
 			{
 				lastCheckIndex = maxSessionCount;
@@ -97,13 +109,15 @@ namespace OmokServerLib
 				auto diff = curSecTime - ConnectedUserList[i].m_ConnectedTime;
 				//TODO 최흥배
 				//매직넘버
-				if (diff >= 300)
+				// -> 해결
+				if (diff >= LoginWaitTime)
 				{
 					m_pRefLogger->error("{} | Login Wait Time Over. sessionIndex [{}].", __FUNCTION__, i);
 					m_pRefNetwork->ForcingClose(i);
 				}
 			}
 		}
+
 
 	private:
 		NServerNetLib::Logger* m_pRefLogger;
@@ -115,6 +129,12 @@ namespace OmokServerLib
 		std::chrono::system_clock::time_point m_LatestLoginCheckTime = std::chrono::system_clock::now();
 
 		int m_LatestLogincheckIndex = -1;
+
+		const int checkIndexTime = 100;
+
+		const int checkIndexRangeCount = 200;
+
+		const int LoginWaitTime = 300;
 	};
 
 }

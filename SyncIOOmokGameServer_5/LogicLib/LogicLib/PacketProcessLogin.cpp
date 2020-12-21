@@ -12,14 +12,21 @@ namespace OmokServerLib
 	{
 		//TODO 최흥배
 		// 이미 로그인 한 유저인데 또 로그인 요청을 보낸 경우 잘 방어하고 있나요?
+		// -> 해결
+		auto reqPkt = (OmokServerLib::PktLogInReq*)packetInfo.pRefData;
+		OmokServerLib::PktLogInRes resPkt;
 
-		auto reqPkt = (NCommon::PktLogInReq*)packetInfo.pRefData;
-		NCommon::PktLogInRes resPkt;
+		if (m_pRefConUserMgr->CheckUserLogin(packetInfo.SessionIndex) == true)
+		{
+			resPkt.SetError(ERROR_CODE::ALREADY_LOGIN_STATE);
+			SendPacketFunc(packetInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(resPkt), (char*)&resPkt);
+			return ERROR_CODE::ALREADY_LOGIN_STATE;
+		}
 
 		CommandRequest redisRequestInfo;
 		redisRequestInfo.sessionIndex = packetInfo.SessionIndex;
 		redisRequestInfo.redisTaskID = (int)RedisTaskID::confirmLogin;
-		redisRequestInfo.CommandBody = packetInfo.pRefData;
+		redisRequestInfo.commandBody = packetInfo.pRefData;
 
 		m_pRefRedisMgr->InsertRedisRequestQueue(redisRequestInfo);
 

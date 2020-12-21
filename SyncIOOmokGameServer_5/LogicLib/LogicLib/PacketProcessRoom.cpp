@@ -6,14 +6,12 @@ namespace OmokServerLib
 	
 	ERROR_CODE PacketProcess::RoomEnter(PacketInfo packetInfo)
 	{
-		auto reqPkt = (NCommon::PktRoomEnterReq*)packetInfo.pRefData;
-		NCommon::PktRoomEnterRes resPkt;
+		auto reqPkt = (OmokServerLib::PktRoomEnterReq*)packetInfo.pRefData;
+		OmokServerLib::PktRoomEnterRes resPkt;
 
 		//TODO 최흥배
-		// 다른 패킷 처리 함수에서 비슷한 코드가 있습니다. 중복을 제거해주세요
-		auto temp = reqPkt->RoomIndex;
-
-		//
+		// 다른 패킷 처리 함수에서 비슷한 코드가 있습니다. 중복을 제거해주세요 
+		//-> 26줄 FindRoom 에서 reqPkt->RoomIndex를 통해 방을 찾으므로 다른 함수들과 달라 묶기에 무리가 있는 것 같습니다.
 		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
 
 		auto errorCode = userInfo.first;
@@ -21,7 +19,7 @@ namespace OmokServerLib
 		
 		if (errorCode != ERROR_CODE::NONE) 
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, errorCode);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_ENTER_RES, errorCode);
 			return errorCode;
 		}
 		
@@ -29,7 +27,7 @@ namespace OmokServerLib
 
 		if (pRoom.has_value() == false) 
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_ENTER_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
 			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 		//
@@ -37,7 +35,7 @@ namespace OmokServerLib
 
 		if (enterRet != ERROR_CODE::NONE) 
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_ENTER_RES, enterRet);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_ENTER_RES, enterRet);
 			return enterRet;
 		}
 
@@ -45,56 +43,49 @@ namespace OmokServerLib
 
 		pRoom.value()->NotifyEnterUserInfo(packetInfo.SessionIndex, pUser->GetID().c_str());
 
-		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::ROOM_ENTER_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}
 
 	ERROR_CODE PacketProcess::RoomLeave(PacketInfo packetInfo)
 	{
-		NCommon::PktRoomLeaveRes resPkt;
+		OmokServerLib::PktRoomLeaveRes resPkt;
 
 		//TODO 최흥배
 		// 다른 패킷 처리 함수에서 비슷한 코드가 있습니다. 중복을 제거해주세요
-		//
-		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
+		//-> 해결
 
-		auto errorCode = userInfo.first;
-		auto pUser = userInfo.second;
+		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
 
-		if (errorCode != ERROR_CODE::NONE) 
+		if (findResult.has_value() == false)
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, errorCode);
-			return errorCode;
+			return ERROR_CODE::USER_ROOM_FIND_ERROR;
 		}
 
-		auto userIndex = pUser->GetIndex();
+		auto pUser = findResult.value().first;
+		auto pRoom = findResult.value().second;	
 
 		if (pUser->IsCurDomainInLogIn() == true)
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
 			return ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
 	
-		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
-
-		if (pRoom.has_value() == false) 
-		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
-		}
 		//
 
-		auto leaveRet = pRoom.value()->LeaveUser(userIndex, packetInfo.SessionIndex, pUser->GetID().c_str());
+		auto userIndex = pUser->GetIndex();
+
+		auto leaveRet = pRoom->LeaveUser(userIndex, packetInfo.SessionIndex, pUser->GetID().c_str());
 		if (leaveRet != ERROR_CODE::NONE) 
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_LEAVE_RES, leaveRet);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_LEAVE_RES, leaveRet);
 			return leaveRet;
 		}
 
 		pUser->LeaveRoom();
 
-		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
+		SendPacketFunc(packetInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::ROOM_LEAVE_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}
@@ -102,38 +93,32 @@ namespace OmokServerLib
 
 	ERROR_CODE PacketProcess::RoomChat(PacketInfo packetInfo)
 	{
-		auto reqPkt = (NCommon::PktRoomChatReq*)packetInfo.pRefData;
-		NCommon::PktRoomChatRes resPkt;
+		auto reqPkt = (OmokServerLib::PktRoomChatReq*)packetInfo.pRefData;
+		OmokServerLib::PktRoomChatRes resPkt;
 		
 		//TODO 최흥배
 		// 다른 패킷 처리 함수에서 비슷한 코드가 있습니다. 중복을 제거해주세요
-		//
-		auto userInfo = m_pRefUserMgr->GetUser(packetInfo.SessionIndex);
-		auto errorCode = userInfo.first;
-		auto pUser = userInfo.second;
+		//->해결
 
-		if (errorCode != ERROR_CODE::NONE) 
+		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
+
+		if (findResult.has_value() == false)
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, errorCode);
-			return errorCode;
+			return ERROR_CODE::USER_ROOM_FIND_ERROR;
 		}
+
+		auto pUser = findResult.value().first;
+		auto pRoom = findResult.value().second;
 
 		if (pUser->IsCurDomainInLogIn() == true) 
 		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
+			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN);
 			return ERROR_CODE::ROOM_CHAT_INVALID_DOMAIN;
-		}
-
-		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
-		if (pRoom.has_value() == false) 
-		{
-			SendPacketSetError(packetInfo.SessionIndex, NCommon::PACKET_ID::ROOM_CHAT_RES, ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX);
-			return ERROR_CODE::ROOM_ENTER_INVALID_ROOM_INDEX;
 		}
 		//
 
-	    pRoom.value()->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);	
-		SendPacketFunc(packetInfo.SessionIndex, (short)NCommon::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
+	    pRoom->NotifyChat(pUser->GetSessioIndex(), pUser->GetID().c_str(), reqPkt->Msg);	
+		SendPacketFunc(packetInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::ROOM_CHAT_RES, sizeof(resPkt), (char*)&resPkt);
 
 		return ERROR_CODE::NONE;
 	}

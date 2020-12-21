@@ -186,7 +186,6 @@
     <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="Omok.h" />
     <ClInclude Include="OmokLogic.h" />
-    <ClInclude Include="OmokPanPoint.h" />
     <ClInclude Include="OmokServer.h" />
     <ClInclude Include="PacketDef.h" />
     <ClInclude Include="PacketID.h" />

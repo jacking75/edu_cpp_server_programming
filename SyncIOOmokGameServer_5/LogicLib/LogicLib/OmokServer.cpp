@@ -5,10 +5,7 @@ namespace OmokServerLib
 {
 	//TODO 최흥배
 	// default 선언르로 해야 하지 않나요?
-	OmokServer::OmokServer()
-	{
-
-	}
+	// -> 해결
 
 	OmokServer::~OmokServer()
 	{

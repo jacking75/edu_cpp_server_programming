@@ -101,64 +101,64 @@ namespace OmokServerLib
 
 	void Room::NotifyEnterUserInfo(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktRoomEnterUserInfoNtf pkt;
+		OmokServerLib::PktRoomEnterUserInfoNtf pkt;
 		pkt.UserUniqueId = sessionIndex;
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
-		SendToAllUser((short)NCommon::PACKET_ID::ROOM_ENTER_NEW_USER_NTF, sizeof(pkt), (char*)&pkt, sessionIndex);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::ROOM_ENTER_NEW_USER_NTF, sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
 
 	void Room::NotifyLeaveUserInfo(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktRoomLeaveUserInfoNtf pkt;
+		OmokServerLib::PktRoomLeaveUserInfoNtf pkt;
 		pkt.UserUniqueId = sessionIndex;
 
-		SendToAllUser((short)NCommon::PACKET_ID::ROOM_LEAVE_USER_NTF, sizeof(pkt), (char*)&pkt , sessionIndex);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::ROOM_LEAVE_USER_NTF, sizeof(pkt), (char*)&pkt , sessionIndex);
 	}
 
 	void Room::NotifyChat(const int sessionIndex, const char* pszUserID, const char* pszMsg)
 	{
-		NCommon::PktRoomChatNtf pkt;
+		OmokServerLib::PktRoomChatNtf pkt;
 
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
-		strncpy_s(pkt.Msg, NCommon::MAX_ROOM_CHAT_MSG_SIZE + 1, pszMsg, NCommon::MAX_ROOM_CHAT_MSG_SIZE);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
+		strncpy_s(pkt.Msg, OmokServerLib::MAX_ROOM_CHAT_MSG_SIZE + 1, pszMsg, OmokServerLib::MAX_ROOM_CHAT_MSG_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::ROOM_CHAT_NTF, sizeof(pkt), (char*)&pkt);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::ROOM_CHAT_NTF, sizeof(pkt), (char*)&pkt);
 	}
 
 	void Room::NotifyPutStoneInfo(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktPutStoneRes pkt;
+		OmokServerLib::PktPutStoneRes pkt;
 
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::PUT_STONE_RES ,sizeof(pkt), (char*)&pkt, sessionIndex);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::PUT_STONE_RES ,sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
 
 	void Room::NotifyGameResult(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktGameResultNtf pkt;
+		OmokServerLib::PktGameResultNtf pkt;
 
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::GAME_END_RESULT, sizeof(pkt), (char*)&pkt, sessionIndex);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::GAME_END_RESULT, sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
 
 	void Room::NotifyGameStart(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktGameReadyRes pkt;
+		OmokServerLib::PktGameReadyRes pkt;
 
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::GAME_START_RES, sizeof(pkt), (char*)&pkt, sessionIndex);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::GAME_START_RES, sizeof(pkt), (char*)&pkt, sessionIndex);
 	}
 
 	void Room::NotifyTimeOutTurnChange(const int sessionIndex, const char* pszUserID)
 	{
-		NCommon::PktTimeOutTurnChange pkt;
+		OmokServerLib::PktTimeOutTurnChange pkt;
 
-		strncpy_s(pkt.UserID, (NCommon::MAX_USER_ID_SIZE + 1), pszUserID, NCommon::MAX_USER_ID_SIZE);
+		strncpy_s(pkt.UserID, (OmokServerLib::MAX_USER_ID_SIZE + 1), pszUserID, OmokServerLib::MAX_USER_ID_SIZE);
 
-		SendToAllUser((short)NCommon::PACKET_ID::TIME_OUT_TURN_CHANGE, sizeof(pkt), (char*)&pkt, -1);
+		SendToAllUser((short)OmokServerLib::PACKET_ID::TIME_OUT_TURN_CHANGE, sizeof(pkt), (char*)&pkt, -1);
 	}
 
 }

@@ -13,7 +13,7 @@ namespace OmokServerLib
 		m_pRefConUserMgr = m_pConUserMgr;
 
 		using netLibPacketId = NServerNetLib::PACKET_ID;
-		using commonPacketId = NCommon::PACKET_ID;
+		using commonPacketId = OmokServerLib::PACKET_ID;
 
 		for (int i = 0; i < (int)commonPacketId::MAX; ++i)
 		{
@@ -36,7 +36,7 @@ namespace OmokServerLib
 	{
 		auto packetId = packetInfo.PacketId;
 
-		if (packetId < 0 || packetId > (int)NCommon::PACKET_ID::MAX)
+		if (packetId < 0 || packetId > (int)OmokServerLib::PACKET_ID::MAX)
 		{
 			return;
 		}
@@ -82,58 +82,83 @@ namespace OmokServerLib
 		return ERROR_CODE::NONE;
 	}
 
-	void PacketProcess::SendPacketSetError(int sessionIndex, NCommon::PACKET_ID packetID, ERROR_CODE errorCode)
+	void PacketProcess::SendPacketSetError(int sessionIndex, OmokServerLib::PACKET_ID packetID, ERROR_CODE errorCode)
 	{
-		if (packetID == NCommon::PACKET_ID::PUT_STONE_RES)
+		if (packetID == OmokServerLib::PACKET_ID::PUT_STONE_RES)
 		{
-			NCommon::PktPutStoneRes resPkt;
+			OmokServerLib::PktPutStoneRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
-		else if (packetID == NCommon::PACKET_ID::GAME_START_RES)
+		else if (packetID == OmokServerLib::PACKET_ID::GAME_START_RES)
 		{
-			NCommon::PktGameReadyRes resPkt;
+			OmokServerLib::PktGameReadyRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
-		else if (packetID == NCommon::PACKET_ID::MATCH_USER_RES)
+		else if (packetID == OmokServerLib::PACKET_ID::MATCH_USER_RES)
 		{
-			NCommon::PktMatchRes resPkt;
+			OmokServerLib::PktMatchRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 
 		}
-		else if (packetID == NCommon::PACKET_ID::ROOM_ENTER_RES)
+		else if (packetID == OmokServerLib::PACKET_ID::ROOM_ENTER_RES)
 		{
-			NCommon::PktRoomEnterRes resPkt;
+			OmokServerLib::PktRoomEnterRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
-		else if (packetID == NCommon::PACKET_ID::ROOM_LEAVE_RES)
+		else if (packetID == OmokServerLib::PACKET_ID::ROOM_LEAVE_RES)
 		{
-			NCommon::PktRoomLeaveRes resPkt;
+			OmokServerLib::PktRoomLeaveRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
-		else if (packetID == NCommon::PACKET_ID::ROOM_CHAT_RES)
+		else if (packetID == OmokServerLib::PACKET_ID::ROOM_CHAT_RES)
 		{
-			NCommon::PktRoomChatRes resPkt;
+			OmokServerLib::PktRoomChatRes resPkt;
 
 			resPkt.SetError(errorCode);
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
 
+	}
+
+	std::optional <std::pair<User*,Room*>> PacketProcess::FindUserAndRoom(int sessionIndex, OmokServerLib::PACKET_ID packetID, ERROR_CODE roomErrorCode)
+	{
+		bool isTrue = true;
+		auto userInfo = m_pRefUserMgr->GetUser(sessionIndex);
+
+		auto errorCode = userInfo.first;
+		auto pUser = userInfo.second;
+
+		if (errorCode != ERROR_CODE::NONE)
+		{
+			SendPacketSetError(sessionIndex, packetID, errorCode);
+			return std::nullopt;
+		}
+
+		auto pRoom = m_pRefRoomMgr->FindRoom(pUser->GetRoomIndex());
+
+		if (pRoom.has_value() == false)
+		{
+			SendPacketSetError(sessionIndex, packetID, roomErrorCode);
+			return std::nullopt;
+		}
+
+		return std::make_pair(pUser, pRoom.value());
 	}
 
 }

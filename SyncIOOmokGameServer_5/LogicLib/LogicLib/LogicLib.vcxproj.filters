@@ -77,9 +77,6 @@
     <ClInclude Include="OmokLogic.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="OmokPanPoint.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="OmokServer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
