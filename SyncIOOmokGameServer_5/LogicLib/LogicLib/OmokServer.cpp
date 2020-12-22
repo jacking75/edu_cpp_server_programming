@@ -1,5 +1,6 @@
 ﻿#include "OmokServer.h"
 #include <iostream>
+#include "Config.h"
 
 namespace OmokServerLib
 {
@@ -15,14 +16,17 @@ namespace OmokServerLib
 		}
 	}
 
-	ERROR_CODE OmokServer::Init(const NServerNetLib::ServerConfig Config)
+	ERROR_CODE OmokServer::Init()
 	{
+		m_pConfig = std::make_unique<Config>();
+		m_pConfig->Load();
+
 		m_pLogger = std::make_unique<NServerNetLib::Logger>();
 		m_pNetwork = std::make_unique<NServerNetLib::TcpNetwork>();
 
-		m_pLogger->info("LoadConfig Port : {} , BackLog : {} ", Config.Port, Config.BackLogCount);
+		m_pLogger->info("LoadConfig Port : {} , BackLog : {} ", m_pConfig->port, m_pConfig->backLogCount);
 
-		auto result = m_pNetwork->Init(Config, m_pLogger.get());
+		auto result = m_pNetwork->Init(m_pConfig.get(), m_pLogger.get());
 
 		if (result != NServerNetLib::NET_ERROR_CODE::NONE)
 		{
@@ -36,10 +40,10 @@ namespace OmokServerLib
 		};
 
 		m_pUserMgr = std::make_unique<UserManager>();
-		m_pUserMgr->Init(Config.MaxClientCount);
+		m_pUserMgr->Init(m_pConfig->maxClientCount);
 
 		m_pRedisMgr = std::make_unique<RedisManager>();
-		auto redisResult = m_pRedisMgr->Connect(Config.RedisAddress.c_str(), Config.RedisPortNum);
+		auto redisResult = m_pRedisMgr->Connect(m_pConfig->redisAddress.value().c_str(), m_pConfig->redisPortNum);
 
 		if (redisResult != ERROR_CODE::NONE)
 		{
@@ -47,18 +51,18 @@ namespace OmokServerLib
 			return ERROR_CODE::MAIN_INIT_NETWORK_INIT_FAIL;
 		}
 		m_pRefConUserMgr = std::make_unique<ConnectedUserManager>();
-		m_pRefConUserMgr->Init(m_pNetwork->ClientSessionPoolSize(), m_pNetwork.get(), Config, m_pLogger.get());
+		m_pRefConUserMgr->Init(m_pNetwork->ClientSessionPoolSize(), m_pNetwork.get(), m_pLogger.get());
 
 		m_pRedisMgr->Init(m_pUserMgr.get(), m_pRefConUserMgr.get());
 		m_pRedisMgr->SendPacketFunc = sendPacketFunc;
 
 		m_pRoomMgr = std::make_unique<RoomManager>();
 		m_pRoomMgr->SendPacketFunc = sendPacketFunc;
-		m_pRoomMgr->Init(Config.MaxRoomCountByLobby, m_pNetwork.get());
+		m_pRoomMgr->Init(m_pConfig->maxRoomCountByLobby, m_pNetwork.get());
 
 		m_pPacketProc = std::make_unique<PacketProcess>();
 		m_pPacketProc->SendPacketFunc = sendPacketFunc;
-		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(),m_pRedisMgr.get(), m_pLogger.get(), m_pRefConUserMgr.get(), Config);
+		m_pPacketProc->Init(m_pNetwork.get(), m_pUserMgr.get(),m_pRoomMgr.get(),m_pRedisMgr.get(), m_pLogger.get(), m_pRefConUserMgr.get());
 	
 		m_IsRun = true;
 

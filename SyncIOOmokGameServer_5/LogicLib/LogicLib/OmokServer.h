@@ -15,7 +15,7 @@ namespace OmokServerLib
 
 		void Stop();
 
-		ERROR_CODE Init(const NServerNetLib::ServerConfig pConfig);
+		ERROR_CODE Init();
 
 		void MainProcessThread();
 
@@ -38,6 +38,8 @@ namespace OmokServerLib
 		std::unique_ptr<ConnectedUserManager> m_pRefConUserMgr;
 
 		std::unique_ptr<std::thread> mainThread;
+
+		std::unique_ptr<Config> m_pConfig;
 
 	};
 }

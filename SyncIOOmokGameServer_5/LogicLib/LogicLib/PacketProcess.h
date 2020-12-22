@@ -30,9 +30,8 @@ namespace OmokServerLib
 		//TODO 최흥배
 		// 파라미터 수가 너무 많으면 단락을 지어주거나 파라미터들을 특정 구조체로 묶어서 파라미터로 전달하는 등으로 간결하게 해주세요
 		// -> 해결
-		void Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, 
-			RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, 
-			ConnectedUserManager* m_pConUserMgr, NServerNetLib::ServerConfig pConfig);
+		void Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr,
+			RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, ConnectedUserManager* m_pConUserMgr);
 
 		void Process(PacketInfo packetInfo);
 

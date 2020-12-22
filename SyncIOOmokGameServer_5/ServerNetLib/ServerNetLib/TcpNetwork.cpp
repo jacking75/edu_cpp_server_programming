@@ -3,11 +3,6 @@
 
 namespace NServerNetLib
 {
-    TcpNetwork::TcpNetwork()
-    {
-
-    }
-
     TcpNetwork::~TcpNetwork()
     {
         for (auto& client : m_ClientSessionPool)
@@ -21,9 +16,9 @@ namespace NServerNetLib
         mSendThread->join();
     }
 
-    NET_ERROR_CODE TcpNetwork::Init(const ServerConfig pConfig, Logger* pLogger)
+    NET_ERROR_CODE TcpNetwork::Init(OmokServerLib::Config* config, Logger* pLogger)
     {
-        m_Config = pConfig;
+        m_Config = config;
         m_pRefLogger = pLogger;
         
         auto initRet = InitServerSocket();
@@ -33,7 +28,7 @@ namespace NServerNetLib
             return initRet;
         }
 
-        auto bindListenRet = BindListen(pConfig.Port, pConfig.BackLogCount);
+        auto bindListenRet = BindListen(config->port, config->backLogCount);
         if (bindListenRet != NET_ERROR_CODE::NONE)
         {
             return bindListenRet;
@@ -42,7 +37,7 @@ namespace NServerNetLib
         FD_ZERO(&m_Readfds);
         FD_SET(m_ServerSockfd, &m_Readfds);
 
-        auto sessionPoolSize = CreateSessionPool(pConfig.MaxClientCount + pConfig.ExtraClientCount);
+        auto sessionPoolSize = CreateSessionPool(config->maxClientCount + config->extraClientCount);
 
         m_pRefLogger->info("Network Init | SessionPoolSize : {}", sessionPoolSize);
 
@@ -55,7 +50,7 @@ namespace NServerNetLib
         {
             TcpSession* session = new TcpSession;
             session->Init(i);
-            session->NewSessionBuffer(m_Config.MaxClientRecvBufferSize, m_Config.MaxClientSendBufferSize);
+            session->NewSessionBuffer(m_Config->maxClientRecvBufferSize, m_Config->maxClientSendBufferSize);
 
             m_ClientSessionPool.push_back(session);
             m_ClientSessionPoolIndex.push_back(i);
@@ -400,7 +395,7 @@ namespace NServerNetLib
     NET_ERROR_CODE TcpNetwork::SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg)
     {
         auto& session = m_ClientSessionPool[sessionIndex];
-        auto result = session->SendSessionData(m_Config.MaxClientSendBufferSize,packetId, bodySize, pMsg);
+        auto result = session->SendSessionData(m_Config->maxClientSendBufferSize,packetId, bodySize, pMsg);
         
         return result;
     }

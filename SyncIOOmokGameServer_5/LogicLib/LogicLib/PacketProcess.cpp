@@ -4,7 +4,7 @@
 
 namespace OmokServerLib
 {	
-	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, ConnectedUserManager* m_pConUserMgr, NServerNetLib::ServerConfig pConfig)
+	void PacketProcess::Init(NServerNetLib::TcpNetwork* pNetwork, UserManager* pUserMgr, RoomManager* pRoomMgr, RedisManager* pRedisMgr, NServerNetLib::Logger* pLogger, ConnectedUserManager* m_pConUserMgr)
 	{		
 		m_pRefUserMgr = pUserMgr;
 		m_pRefRoomMgr = pRoomMgr;

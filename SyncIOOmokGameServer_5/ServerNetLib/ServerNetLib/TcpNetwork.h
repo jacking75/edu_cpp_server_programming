@@ -16,6 +16,7 @@
 #include <thread>
 #include <mutex>
 #include "logger.h"
+#include "../../LogicLib/LogicLib/Config.h"
 
 namespace NServerNetLib
 {
@@ -34,10 +35,10 @@ namespace NServerNetLib
 
 	public:
 
-		TcpNetwork();
+		TcpNetwork() = default;
 		 ~TcpNetwork();
 
-		NET_ERROR_CODE Init(const ServerConfig pConfig, Logger* pLogger);
+		NET_ERROR_CODE Init(OmokServerLib::Config* pConfig, Logger* pLogger);
 
 		NET_ERROR_CODE SendData(const int sessionIndex, const short packetId, const short bodySize, char* pMsg);
 
@@ -93,7 +94,7 @@ namespace NServerNetLib
 
 		std::mutex mReceivePacketMutex;
 
-		ServerConfig m_Config;
+		OmokServerLib::Config* m_Config;
 
 		SOCKET m_ServerSockfd;
 

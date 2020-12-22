@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis;..\..\..\ThirdParty\tomlplusplus-master\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis;..\..\..\ThirdParty\tomlplusplus-master\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -132,7 +132,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis;..\..\..\ThirdParty\tomlplusplus-master\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,7 +153,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ThirdParty\spdlog\include;..\..\..\ThirdParty\hiredis;..\..\..\ThirdParty\tomlplusplus-master\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -168,6 +168,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="ConnectedUserManager.h" />
     <ClCompile Include="Omok.cpp" />
     <ClCompile Include="OmokServer.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="Omok.h" />
     <ClInclude Include="OmokLogic.h" />
