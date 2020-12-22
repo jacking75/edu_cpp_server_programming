@@ -133,6 +133,14 @@ namespace OmokServerLib
 			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}
+		else if (packetID == OmokServerLib::PACKET_ID::LOGIN_IN_RES)
+		{
+			OmokServerLib::PktLogInRes resPkt;
+
+			resPkt.SetError(errorCode);
+			SendPacketFunc(sessionIndex, (short)packetID, sizeof(resPkt), (char*)&resPkt);
+			return;
+		}
 
 	}
 

@@ -11,7 +11,6 @@ namespace OmokServerLib
 
 		//TODO 최흥배
 		//중복 코드 -> 해결
-		//
 
 		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::PUT_STONE_RES, ERROR_CODE::USER_STATE_NOT_ROOM);
 
@@ -28,7 +27,7 @@ namespace OmokServerLib
 			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::PUT_STONE_RES, ERROR_CODE::USER_STATE_NOT_GAME);
 			return ERROR_CODE::USER_STATE_NOT_GAME;
 		}
-		//
+
 		if (packetInfo.SessionIndex != pRoom->m_OmokGame->m_TurnIndex)
 		{
 			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::PUT_STONE_RES, ERROR_CODE::NOT_YOUR_TURN);

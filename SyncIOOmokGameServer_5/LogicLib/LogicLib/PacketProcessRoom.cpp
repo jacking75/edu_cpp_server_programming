@@ -71,8 +71,6 @@ namespace OmokServerLib
 			SendPacketSetError(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::ROOM_LEAVE_RES, ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN);
 			return ERROR_CODE::ROOM_LEAVE_INVALID_DOMAIN;
 		}
-	
-		//
 
 		auto userIndex = pUser->GetIndex();
 

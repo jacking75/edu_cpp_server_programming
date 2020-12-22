@@ -70,8 +70,6 @@ namespace OmokServerLib
 
 		std::string SetWinUserID(Room* pRoom, ERROR_CODE endResult);
 
-		ERROR_CODE UserSetGame(User* pUser, int sessionIndex);
-
 		std::pair<ERROR_CODE, std::string> PutStone(Room* pRoom, int x, int y, int sessionIndex);
 
 		std::optional <std::pair<User*, Room*>> FindUserAndRoom(int sessionIndex, OmokServerLib::PACKET_ID packetID, ERROR_CODE roomErrorCode);

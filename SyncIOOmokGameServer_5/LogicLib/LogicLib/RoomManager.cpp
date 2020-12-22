@@ -1,6 +1,6 @@
 #include "RoomManager.h"
 #include <optional>
-
+#include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
 namespace OmokServerLib
 {
 	void RoomManager::Init(const int maxRoomNum, NServerNetLib::TcpNetwork* pNetwork)

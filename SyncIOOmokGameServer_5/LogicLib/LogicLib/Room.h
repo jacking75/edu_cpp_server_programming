@@ -66,6 +66,8 @@ namespace OmokServerLib
 
 		std::function<void(const int, const short, const short, char*)> SendPacketFunc;
 
+		ERROR_CODE UserSetGame(User* pUser, int sessionIndex);
+
 	private:
 
 		NServerNetLib::TcpNetwork* m_pRefNetwork;

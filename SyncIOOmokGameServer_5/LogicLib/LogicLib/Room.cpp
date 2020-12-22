@@ -98,6 +98,37 @@ namespace OmokServerLib
 			}
 		}
 	}
+	
+	ERROR_CODE Room::UserSetGame(User* pUser, int sessionIndex)
+	{		
+		auto pOpponentUser = sessionIndex == m_UserList[0]->GetSessioIndex() ? m_UserList[1] : m_UserList[0];
+		auto roomUserIndex = sessionIndex == m_UserList[0]->GetSessioIndex() ? 1 : 0;
+
+		if (pOpponentUser->IsCurDomainInReady() == true)
+		{
+			pOpponentUser->SetGame();
+			pUser->SetGame();
+			SetRoomStateGame();
+
+			//검은돌 랜덤 선정
+			m_OmokGame->m_BlackStoneUserIndex = std::abs(1 - roomUserIndex);
+			m_OmokGame->m_WhiteStoneUserIndex = roomUserIndex;
+			m_OmokGame->m_TurnIndex = sessionIndex;
+			m_OmokGame->init();
+			NotifyGameStart(sessionIndex, pUser->GetID().c_str());
+
+			m_OmokGame->SetUserTurnTime();
+
+			return ERROR_CODE::NONE;
+
+		}
+		else
+		{
+			return ERROR_CODE::NOT_READY_EXIST;
+		}
+
+		return ERROR_CODE::UNASSIGNED_ERROR;
+	}
 
 	void Room::NotifyEnterUserInfo(const int sessionIndex, const char* pszUserID)
 	{
