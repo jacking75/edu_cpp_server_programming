@@ -1,4 +1,6 @@
 #include "PacketProcess.h"
+#include "User.h"
+#include "Room.h"
 #include "PacketDef.h"
 
 //TODO 최흥배
@@ -11,10 +13,6 @@ namespace OmokServerLib
 	{
 		OmokServerLib::PktGameReadyRes resPkt;
 
-		//TODO 최흥배
-		// 이 유저가 지금 방에 있는 유저인지 확인해봐야 하지 않나요?
-		// 이 단계에서 room 객체도 얻는 것이 좋습니다.
-		//-> 해결
 		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::GAME_START_RES, ERROR_CODE::USER_STATE_NOT_ROOM);
 
 		if (findResult.has_value() == false)

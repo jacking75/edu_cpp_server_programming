@@ -1,13 +1,10 @@
 ﻿#include "OmokServer.h"
-#include <iostream>
+#include "User.h"
 #include "Config.h"
+#include <iostream>
 
 namespace OmokServerLib
 {
-	//TODO 최흥배
-	// default 선언르로 해야 하지 않나요?
-	// -> 해결
-
 	OmokServer::~OmokServer()
 	{
 		if (m_pNetwork) 

@@ -1,4 +1,5 @@
 #include "RoomManager.h"
+#include "Room.h"
 #include <optional>
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
 namespace OmokServerLib
@@ -39,6 +40,8 @@ namespace OmokServerLib
 
 	void RoomManager::CheckRoomGameTime()
 	{
+		//TODO 최흥배
+		// User 조사처럼 한번에 다 하지 말고 잘게 나누어서 체크 하도록 하세요. 한번에 모든 방 다 체크하면 부하가 순간적으로 증가되는 현상이 생길 수 있습니다.
 		for (auto room : m_RoomList)
 		{
 			room->CheckTurnTimeOut();

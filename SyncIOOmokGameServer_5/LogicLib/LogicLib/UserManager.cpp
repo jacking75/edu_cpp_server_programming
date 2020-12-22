@@ -8,10 +8,10 @@ namespace OmokServerLib
 	{
 		for (int i = 0; i < maxUserCount; ++i)
 		{
-			User user;
-			user.Init((short)i);
+			auto* pUser = new User;
+			pUser->Init((short)i);
 
-			m_UserObjPool.push_back(user);
+			m_UserObjPool.push_back(pUser);
 			m_UserObjPoolIndex.push_back(i);
 		}
 	}
@@ -26,13 +26,13 @@ namespace OmokServerLib
 		int index = m_UserObjPoolIndex.front();
 		m_UserObjPoolIndex.pop_front();
 
-		return &m_UserObjPool[index];
+		return m_UserObjPool[index];
 	}
 
 	void UserManager::ReleaseUserObjPoolIndex(const int index)
 	{
 		m_UserObjPoolIndex.push_back(index);
-		m_UserObjPool[index].Clear();
+		m_UserObjPool[index]->Clear();
 	}
 
 	ERROR_CODE UserManager::AddUser(const int sessionIndex, const char* pszID)

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <unordered_map>
 #include <deque>
 #include <string>
@@ -39,7 +40,7 @@ namespace OmokServerLib
 
 	private:
 
-		std::vector<User> m_UserObjPool;
+		std::vector<User*> m_UserObjPool;
 
 		std::deque<int> m_UserObjPoolIndex;
 

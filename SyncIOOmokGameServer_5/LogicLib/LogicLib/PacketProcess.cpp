@@ -1,5 +1,7 @@
 ﻿#include <iostream>
 #include "PacketProcess.h"
+#include "User.h"
+#include "Room.h"
 #include "PacketDef.h"
 
 namespace OmokServerLib

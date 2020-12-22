@@ -4,14 +4,18 @@
 // 전반 선언으로 해주세요
 //-> 엄청난 에러들이 발생합니다...... 
 #include <functional>
-#include "Room.h"
+#include <optional>
+#include <vector>
+//#include "Room.h"
 
 namespace NServerNetLib
 {
 	class TcpNetwork;
 }
+
 namespace OmokServerLib
-{
+{	
+	class Room;
 
 	class RoomManager
 	{

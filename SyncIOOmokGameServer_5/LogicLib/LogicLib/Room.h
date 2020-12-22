@@ -5,9 +5,7 @@
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
 #include <functional>
 
-//TODO 최흥배
-// 코드 전체적으로 주석이 필요한 곳은 주석을 남겨주세요. 다른 사람이 봤을 때 주석 없이 이 코드들을 이해할 수 있다고 생각하면 주석 안달아도 되지만 그런 자신이 없다면 주석 달아주세요
-// 물론 함수 및 변수 이름으로 충분히 뜻을 알 수 있다면 주석은 달지 않아도 됩니다
+
 namespace OmokServerLib
 {
 	class Room

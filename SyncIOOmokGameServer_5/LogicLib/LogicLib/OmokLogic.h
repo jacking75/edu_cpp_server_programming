@@ -6,6 +6,7 @@ namespace OmokServerLib
     //TODO 최흥배
     // 왜 static을 사용했나요?
     // -> 전에 static으로 해서 class 만들지 않아도 된다고 피드백 주셨었습니다 ~! 
+    // -> 제가 생각한 것은 class를 만든 후 멤버 함수를 static으로 가지는 것을 생각했습니다.  아래 방식은 C언어 스타일 같아서요
 
     enum class PointType
     {

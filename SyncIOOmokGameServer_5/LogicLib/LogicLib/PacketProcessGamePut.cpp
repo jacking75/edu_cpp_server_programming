@@ -1,4 +1,6 @@
 #include "PacketProcess.h"
+#include "User.h"
+#include "Room.h"
 #include "PacketDef.h"
 
 namespace OmokServerLib
@@ -8,9 +10,6 @@ namespace OmokServerLib
 		auto reqPkt = (OmokServerLib::PktPutStoneReq*)packetInfo.pRefData;
 		OmokServerLib::PktPutStoneRes resPkt;
 		OmokServerLib::PktGameResultNtf gameResPkt;
-
-		//TODO 최흥배
-		//중복 코드 -> 해결
 
 		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::PUT_STONE_RES, ERROR_CODE::USER_STATE_NOT_ROOM);
 

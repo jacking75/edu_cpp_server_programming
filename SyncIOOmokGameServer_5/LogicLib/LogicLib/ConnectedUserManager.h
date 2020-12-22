@@ -65,9 +65,6 @@ namespace OmokServerLib
 			auto curTime = std::chrono::system_clock::now();
 			auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - m_LatestLoginCheckTime);
 
-			//TODO 최흥배
-			// 매직넘버
-			// -> 해결
 			if (diffTime.count() < checkIndexTime)
 			{
 				return;
@@ -88,9 +85,6 @@ namespace OmokServerLib
 
 			++m_LatestLogincheckIndex;
 
-			//TODO 최흥배
-			//매직넘버
-			// -> 해결
 			auto lastCheckIndex = m_LatestLogincheckIndex + checkIndexRangeCount;
 			if (lastCheckIndex > maxSessionCount)
 			{
@@ -106,10 +100,7 @@ namespace OmokServerLib
 					continue;
 				}
 
-				auto diff = curSecTime - ConnectedUserList[i].m_ConnectedTime;
-				//TODO 최흥배
-				//매직넘버
-				// -> 해결
+				auto diff = curSecTime - ConnectedUserList[i].m_ConnectedTime;				
 				if (diff >= LoginWaitTime)
 				{
 					m_pRefLogger->error("{} | Login Wait Time Over. sessionIndex [{}].", __FUNCTION__, i);

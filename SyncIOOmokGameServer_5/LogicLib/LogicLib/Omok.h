@@ -35,9 +35,6 @@ namespace OmokServerLib
         void SetUserTurnTime();
 
     private:
-        //TODO 최흥배
-        // 아래 상수는 Omok.cpp에서만 사용한다면 cpp에 선언하세요. 헤더 파일에는 가급적 선언 안하는 것이 좋습니다.
-        // -> 해결
         std::chrono::system_clock::time_point m_UserTurnTime = std::chrono::system_clock::now();
 
         std::vector<std::vector<PointType>> OmokPanPoints;
