@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Omok.h"
-#include "OmokLogic.h"
 #include <iostream>
 #include <algorithm>
 
@@ -11,10 +10,10 @@ namespace OmokServerLib
 
     void Omok::init()
     {
-        for (int i = 0; i < OmokPanPointNumber; ++i)
+        for (int i = 0; i < OmokLogic::OmokPanPointNumber; ++i)
         { 
             std::vector<PointType> elem;
-            elem.resize(OmokPanPointNumber);
+            elem.resize(OmokLogic::OmokPanPointNumber);
             OmokPanPoints.push_back(elem);
         }
 
@@ -28,9 +27,9 @@ namespace OmokServerLib
       //std::fill(&OmokPanPoints[0][0], &OmokPanPoints[OmokPanPointNumber - 1][OmokPanPointNumber], PointType::None);
        
       //이전코드
-        for (int i = 0; i < OmokPanPointNumber; ++i)
+        for (int i = 0; i < OmokLogic::OmokPanPointNumber; ++i)
         {
-            for (int j = 0; j < OmokPanPointNumber; ++j)
+            for (int j = 0; j < OmokLogic::OmokPanPointNumber; ++j)
             {
                 OmokPanPoints[i][j] = PointType::None;
             }
@@ -65,7 +64,7 @@ namespace OmokServerLib
     {
         auto pointType = IsBlackTurn == true ? PointType::White : PointType::Black;
 
-        if (ConfirmOmok(OmokPanPoints, xPos, yPos, pointType) == false)
+        if (OmokLogic::ConfirmOmok(OmokPanPoints, xPos, yPos, pointType) == false)
         {
             return ERROR_CODE::NONE;
         }
@@ -83,7 +82,7 @@ namespace OmokServerLib
 
     ERROR_CODE Omok::CheckPos(int xPos, int yPos)
     {
-        if (xPos < 0 || yPos < 0 || xPos >= OmokPanPointNumber || yPos >= OmokPanPointNumber)
+        if (xPos < 0 || yPos < 0 || xPos >= OmokLogic::OmokPanPointNumber || yPos >= OmokLogic::OmokPanPointNumber)
         {
             return ERROR_CODE::GAME_PUT_POS_ERROR;
         }

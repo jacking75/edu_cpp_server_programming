@@ -17,9 +17,9 @@ namespace OmokServerLib
 		}
 
 		CommandRequest redisRequestInfo;
-		redisRequestInfo.sessionIndex = packetInfo.SessionIndex;
-		redisRequestInfo.redisTaskID = (int)RedisTaskID::confirmLogin;
-		redisRequestInfo.commandBody = packetInfo.pRefData;
+		redisRequestInfo.SessionIndex = packetInfo.SessionIndex;
+		redisRequestInfo.RedisTaskID = (int)RedisTaskID::confirmLogin;
+		redisRequestInfo.CommandBody = packetInfo.pRefData;
 
 		m_pRefRedisMgr->InsertRedisRequestQueue(redisRequestInfo);
 

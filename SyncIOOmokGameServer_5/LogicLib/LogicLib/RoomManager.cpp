@@ -2,6 +2,7 @@
 #include "Room.h"
 #include <optional>
 #include "../../ServerNetLib/ServerNetLib/TcpNetwork.h"
+
 namespace OmokServerLib
 {
 	void RoomManager::Init(const int maxRoomNum, NServerNetLib::TcpNetwork* pNetwork)
@@ -42,9 +43,41 @@ namespace OmokServerLib
 	{
 		//TODO 최흥배
 		// User 조사처럼 한번에 다 하지 말고 잘게 나누어서 체크 하도록 하세요. 한번에 모든 방 다 체크하면 부하가 순간적으로 증가되는 현상이 생길 수 있습니다.
-		for (auto room : m_RoomList)
+		//-> 해결
+		auto curTime = std::chrono::system_clock::now();
+		auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - m_LatestRoomCheckTime);
+
+		if (diffTime.count() < checkIndexTime)
 		{
-			room->CheckTurnTimeOut();
+			return;
 		}
+		else
+		{
+			m_LatestRoomCheckTime = curTime;
+		}
+
+		auto curSecTime = std::chrono::system_clock::to_time_t(curTime);
+
+		const auto maxSessionCount = (int)m_RoomList.size();
+
+		if (m_LatestRoomCheckIndex >= maxSessionCount)
+		{
+			m_LatestRoomCheckIndex = -1;
+		}
+
+		++m_LatestRoomCheckIndex;
+
+		auto lastCheckIndex = m_LatestRoomCheckIndex + checkIndexRangeCount;
+		if (lastCheckIndex > maxSessionCount)
+		{
+			lastCheckIndex = maxSessionCount;
+		}
+
+		for (; m_LatestRoomCheckIndex < lastCheckIndex; ++m_LatestRoomCheckIndex)
+		{
+			auto i = m_LatestRoomCheckIndex;
+			m_RoomList[i]->CheckTurnTimeOut();
+		}
+
 	}
 }

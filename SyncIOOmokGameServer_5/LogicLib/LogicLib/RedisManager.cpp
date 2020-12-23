@@ -48,7 +48,7 @@ namespace OmokServerLib
 
 	void RedisManager::Process(RedisRequestInfo redisRequestInfo)
 	{
-		auto redisTaskID = redisRequestInfo.redisTaskID;
+		auto redisTaskID = redisRequestInfo.RedisTaskID;
 
 		if (PacketFuncArray[redisTaskID] == nullptr)
 		{
@@ -85,7 +85,7 @@ namespace OmokServerLib
 
 	void RedisManager::InsertRedisRequestQueue(RedisRequestInfo redisRequestInfo)
 	{
-		m_RedisRequestQueue.push_back(redisRequestInfo);
+		m_RedisRequestQueue.push(redisRequestInfo);
 	}
 
 	void RedisManager::Disconnect()
@@ -95,7 +95,7 @@ namespace OmokServerLib
 
 	ERROR_CODE RedisManager::ConfirmLogin(RedisRequestInfo redisRequestInfo)
 	{
-		auto reqPkt = (OmokServerLib::PktLogInReq*)redisRequestInfo.commandBody;
+		auto reqPkt = (OmokServerLib::PktLogInReq*)redisRequestInfo.CommandBody;
 		OmokServerLib::PktLogInRes resPkt;
 
 		std::string userID = reqPkt->szID;
@@ -104,25 +104,25 @@ namespace OmokServerLib
 		if (con->get(userID, password) == false)
 		{
 			resPkt.SetError(ERROR_CODE::REDIS_GET_FAIL);
-			SendPacketFunc(redisRequestInfo.sessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
+			SendPacketFunc(redisRequestInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
 			return ERROR_CODE::REDIS_GET_FAIL;
 		}
 
 		if (password == reqPkt->szPW)
 		{
-			auto addRet = m_pRefUserMgr->AddUser(redisRequestInfo.sessionIndex, reqPkt->szID);
-			auto userInfo = m_pRefUserMgr->GetUser(redisRequestInfo.sessionIndex);
+			auto addRet = m_pRefUserMgr->AddUser(redisRequestInfo.SessionIndex, reqPkt->szID);
+			auto userInfo = m_pRefUserMgr->GetUser(redisRequestInfo.SessionIndex);
 
 			userInfo.second->SetLogin();
-			m_pRefConUserMgr->SetLogin(redisRequestInfo.sessionIndex);
+			m_pRefConUserMgr->SetLogin(redisRequestInfo.SessionIndex);
 
 			resPkt.SetError(ERROR_CODE::NONE);
-			SendPacketFunc(redisRequestInfo.sessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
+			SendPacketFunc(redisRequestInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
 			return ERROR_CODE::NONE;
 		}
 
 		resPkt.SetError(ERROR_CODE::REDIS_LOGIN_PW_INCORRECT);
-		SendPacketFunc(redisRequestInfo.sessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
+		SendPacketFunc(redisRequestInfo.SessionIndex, (short)OmokServerLib::PACKET_ID::LOGIN_IN_RES, sizeof(OmokServerLib::PktLogInRes), (char*)&resPkt);
 		
 		return ERROR_CODE::NONE;
 	}
@@ -133,8 +133,9 @@ namespace OmokServerLib
 
 		if (m_RedisRequestQueue.empty() == false)
 		{
-			CommandRequest packetInfo = m_RedisRequestQueue.front();
-			m_RedisRequestQueue.pop_front();
+			CommandRequest packetInfo;
+			m_RedisRequestQueue.try_pop(packetInfo);
+
 			return packetInfo;
 		}
 

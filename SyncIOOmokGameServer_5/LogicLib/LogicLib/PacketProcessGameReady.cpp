@@ -3,10 +3,6 @@
 #include "Room.h"
 #include "PacketDef.h"
 
-//TODO 최흥배
-// 패킷 핸들러 함수에 있는 코드들이 Room으로 옮길 수 있으면 그쪽으로 옮겨주세요
-// 패킷 핸들어에 코드가 많이 있는 것 별로 좋지 않습니다.
-//-> 해결
 namespace OmokServerLib
 {
 	ERROR_CODE PacketProcess::GameReady(PacketInfo packetInfo)

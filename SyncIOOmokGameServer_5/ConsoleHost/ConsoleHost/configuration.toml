@@ -8,6 +8,6 @@ BackLogCount = 128
 MaxClientRecvBufferSize = 8192
 MaxClientSendBufferSize = 8192
 MaxRoomUserCount = 4
-MaxRoomCountByLobby = 5
+MaxRoomCountByLobby = 100
 RedisAddress = "127.0.0.1"
 RedisPortNum = 6379

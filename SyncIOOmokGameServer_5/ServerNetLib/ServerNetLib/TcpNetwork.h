@@ -17,6 +17,9 @@
 #include <mutex>
 #include "logger.h"
 #include "../../LogicLib/LogicLib/Config.h"
+#include <concurrent_queue.h>
+
+using namespace Concurrency;
 
 namespace NServerNetLib
 {
@@ -104,9 +107,7 @@ namespace NServerNetLib
 
 		std::deque<int> m_ClientSessionPoolIndex;
 
-		std::deque<RecvPacketInfo> m_PacketQueue;
-
-		std::deque<RecvPacketInfo> m_SendPacketQueue;
+		concurrent_queue <RecvPacketInfo> m_PacketQueue;
 
 		Logger* m_pRefLogger;
 

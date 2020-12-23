@@ -192,8 +192,8 @@ namespace NServerNetLib
 
         if (m_PacketQueue.empty() == false)
         {
-            RecvPacketInfo packetInfo = m_PacketQueue.front();
-            m_PacketQueue.pop_front();
+            RecvPacketInfo packetInfo;
+            m_PacketQueue.try_pop(packetInfo);
             return packetInfo;
         }
 
@@ -210,7 +210,7 @@ namespace NServerNetLib
         packetInfo.PacketBodySize = bodySize;
         packetInfo.pRefData = pDataPos;
 
-        m_PacketQueue.push_back(packetInfo);
+        m_PacketQueue.push(packetInfo);
     }
 
     NET_ERROR_CODE TcpNetwork::SetNonBlockSocket(const SOCKET sock)

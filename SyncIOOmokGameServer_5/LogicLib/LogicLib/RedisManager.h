@@ -8,7 +8,8 @@
 #include <functional>
 #include "UserManager.h"
 #include "ConnectedUserManager.h"
-
+#include <concurrent_queue.h>
+using namespace Concurrency;
 
 namespace RedisCpp
 {
@@ -58,7 +59,8 @@ namespace OmokServerLib
 		// VC++의 Concurrent_Queue 라는 스레드세이프한 큐 컨테이너를 사용하도록 하죠
 		// 여기 이외에도 lock이 필요한 컨테이너는 스레드 세이프한 컨테이너로 바꾸기 바랍니다.
 		// https://vsts2010.tistory.com/171?category=79917
-		std::deque<CommandRequest> m_RedisRequestQueue;
+		//-> 해결
+		concurrent_queue <CommandRequest> m_RedisRequestQueue;
 
 		bool m_IsRun = false;
 
