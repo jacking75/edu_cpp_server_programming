@@ -53,8 +53,6 @@ namespace NServerNetLib
 
 		std::optional <int> SendSocket();
 
-		std::optional <int> RecvSocket();
-
 		std::mutex sendPacketMutex;
 	};
 }
