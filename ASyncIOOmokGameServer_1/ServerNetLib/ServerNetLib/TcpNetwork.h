@@ -50,7 +50,7 @@ namespace NServerNetLib
 
 		void Release();
 
-		void CloseSocket(TcpSession* clientInfo, bool isForce);
+		void CloseSocket(const int sessionIndex, bool isForce);
 
 		std::optional <RecvPacketInfo> GetPacketData();
 

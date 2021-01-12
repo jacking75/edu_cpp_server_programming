@@ -104,7 +104,7 @@ namespace OmokServerLib
 				if (diff >= LoginWaitTime)
 				{
 					m_pRefLogger->error("{} | Login Wait Time Over. sessionIndex [{}].", __FUNCTION__, i);
-					//m_pRefNetwork->CloseSocket(i);
+					m_pRefNetwork->CloseSocket(i, false);
 				}
 			}
 		}
@@ -125,7 +125,7 @@ namespace OmokServerLib
 
 		const int checkIndexRangeCount = 200;
 
-		const int LoginWaitTime = 300;
+		const int LoginWaitTime = 10;
 	};
 
 }

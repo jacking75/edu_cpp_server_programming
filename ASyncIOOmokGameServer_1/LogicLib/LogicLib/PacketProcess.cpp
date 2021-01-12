@@ -101,6 +101,7 @@ namespace OmokServerLib
 			resPkt.Id = (short)OmokServerLib::PACKET_ID::GAME_START_RES;
 			resPkt.TotalSize = sizeof(OmokServerLib::PktGameReadyRes);
 			resPkt.SetError(errorCode);
+			
 			SendPacketFunc(sessionIndex, sizeof(resPkt), (char*)&resPkt);
 			return;
 		}

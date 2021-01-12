@@ -14,8 +14,8 @@ namespace OmokServerLib
 		resPkt.TotalSize = sizeof(OmokServerLib::PktPutStoneRes);
 
 		OmokServerLib::PktGameResultNtf gameResPkt;
-		resPkt.Id = (short)OmokServerLib::PACKET_ID::GAME_END_RESULT;
-		resPkt.TotalSize = sizeof(OmokServerLib::PktGameResultNtf);
+		gameResPkt.Id = (short)OmokServerLib::PACKET_ID::GAME_END_RESULT;
+		gameResPkt.TotalSize = sizeof(OmokServerLib::PktGameResultNtf);
 
 		auto findResult = FindUserAndRoom(packetInfo.SessionIndex, OmokServerLib::PACKET_ID::PUT_STONE_RES, ERROR_CODE::USER_STATE_NOT_ROOM);
 

@@ -273,7 +273,7 @@ namespace NServerNetLib
 			if (FALSE == bSuccess || (0 == dwIoSize && IOOperation::ACCEPT != pOverlappedEx->m_eOperation))
 			{
 				m_pRefLogger->info("WokerThread | socket disconnect : {}", (int)pClientInfo->GetSock());
-				CloseSocket(pClientInfo, false);
+				CloseSocket(pClientInfo->GetIndex(), false);
 				continue;
 			}
 
@@ -288,7 +288,7 @@ namespace NServerNetLib
 				}
 				else
 				{
-					CloseSocket(pClientInfo, true);
+					CloseSocket(pClientInfo->GetIndex(), true);
 				}
 			}
 
@@ -341,18 +341,18 @@ namespace NServerNetLib
 		}
 	}
 
-	void TcpNetwork::CloseSocket(TcpSession* clientInfo, bool isForce)
+	void TcpNetwork::CloseSocket(const int sessionIndex, bool isForce)
 	{
-		if (clientInfo->IsConnectd() == false)
+		auto session = GetClientInfo(sessionIndex);
+
+		if (session->IsConnectd() == false)
 		{
 			return;
 		}
 
-		auto clientIndex = clientInfo->GetIndex();
+		session->Close(isForce);
 
-		clientInfo->Close(isForce);
-
-		OnClose(clientIndex);
+		OnClose(sessionIndex);
 	}
 
 	void TcpNetwork::Release()
