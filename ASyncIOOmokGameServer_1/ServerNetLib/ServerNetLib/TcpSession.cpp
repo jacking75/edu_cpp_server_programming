@@ -10,7 +10,7 @@
 namespace NServerNetLib
 {	
 
-	void TcpSession::Init(const UINT32 index, HANDLE iocpHandle)
+	void TcpSession::Init(const int index, HANDLE iocpHandle)
 	{
 		m_Index = index;
 		m_IOCPHandle = iocpHandle;
@@ -35,18 +35,9 @@ namespace NServerNetLib
 		return BindRecv();
 	}
 
-	void TcpSession::Close(bool bIsForce)
+	void TcpSession::Close()
 	{
-		struct linger stLinger = { 0, 0 };
-
-		if (true == bIsForce)
-		{
-			stLinger.l_onoff = 1;
-		}
-
 		shutdown(m_Socket, SD_BOTH);
-
-		setsockopt(m_Socket, SOL_SOCKET, SO_LINGER, (char*)&stLinger, sizeof(stLinger));
 
 		m_IsConnect = 0;
 		m_LatestClosedTimeSec = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -155,7 +146,7 @@ namespace NServerNetLib
 		return true;
 	}
 
-	void TcpSession::SendCompleted(const UINT32 dataSize)
+	void TcpSession::SendCompleted(const int dataSize)
 	{
 		std::lock_guard<std::mutex> guard(m_SendLock);
 
@@ -209,7 +200,7 @@ namespace NServerNetLib
 		return true;
 	}
 
-	void TcpSession::SetPacketData(const UINT32 dataSize, char* pData)
+	void TcpSession::SetPacketData(const int dataSize, char* pData)
 	{
 		if ((m_PakcetDataBufferWPos + dataSize) >= PACKET_DATA_BUFFER_SIZE)
 		{

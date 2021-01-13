@@ -20,9 +20,9 @@ namespace NServerNetLib
 
 		~TcpSession() = default;
 
-		void Init(const UINT32 index, HANDLE iocpHandle);
+		void Init(const int index, HANDLE iocpHandle);
 
-		UINT32 GetIndex() { return m_Index; }
+		int GetIndex() { return m_Index; }
 
 		bool IsConnectd() { return m_IsConnect == 1; }
 
@@ -34,7 +34,7 @@ namespace NServerNetLib
 
 		bool OnConnect(HANDLE iocpHandle, SOCKET socket);
 
-		void Close(bool bIsForce);
+		void Close();
 
 		bool PostAccept(SOCKET listenSock, const UINT64 curTimeSec);
 
@@ -46,9 +46,9 @@ namespace NServerNetLib
 
 		bool SendMsg(const short bodySize, char* pMsg);
 
-		void SendCompleted(const UINT32 dataSize);
+		void SendCompleted(const int dataSize);
 
-		void SetPacketData(const UINT32 dataSize, char* pData);
+		void SetPacketData(const int dataSize, char* pData);
 
 		RecvPacketInfo GetPacket();
 
@@ -57,11 +57,11 @@ namespace NServerNetLib
 
 		bool SetSocketOption();
 
-		INT32 m_Index = 0;
+		int m_Index = 0;
 
 		HANDLE m_IOCPHandle = INVALID_HANDLE_VALUE;
 
-		INT64 m_IsConnect = 0;
+		int m_IsConnect = 0;
 
 		UINT64 m_LatestClosedTimeSec = 0;
 
@@ -79,9 +79,9 @@ namespace NServerNetLib
 
 		std::queue<stOverlappedEx*> m_SendDataqueue;
 
-		UINT32 m_PakcetDataBufferWPos = 0;
+		int m_PakcetDataBufferWPos = 0;
 
-		UINT32 m_PakcetDataBufferRPos = 0;
+		int m_PakcetDataBufferRPos = 0;
 
 		char* m_PakcetDataBuffer = nullptr;
 		

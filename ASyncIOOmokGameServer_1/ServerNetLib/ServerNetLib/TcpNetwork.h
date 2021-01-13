@@ -50,7 +50,7 @@ namespace NServerNetLib
 
 		void Release();
 
-		void CloseSocket(const int sessionIndex, bool isForce);
+		void CloseSocket(const int sessionInde);
 
 		std::optional <RecvPacketInfo> GetPacketData();
 
@@ -59,17 +59,17 @@ namespace NServerNetLib
 	private: 
 		void DestroyThread();
 
-		void OnConnect(const UINT32 clientIndex);
+		void OnConnect(const int clientIndex);
 
-		void OnClose(const UINT32 clientIndex);
+		void OnClose(const int clientIndex);
 
-		void OnReceive(const UINT32 clientIndex, const UINT32 size, char* pData);
+		void OnReceive(const int clientIndex, const int size, char* pData);
 
 		int CreateSessionPool(const int maxClientCount);
 
 		bool CreateWokerThread();
 
-		TcpSession* GetClientInfo(const UINT32 clientIndex);
+		TcpSession* GetClientInfo(const int clientIndex);
 
 		bool CreateAccepterThread();
 
@@ -81,7 +81,7 @@ namespace NServerNetLib
 
 		std::mutex m_ReceivePacketMutex;
 
-		UINT32 maxIOWorkerThreadCount = 0;
+		int maxIOWorkerThreadCount = 0;
 
 		std::vector<TcpSession*> m_ClientSessionPool;
 
@@ -99,7 +99,7 @@ namespace NServerNetLib
 
 		bool	m_IsAccepterRun = true;
 
-		std::deque<UINT32> m_InComingPacketUserIndexQueue;
+		std::deque<int> m_InComingPacketUserIndexQueue;
 
 		std::mutex m_InComingPacketQueueMutex;
 
