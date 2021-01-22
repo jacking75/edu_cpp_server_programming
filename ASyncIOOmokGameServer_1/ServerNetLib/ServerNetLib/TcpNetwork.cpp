@@ -136,19 +136,19 @@ namespace NServerNetLib
 		return pClient->SendMsg(bodySize, pMsg);
 	}
 
-    void TcpNetwork::OnConnect(const UINT32 sessionIndex)
+    void TcpNetwork::OnConnect(const int sessionIndex)
 	{
 		m_pRefLogger->info("OnConnect | connect client index : {}", sessionIndex);
 		AddSystemPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CONNECT_SESSION, 0, nullptr);
 	}
 
-	void TcpNetwork::OnClose(const UINT32 sessionIndex)
+	void TcpNetwork::OnClose(const int sessionIndex)
 	{
 		m_pRefLogger->info("OnClose | close client index : {}", sessionIndex);
 		AddSystemPacketQueue(sessionIndex, (short)PACKET_ID::NTF_SYS_CLOSE_SESSION, 0, nullptr);
 	}
 
-	void TcpNetwork::OnReceive(const UINT32 sessionIndex, const UINT32 size, char* pData)
+	void TcpNetwork::OnReceive(const int sessionIndex, const int size, char* pData)
 	{
 		m_pRefLogger->info("OnReceive | receive client index : {}, datasize : {}", sessionIndex, size);
 		auto session = GetClientInfo(sessionIndex);
@@ -228,7 +228,7 @@ namespace NServerNetLib
 		return true;
 	}
 
-	TcpSession* TcpNetwork::GetClientInfo(const UINT32 clientIndex)
+	TcpSession* TcpNetwork::GetClientInfo(const int clientIndex)
 	{
 		return m_ClientSessionPool[clientIndex];
 	}
@@ -273,7 +273,7 @@ namespace NServerNetLib
 			if (FALSE == bSuccess || (0 == dwIoSize && IOOperation::ACCEPT != pOverlappedEx->m_eOperation))
 			{
 				m_pRefLogger->info("WokerThread | socket disconnect : {}", (int)pClientInfo->GetSock());
-				CloseSocket(pClientInfo->GetIndex(), false);
+				CloseSocket(pClientInfo->GetIndex());
 				continue;
 			}
 
@@ -288,7 +288,7 @@ namespace NServerNetLib
 				}
 				else
 				{
-					CloseSocket(pClientInfo->GetIndex(), true);
+					CloseSocket(pClientInfo->GetIndex());
 				}
 			}
 
@@ -341,7 +341,7 @@ namespace NServerNetLib
 		}
 	}
 
-	void TcpNetwork::CloseSocket(const int sessionIndex, bool isForce)
+	void TcpNetwork::CloseSocket(const int sessionIndex)
 	{
 		auto session = GetClientInfo(sessionIndex);
 
@@ -350,7 +350,7 @@ namespace NServerNetLib
 			return;
 		}
 
-		session->Close(isForce);
+		session->Close();
 
 		OnClose(sessionIndex);
 	}
