@@ -10,7 +10,6 @@ namespace NServerNetLib
 {
 	class TcpSession
 	{
-
 	public:
 		TcpSession()
 		{

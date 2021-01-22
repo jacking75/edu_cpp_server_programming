@@ -21,7 +21,6 @@ namespace NServerNetLib
 		m_PakcetDataBufferRPos = 0;
 	}
 
-
 	bool TcpSession::OnConnect(HANDLE iocpHandle, SOCKET socket)
 	{
 		m_Socket = socket;
