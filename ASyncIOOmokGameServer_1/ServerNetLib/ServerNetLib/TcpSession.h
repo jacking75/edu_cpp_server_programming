@@ -84,6 +84,8 @@ namespace NServerNetLib
 		UINT32 m_PakcetDataBufferRPos = 0;
 
 		char* m_PakcetDataBuffer = nullptr;
+
+		std::mutex m_PakcetDataBufferPosMutex;
 		
 	};
 }

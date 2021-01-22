@@ -211,6 +211,8 @@ namespace NServerNetLib
 
 	void TcpSession::SetPacketData(const UINT32 dataSize, char* pData)
 	{
+		std::lock_guard<std::mutex> guard(m_PakcetDataBufferPosMutex);
+
 		if ((m_PakcetDataBufferWPos + dataSize) >= PACKET_DATA_BUFFER_SIZE)
 		{
 			auto remainDataSize = m_PakcetDataBufferWPos - m_PakcetDataBufferRPos;
@@ -234,6 +236,8 @@ namespace NServerNetLib
 
 	RecvPacketInfo TcpSession::GetPacket()
 	{
+		std::lock_guard<std::mutex> guard(m_PakcetDataBufferPosMutex);
+
 		UINT32 remainByte = m_PakcetDataBufferWPos - m_PakcetDataBufferRPos;
 
 		if (remainByte < OmokServerLib::PACKET_HEADER_SIZE)
