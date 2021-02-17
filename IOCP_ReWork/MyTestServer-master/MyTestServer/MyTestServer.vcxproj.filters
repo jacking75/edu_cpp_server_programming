@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Server">
+      <UniqueIdentifier>{6b6766e2-e56f-4ce0-bbb2-faf1356bd49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerModule">
+      <UniqueIdentifier>{2af3e23d-cc5b-4833-8de8-320835a32b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerModule\Impl">
+      <UniqueIdentifier>{31a42f24-347d-460c-95f2-3bf9e7d431cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{d244427b-3743-4e91-914b-cfe5de6cfc50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\ADO">
+      <UniqueIdentifier>{8d8bb27d-f113-416e-8a45-de5b9233615a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\DBTask">
+      <UniqueIdentifier>{f4ee79b7-9d08-4b6f-9003-bfa4e0bac450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Login">
+      <UniqueIdentifier>{06383908-da92-404e-950e-ef5c154e82a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{b348a0ba-71af-45f1-94d1-ed4a6723a11f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Actor">
+      <UniqueIdentifier>{937ab2e3-b681-4bc5-b0fa-423c71ad62b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Actor\NPC">
+      <UniqueIdentifier>{b3b78a54-bca9-49cb-af94-9c924360e4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Actor\PC">
+      <UniqueIdentifier>{99a6c04f-a637-4933-9fb1-204cf024547c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Zone">
+      <UniqueIdentifier>{f7a06906-a45f-4195-8e62-270830d84c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\ServerTask">
+      <UniqueIdentifier>{f2629c5a-26eb-4d38-81c4-aa94e1d9bff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\AI">
+      <UniqueIdentifier>{167e24b2-fb2c-4d6c-ac8f-9f16efc4b668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\AI\AIState">
+      <UniqueIdentifier>{4368dfc7-3704-418e-bd80-25bd7df00eca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\AI\AIState\Impl">
+      <UniqueIdentifier>{efa45dd6-9059-4c08-948f-4574668a89b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\AI\Geometry">
+      <UniqueIdentifier>{47b7a34a-70c0-4313-a5d5-3ba9b16ceece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Session">
+      <UniqueIdentifier>{f433018b-aba9-4b17-8c51-75dfbae31254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Zone\Sector">
+      <UniqueIdentifier>{ba2fec6d-28bf-48c2-a8f1-592b6fb856bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServerManager.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachModule.h">
+      <Filter>ServerModule</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachServerMessage.h">
+      <Filter>ServerModule\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginContext.h">
+      <Filter>Login</Filter>
+    </ClInclude>
+    <ClInclude Include="AdoOleDB.h">
+      <Filter>Database\ADO</Filter>
+    </ClInclude>
+    <ClInclude Include="DBBaseTask.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="TestQuery.hpp">
+      <Filter>Database\DBTask</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSProc.hpp">
+      <Filter>Database\DBTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Contents\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC.h">
+      <Filter>Contents\Actor\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateWander.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateReturn.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateAttack.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateFollow.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateHit.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateIdle.h">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="AIState.h">
+      <Filter>Contents\AI\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStateMachine.h">
+      <Filter>Contents\AI\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorNavi.h">
+      <Filter>Contents\AI\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryDef.h">
+      <Filter>Contents\AI\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="PC.h">
+      <Filter>Contents\Actor\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="PCManager.h">
+      <Filter>Contents\Actor\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTask.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTaskUpdate.h">
+      <Filter>Contents\ServerTask</Filter>
+    </ClInclude>
+    <ClInclude Include="ZoneManager.h">
+      <Filter>Contents\Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Zone.h">
+      <Filter>Contents\Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTaskDisconnected.h">
+      <Filter>Contents\ServerTask</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTaskZoneMove.h">
+      <Filter>Contents\ServerTask</Filter>
+    </ClInclude>
+    <ClInclude Include="WrappingServer.h">
+      <Filter>Login</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="MessageContext.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTaskSendAll.h">
+      <Filter>Contents\ServerTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Server\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManager.h">
+      <Filter>Server\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="Sector.h">
+      <Filter>Contents\Zone\Sector</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ServerManager.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachModule.cpp">
+      <Filter>ServerModule</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachServerMessage.cpp">
+      <Filter>ServerModule\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AdoOleDB.cpp">
+      <Filter>Database\ADO</Filter>
+    </ClCompile>
+    <ClCompile Include="DBBaseTask.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Contents\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC.cpp">
+      <Filter>Contents\Actor\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateWander.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateAttack.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateFollow.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateHit.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateIdle.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateReturn.cpp">
+      <Filter>Contents\AI\AIState\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="AIState.cpp">
+      <Filter>Contents\AI\AIState</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStateMachine.cpp">
+      <Filter>Contents\AI\AIState</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorNavi.cpp">
+      <Filter>Contents\AI\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="PC.cpp">
+      <Filter>Contents\Actor\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="PCManager.cpp">
+      <Filter>Contents\Actor\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerTask.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerTaskUpdate.cpp">
+      <Filter>Contents\ServerTask</Filter>
+    </ClCompile>
+    <ClCompile Include="ZoneManager.cpp">
+      <Filter>Contents\Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="Zone.cpp">
+      <Filter>Contents\Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerTaskDisconnected.cpp">
+      <Filter>Contents\ServerTask</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerTaskZoneMove.cpp">
+      <Filter>Contents\ServerTask</Filter>
+    </ClCompile>
+    <ClCompile Include="MyTestServer.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="WrappingServer.cpp">
+      <Filter>Login</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageContext.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerTaskSendAll.cpp">
+      <Filter>Contents\ServerTask</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginContext.cpp">
+      <Filter>Login</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Server\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionManager.cpp">
+      <Filter>Server\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="Sector.cpp">
+      <Filter>Contents\Zone\Sector</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Network">
+      <UniqueIdentifier>{d17b835a-8759-479d-a0e1-df40e207e24e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Sender">
+      <UniqueIdentifier>{ca125e59-c410-45b0-8ab2-82f758ae8602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Listener">
+      <UniqueIdentifier>{3c2c6f11-6d6d-4d07-9ce6-d209e153a6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Transfer">
+      <UniqueIdentifier>{9aa3a5cb-8dcb-41ca-b102-3e04d77d3632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Receiver">
+      <UniqueIdentifier>{df3d5f52-3fb1-45c2-b4c8-324c05b6cd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Session">
+      <UniqueIdentifier>{6bb642d3-5c25-4bb8-bc00-7d078135da47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{aad53c88-97b1-4d8a-98ce-838d7cc5c892}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\MyTestServer\Sender.h">
+      <Filter>Network\Sender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MyTestServer\Listener.h">
+      <Filter>Network\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MyTestServer\Transfer.h">
+      <Filter>Network\Transfer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MyTestServer\Receiver.h">
+      <Filter>Network\Receiver</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionBase.h">
+      <Filter>Network\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManagerBase.h">
+      <Filter>Network\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MyTestServer\ServerBase.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\MyTestServer\Sender.cpp">
+      <Filter>Network\Sender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MyTestServer\Listener.cpp">
+      <Filter>Network\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MyTestServer\Transfer.cpp">
+      <Filter>Network\Transfer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MyTestServer\Receiver.cpp">
+      <Filter>Network\Receiver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MyTestServer\ServerBase.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerCore.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+</Project>
