@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6f1236dc-835d-4734-b8ae-c4ec47528a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetworkLib">
+      <UniqueIdentifier>{b9f3c822-50c8-4199-b74e-7472ca0aeeca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\NetworkLib\LIB_IOCPModule.cpp">
+      <Filter>NetworkLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ACKPacket.cpp" />
+    <ClCompile Include="IOCPServer.cpp" />
+    <ClCompile Include="REQPacket.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="..\..\Common\LIB_LOGSYSTEM.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LIB_PROFILE.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LIB_SERVICECTRL.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LIB_SESSIONDATA.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LIB_SESSIONPOOL.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\LIB_THREAD.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="..\..\Common\Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_LOCK.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_LOGSYSTEM.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_PROFILE.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_SERVERSYSTEM.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_SERVICECTRL.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_SESSIONDATA.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_SESSIONPOOL.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\LIB_THREAD.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Protocol.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetworkLib\InitialNetwork.h">
+      <Filter>NetworkLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetworkLib\LIB_IOCPModule.h">
+      <Filter>NetworkLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetworkLib\LIB_WINSOCKERRCODE.h">
+      <Filter>NetworkLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceManager.h" />
+  </ItemGroup>
+</Project>
