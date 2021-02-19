@@ -67,36 +67,20 @@ ChatServerLib::ChatServerConfig ParseConfig(int argc, char* argv[])
 	std::cout << "WorkThreadCount: " << *WorkThreadCount << std::endl;
 
 
-	const auto MaxRecvOverlappedBufferSize = args.get<INT32>("MaxRecvOverlappedBufferSize");
-	if (!MaxRecvOverlappedBufferSize) {
-		std::cerr << "No MaxRecvOverlappedBufferSize. :(" << std::endl;
+	const auto MaxRecvConnectionBufferSize = args.get<INT32>("MaxRecvConnectionBufferSize");
+	if (!MaxRecvConnectionBufferSize) {
+		std::cerr << "No MaxRecvConnectionBufferSize. :(" << std::endl;
 		return serverConfig;
 	}
-	std::cout << "MaxRecvOverlappedBufferSize: " << *MaxRecvOverlappedBufferSize << std::endl;
+	std::cout << "MaxRecvConnectionBufferSize: " << *MaxRecvConnectionBufferSize << std::endl;
 
 
-	const auto MaxSendOverlappedBufferSize = args.get<INT32>("MaxSendOverlappedBufferSize");
-	if (!MaxSendOverlappedBufferSize) {
-		std::cerr << "No MaxSendOverlappedBufferSize. :(" << std::endl;
+	const auto MaxSendConnectionBufferSize = args.get<INT32>("MaxSendConnectionBufferSize");
+	if (!MaxSendConnectionBufferSize) {
+		std::cerr << "No MaxSendConnectionBufferSize :(" << std::endl;
 		return serverConfig;
 	}
-	std::cout << "MaxSendOverlappedBufferSize: " << *MaxSendOverlappedBufferSize << std::endl;
-
-
-	const auto MaxRecvConnectionBufferCount = args.get<INT32>("MaxRecvConnectionBufferCount");
-	if (!MaxRecvConnectionBufferCount) {
-		std::cerr << "No MaxRecvConnectionBufferCount. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "MaxRecvConnectionBufferCount: " << *MaxRecvConnectionBufferCount << std::endl;
-
-
-	const auto MaxSendConnectionBufferCount = args.get<INT32>("MaxSendConnectionBufferCount");
-	if (!MaxSendConnectionBufferCount) {
-		std::cerr << "No MaxSendConnectionBufferCount. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "MaxSendConnectionBufferCount: " << *MaxSendConnectionBufferCount << std::endl;
+	std::cout << "MaxSendConnectionBufferSize: " << *MaxSendConnectionBufferSize << std::endl;
 
 
 	const auto MaxPacketSize = args.get<INT32>("MaxPacketSize");
@@ -157,8 +141,8 @@ ChatServerLib::ChatServerConfig ParseConfig(int argc, char* argv[])
 
 	serverConfig.PortNumber = *port;
 	serverConfig.WorkThreadCount = *WorkThreadCount;
-	serverConfig.ConnectionMaxRecvBufferSize = *MaxRecvConnectionBufferCount;
-	serverConfig.ConnectionMaxSendBufferSize = *MaxSendConnectionBufferCount;
+	serverConfig.ConnectionMaxRecvBufferSize = *MaxRecvConnectionBufferSize;
+	serverConfig.ConnectionMaxSendBufferSize = *MaxSendConnectionBufferSize;
 	serverConfig.MaxPacketSize = *MaxPacketSize;
 	serverConfig.MaxConnectionCount = *MaxConnectionCount;
 	serverConfig.MaxMessagePoolCount = *MaxMessagePoolCount;

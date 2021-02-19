@@ -7,7 +7,8 @@
 #include <WinSock2.h>
 #include <mswsock.h>
 
-#include "RingBuffer.h"
+#include "SendRingBuffer.h"
+#include "RecvRingBuffer.h"
 #include "NetDefine.h"
 
 //TODO 네트워크 api를 호출하는 부분은 따로 함수로 분리한다
@@ -35,8 +36,8 @@ namespace NetLib
 
 			m_pRecvOverlappedEx = new OVERLAPPED_EX(index);
 			m_pSendOverlappedEx = new OVERLAPPED_EX(index);
-			m_RingRecvBuffer.Create(config.MaxRecvBufferSize);
-			m_RingSendBuffer.Create(config.MaxSendBufferSize);
+			m_RecvRingBuffer.Create(config.MaxRecvBufferSize);
+			m_SendRingBuffer.Create(config.MaxSendBufferSize);
 
 			m_ConnectionMsg.Type = MessageType::Connection;
 			m_ConnectionMsg.pContents = nullptr;
@@ -82,9 +83,9 @@ namespace NetLib
 		{
 			std::lock_guard<std::mutex> Lock(m_MUTEX);
 
-			m_pRecvOverlappedEx->OverlappedExRemainByte = 0;
+			//m_pRecvOverlappedEx->OverlappedExRemainByte = 0;
 			m_pRecvOverlappedEx->OverlappedExTotalByte = 0;
-			m_pSendOverlappedEx->OverlappedExRemainByte = 0;
+			//m_pSendOverlappedEx->OverlappedExRemainByte = 0;
 			m_pSendOverlappedEx->OverlappedExTotalByte = 0;
 			
 			Init();
@@ -114,7 +115,7 @@ namespace NetLib
 			return true;
 		}
 		
-		NetResult PostRecv(const char* pNextBuf, const DWORD remainByte)
+		NetResult PostRecv()
 		{
 			if (m_IsConnect == FALSE || m_pRecvOverlappedEx == nullptr)
 			{
@@ -122,18 +123,13 @@ namespace NetLib
 			}
 
 			m_pRecvOverlappedEx->OverlappedExOperationType = OperationType::Recv;
-			m_pRecvOverlappedEx->OverlappedExRemainByte = remainByte;
-
-			auto moveMark = static_cast<int>(remainByte - (m_RingRecvBuffer.GetCurMark() - pNextBuf));
 			m_pRecvOverlappedEx->OverlappedExWsaBuf.len = m_RecvBufSize;
-			m_pRecvOverlappedEx->OverlappedExWsaBuf.buf = m_RingRecvBuffer.ForwardMark(moveMark, m_RecvBufSize, remainByte);
+			m_pRecvOverlappedEx->OverlappedExWsaBuf.buf = m_RecvRingBuffer.GetWriteBuffer(m_RecvBufSize);
 
 			if (m_pRecvOverlappedEx->OverlappedExWsaBuf.buf == nullptr)
 			{
 				return NetResult::PostRecv_Null_WSABUF;
 			}
-
-			m_pRecvOverlappedEx->pOverlappedExSocketMessage = m_pRecvOverlappedEx->OverlappedExWsaBuf.buf - remainByte;
 
 			ZeroMemory(&m_pRecvOverlappedEx->Overlapped, sizeof(OVERLAPPED));
 
@@ -164,13 +160,13 @@ namespace NetLib
 			//남은 패킷이 존재하는지 확인하기 위한 과정
 			if (sendSize > 0)
 			{
-				m_RingSendBuffer.SetUsedBufferSize(sendSize);
+				m_SendRingBuffer.SetUsedBufferSize(sendSize);
 			}
 
 			if (InterlockedCompareExchange(reinterpret_cast<LPLONG>(&m_IsSendable), FALSE, TRUE))
 			{
 				auto reservedSize = 0;
-				char* pBuf = m_RingSendBuffer.GetBuffer(m_SendBufSize, reservedSize);
+				char* pBuf = m_SendRingBuffer.GetBuffer(m_SendBufSize, reservedSize);
 				if (pBuf == nullptr)
 				{
 					InterlockedExchange(reinterpret_cast<LPLONG>(&m_IsSendable), TRUE);
@@ -183,7 +179,7 @@ namespace NetLib
 				m_pSendOverlappedEx->OverlappedExWsaBuf.buf = pBuf;
 				m_pSendOverlappedEx->ConnectionIndex = GetIndex();
 
-				m_pSendOverlappedEx->OverlappedExRemainByte = 0;
+				//m_pSendOverlappedEx->OverlappedExRemainByte = 0;
 				m_pSendOverlappedEx->OverlappedExTotalByte = reservedSize;
 				m_pSendOverlappedEx->OverlappedExOperationType = OperationType::Send;
 
@@ -217,7 +213,7 @@ namespace NetLib
 				return NetResult::ReservedSendPacketBuffer_Not_Connected;
 			}
 
-			*ppBuf = m_RingSendBuffer.ForwardMark(sendSize);
+			*ppBuf = m_SendRingBuffer.ForwardMark(sendSize);
 			if (*ppBuf == nullptr)
 			{
 				return NetResult::ReservedSendPacketBuffer_Empty_Buffer;
@@ -251,14 +247,13 @@ namespace NetLib
 			InterlockedExchange(reinterpret_cast<LPLONG>(&m_IsConnect), FALSE);
 		}
 
-		INT32 RecvBufferSize() { return m_RingRecvBuffer.GetBufferSize(); }
 
-		char* RecvBufferBeginPos() {	return m_RingRecvBuffer.GetBeginMark();	}
-
-		void RecvBufferReadCompleted(const INT32 size)
-		{
-			m_RingRecvBuffer.ReleaseBuffer(size);
-		}
+		INT32 RecvBufferSize() { return m_RecvRingBuffer.GetBufferSize(); }
+		
+		std::tuple<int, char*> GetReceiveData(int recvSize) { return m_RecvRingBuffer.GetReceiveData(recvSize); }
+		
+		void UsedRecvBuffer(int size) { m_RecvRingBuffer.UsedRecvBuffer(size); }
+		
 
 		bool SetNetAddressInfo()
 		{
@@ -292,7 +287,7 @@ namespace NetLib
 
 		void SendBufferSendCompleted(const INT32 sendSize)
 		{
-			m_RingSendBuffer.ReleaseBuffer(sendSize);
+			m_SendRingBuffer.ReleaseBuffer(sendSize);
 		}
 
 		void SetEnableSend()
@@ -306,8 +301,8 @@ namespace NetLib
 		{
 			ZeroMemory(m_szIP, MAX_IP_LENGTH);
 
-			m_RingRecvBuffer.Init();
-			m_RingSendBuffer.Init();
+			m_RecvRingBuffer.Init();
+			m_SendRingBuffer.Init();
 
 			m_IsConnect = FALSE;
 			m_IsClosed = FALSE;
@@ -323,7 +318,7 @@ namespace NetLib
 			ZeroMemory(&m_pRecvOverlappedEx->Overlapped, sizeof(OVERLAPPED));
 
 			m_pRecvOverlappedEx->OverlappedExWsaBuf.buf = m_AddrBuf;
-			m_pRecvOverlappedEx->pOverlappedExSocketMessage = m_pRecvOverlappedEx->OverlappedExWsaBuf.buf;
+			//m_pRecvOverlappedEx->pOverlappedExSocketMessage = m_pRecvOverlappedEx->OverlappedExWsaBuf.buf;
 			m_pRecvOverlappedEx->OverlappedExWsaBuf.len = m_RecvBufSize;
 			m_pRecvOverlappedEx->OverlappedExOperationType = OperationType::Accept;
 			m_pRecvOverlappedEx->ConnectionIndex = GetIndex();
@@ -370,8 +365,8 @@ namespace NetLib
 		OVERLAPPED_EX* m_pRecvOverlappedEx = nullptr;
 		OVERLAPPED_EX* m_pSendOverlappedEx = nullptr;
 
-		RingBuffer m_RingRecvBuffer;
-		RingBuffer m_RingSendBuffer;
+		RecvRingBuffer m_RecvRingBuffer;
+		SendRingBuffer m_SendRingBuffer;
 
 		char m_AddrBuf[MAX_ADDR_LENGTH] = { 0, };
 

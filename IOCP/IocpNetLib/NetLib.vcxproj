@@ -27,7 +27,8 @@
     <ClInclude Include="MiniDump.h" />
     <ClInclude Include="NetDefine.h" />
     <ClInclude Include="Performance.h" />
-    <ClInclude Include="RingBuffer.h" />
+    <ClInclude Include="RecvRingBuffer.h" />
+    <ClInclude Include="SendRingBuffer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

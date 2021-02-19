@@ -6,12 +6,12 @@
 
 namespace NetLib
 {
-	class RingBuffer
+	class SendRingBuffer
 	{
 	public:
-		RingBuffer() = default;
+		SendRingBuffer() = default;
 
-		~RingBuffer() 
+		~SendRingBuffer()
 		{ 
 			delete[] m_pRingBuffer;
 		}

@@ -498,7 +498,7 @@ namespace NetLib
 
 			pConnection->SetNetStateConnection();
 			
-			auto result = pConnection->PostRecv(pConnection->RecvBufferBeginPos(), 0);
+			auto result = pConnection->PostRecv();
 			if (result != NetResult::Success)
 			{
 				char logmsg[128] = { 0, };
@@ -527,24 +527,25 @@ namespace NetLib
 
 			pConnection->DecrementRecvIORefCount();
 			
-			pOverlappedEx->OverlappedExWsaBuf.buf = pOverlappedEx->pOverlappedExSocketMessage;
-			pOverlappedEx->OverlappedExRemainByte += ioSize;
-												
-			auto remainByte = pOverlappedEx->OverlappedExRemainByte;
-			auto pNext = pOverlappedEx->OverlappedExWsaBuf.buf;
+
+			auto [remainByte, pNext] = pConnection->GetReceiveData(ioSize);
 			
 			PacketForwardingLoop(pConnection, remainByte, pNext);
+			
+			pConnection->UsedRecvBuffer(remainByte);
 
-			if (pConnection->PostRecv(pNext, remainByte) != NetResult::Success)
+			if (pConnection->PostRecv() != NetResult::Success)
 			{
 				if (pConnection->CloseComplete())
 				{
 					HandleExceptionCloseConnection(pConnection);
 				}
 			}
+
+
 		}
 
-		void PacketForwardingLoop(Connection* pConnection, DWORD& remainByte, char* pBuffer)
+		void PacketForwardingLoop(Connection* pConnection, int& remainByte, char* pBuffer)
 		{
 			//TODO 패킷 분해 부분을 가상 함수로 만들기 
 
@@ -575,7 +576,7 @@ namespace NetLib
 					return;
 				}
 
-				if (remainByte >= (DWORD)currentSize)
+				if (remainByte >= currentSize)
 				{
 					auto pMsg = m_pMsgPool->AllocMsg();
 					if (pMsg == nullptr)
@@ -704,8 +705,6 @@ namespace NetLib
 			CopyMemory(pBuf, pMsg->pContents, ioSize);
 
 			copySize = static_cast<INT16>(ioSize);
-
-			pConnection->RecvBufferReadCompleted(ioSize);
 
 			m_Performance.get()->IncrementPacketProcessCount();
 		}

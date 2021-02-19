@@ -65,24 +65,7 @@ ServerAppConfig ParseConfig(int argc, char* argv[])
 		return serverConfig;
 	}
 	std::cout << "WorkThreadCount: " << *WorkThreadCount << std::endl;
-
-
-	const auto MaxRecvOverlappedBufferSize = args.get<INT32>("MaxRecvOverlappedBufferSize");
-	if (!MaxRecvOverlappedBufferSize) {
-		std::cerr << "No MaxRecvOverlappedBufferSize. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "MaxRecvOverlappedBufferSize: " << *MaxRecvOverlappedBufferSize << std::endl;
-
-
-	const auto MaxSendOverlappedBufferSize = args.get<INT32>("MaxSendOverlappedBufferSize");
-	if (!MaxSendOverlappedBufferSize) {
-		std::cerr << "No MaxSendOverlappedBufferSize. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "MaxSendOverlappedBufferSize: " << *MaxSendOverlappedBufferSize << std::endl;
-
-
+			
 	const auto MaxRecvConnectionBufferSize = args.get<INT32>("MaxRecvConnectionBufferSize");
 	if (!MaxRecvConnectionBufferSize) {
 		std::cerr << "No MaxRecvConnectionBufferSize :(" << std::endl;

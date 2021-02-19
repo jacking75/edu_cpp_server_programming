@@ -85,6 +85,7 @@ public:
 			case NetLib::MessageType::OnRecv:
 				{
 					//PACKET_HEADER* pHeader = reinterpret_cast<PACKET_HEADER*>(pBuf);
+					m_pIOCPServer->SendPacket(connectionIndex, pBuf, copySize);
 				}
 				break;
 			}

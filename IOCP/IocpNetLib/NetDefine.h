@@ -57,7 +57,7 @@ namespace NetLib
 
 		int	OverlappedExTotalByte;
 		DWORD OverlappedExRemainByte;
-		char* pOverlappedExSocketMessage;
+		//char* pOverlappedExSocketMessage;
 
 		INT32 ConnectionIndex = 0;
 		//TODO ConnectionUnique 추가하자
