@@ -67,7 +67,7 @@ public:
 
 			//WorkThread의 함수들을 불러와서 처리한다.
 
-			if (m_pIOCPServer->ProcessNetworkMessage(operationType, connectionIndex, pBuf, copySize, waitTimeMillisec) == false)
+			if (m_pIOCPServer->GetNetworkMessage(operationType, connectionIndex, pBuf, copySize, waitTimeMillisec) == false)
 			{
 				continue;
 			}

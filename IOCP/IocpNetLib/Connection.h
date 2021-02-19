@@ -177,7 +177,7 @@ namespace NetLib
 				auto [sendSize, pSendData] = m_SendRingBuffer.GetSendAbleData(m_SendBufSize);
 				if (sendSize == 0)
 				{
-					InterlockedExchange(reinterpret_cast<LPLONG>(&m_IsSendable), TRUE);
+					SetEnableSend();
 					return true;
 				}
 

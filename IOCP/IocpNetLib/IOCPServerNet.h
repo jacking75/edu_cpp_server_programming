@@ -122,7 +122,7 @@ namespace NetLib
 		}
 
 		
-		bool ProcessNetworkMessage(OUT INT8& msgOperationType, OUT INT32& connectionIndex, char* pBuf, OUT INT16& copySize, const INT32 waitTimeMillisec)
+		bool GetNetworkMessage(OUT INT8& msgOperationType, OUT INT32& connectionIndex, char* pBuf, OUT INT16& copySize, const INT32 waitTimeMillisec)
 		{
 			Message* pMsg = nullptr;
 			Connection* pConnection = nullptr;
@@ -149,14 +149,15 @@ namespace NetLib
 			switch (pMsg->Type)
 			{
 			case MessageType::Connection:
-				DoPostConnection(pConnection, pMsg, msgOperationType, connectionIndex);
+				MakeNetMessageOnConnection(pConnection, pMsg, msgOperationType, connectionIndex);
 				break;
 			case MessageType::Close:
 				//TODO 재 사용에 딜레이를 주도록 한다. 이유는 재 사용으로 가능 도중 IOCP 워크 스레드에서 이 세션이 호출될 수도 있다. 
-				DoPostClose(pConnection, pMsg, msgOperationType, connectionIndex);
+				MakeNetMessageOnClose(pConnection, pMsg, msgOperationType, connectionIndex);
 				break;
 			case MessageType::OnRecv:
-				DoPostRecvPacket(pConnection, pMsg, msgOperationType, connectionIndex, pBuf, copySize, ioSize);
+				MakeNetMessageOnReceive(pConnection, pMsg, msgOperationType, connectionIndex, 
+											pBuf, copySize, ioSize);
 				m_pMsgPool->DeallocMsg(pMsg);
 				break;
 			}
@@ -631,7 +632,7 @@ namespace NetLib
 			}		
 		}
 
-		void DoPostConnection(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex)
+		void MakeNetMessageOnConnection(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex)
 		{
 			if (pConnection->IsConnect() == false)
 			{
@@ -646,7 +647,7 @@ namespace NetLib
 			LogFuncPtr((int)LogLevel::Debug, logmsg);
 		}
 
-		void DoPostClose(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex)
+		void MakeNetMessageOnClose(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex)
 		{
 			msgOperationType = (INT8)pMsg->Type;
 			connectionIndex = pConnection->GetIndex();
@@ -658,7 +659,7 @@ namespace NetLib
 			pConnection->ResetConnection();
 		}
 
-		void DoPostRecvPacket(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex, char* pBuf, OUT INT16& copySize, const DWORD ioSize)
+		void MakeNetMessageOnReceive(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex, char* pBuf, OUT INT16& copySize, const DWORD ioSize)
 		{
 			if (pMsg->pContents == nullptr)
 			{
