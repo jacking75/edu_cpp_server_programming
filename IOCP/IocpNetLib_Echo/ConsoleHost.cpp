@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
 
 ServerAppConfig ParseConfig(int argc, char* argv[])
 {
+	//--port = 11021 --WorkThreadCount = 4 --MaxRecvOverlappedBufferSize = 600 --MaxSendOverlappedBufferSize = 600 --MaxRecvConnectionBufferCount = 1024 --MaxSendConnectionBufferCount = 1024  --MaxPacketSize = 1024 --MaxConnectionCount = 1024 --MaxMessagePoolCount = 1024 --ExtraMessagePoolCount = 128
 	auto serverConfig = ServerAppConfig();
 
 	const flags::args args(argc, argv);
@@ -82,20 +83,20 @@ ServerAppConfig ParseConfig(int argc, char* argv[])
 	std::cout << "MaxSendOverlappedBufferSize: " << *MaxSendOverlappedBufferSize << std::endl;
 
 
-	const auto MaxRecvConnectionBufferCount = args.get<INT32>("MaxRecvConnectionBufferCount");
-	if (!MaxRecvConnectionBufferCount) {
-		std::cerr << "No MaxRecvConnectionBufferCount. :(" << std::endl;
+	const auto MaxRecvConnectionBufferSize = args.get<INT32>("MaxRecvConnectionBufferSize");
+	if (!MaxRecvConnectionBufferSize) {
+		std::cerr << "No MaxRecvConnectionBufferSize :(" << std::endl;
 		return serverConfig;
 	}
-	std::cout << "MaxRecvConnectionBufferCount: " << *MaxRecvConnectionBufferCount << std::endl;
+	std::cout << "MaxRecvConnectionBufferCount: " << *MaxRecvConnectionBufferSize << std::endl;
 
 
-	const auto MaxSendConnectionBufferCount = args.get<INT32>("MaxSendConnectionBufferCount");
-	if (!MaxSendConnectionBufferCount) {
-		std::cerr << "No MaxSendConnectionBufferCount. :(" << std::endl;
+	const auto MaxSendConnectionBufferSize = args.get<INT32>("MaxSendConnectionBufferSize");
+	if (!MaxSendConnectionBufferSize) {
+		std::cerr << "No MaxSendConnectionBufferSize :(" << std::endl;
 		return serverConfig;
 	}
-	std::cout << "MaxSendConnectionBufferCount: " << *MaxSendConnectionBufferCount << std::endl;
+	std::cout << "MaxSendConnectionBufferCount: " << *MaxSendConnectionBufferSize << std::endl;
 
 
 	const auto MaxPacketSize = args.get<INT32>("MaxPacketSize");
@@ -103,11 +104,11 @@ ServerAppConfig ParseConfig(int argc, char* argv[])
 		std::cerr << "No MaxPacketSize. :(" << std::endl;
 		return serverConfig;
 	}
-	std::cout << "MaxSendConnectionBufferCount: " << *MaxSendConnectionBufferCount << std::endl;
+	std::cout << "MaxSendConnectionBufferCount: " << *MaxSendConnectionBufferSize << std::endl;
 
 
 	const auto MaxConnectionCount = args.get<INT32>("MaxConnectionCount");
-	if (!MaxSendConnectionBufferCount) {
+	if (!MaxSendConnectionBufferSize) {
 		std::cerr << "No MaxConnectionCount. :(" << std::endl;
 		return serverConfig;
 	}
@@ -129,37 +130,11 @@ ServerAppConfig ParseConfig(int argc, char* argv[])
 	}
 	std::cout << "ExtraMessagePoolCount: " << *ExtraMessagePoolCount << std::endl;
 
-
-	const auto startRoomNumber = args.get<INT32>("StartRoomNumber");
-	if (!startRoomNumber) {
-		std::cerr << "No StartRoomNumber. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "startRoomNumber: " << *startRoomNumber << std::endl;
-
-
-	const auto maxRoomCount = args.get<INT32>("MaxRoomCnt");
-	if (!startRoomNumber) {
-		std::cerr << "No maxRoomCount. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "maxRoomCount: " << *maxRoomCount << std::endl;
-	
-
-	const auto maxRoomUserCount = args.get<INT32>("MaxRoomUserCnt");
-	if (!maxRoomUserCount) {
-		std::cerr << "No maxRoomUserCount. :(" << std::endl;
-		return serverConfig;
-	}
-	std::cout << "maxRoomUserCount: " << *maxRoomUserCount << std::endl;
-
-
+		
 	serverConfig.PortNumber = *port;
 	serverConfig.WorkThreadCount = *WorkThreadCount;
-	serverConfig.MaxRecvOverlappedBufferSize = *MaxRecvOverlappedBufferSize;
-	serverConfig.MaxSendOverlappedBufferSize = *MaxSendOverlappedBufferSize;
-	serverConfig.ConnectionMaxRecvBufferSize = *MaxRecvConnectionBufferCount;
-	serverConfig.ConnectionMaxSendBufferSize = *MaxSendConnectionBufferCount;
+	serverConfig.ConnectionMaxRecvBufferSize = *MaxRecvConnectionBufferSize;
+	serverConfig.ConnectionMaxSendBufferSize = *MaxSendConnectionBufferSize;
 	serverConfig.MaxPacketSize = *MaxPacketSize;
 	serverConfig.MaxConnectionCount = *MaxConnectionCount;
 	serverConfig.MaxMessagePoolCount = *MaxMessagePoolCount;

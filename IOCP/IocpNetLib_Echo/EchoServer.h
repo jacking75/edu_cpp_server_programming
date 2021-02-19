@@ -13,8 +13,6 @@ struct ServerAppConfig : NetLib::NetConfig
 
 		netConfig.PortNumber = PortNumber;
 		netConfig.WorkThreadCount = WorkThreadCount;
-		netConfig.MaxRecvOverlappedBufferSize = MaxRecvOverlappedBufferSize;
-		netConfig.MaxSendOverlappedBufferSize = MaxSendOverlappedBufferSize;
 		netConfig.ConnectionMaxRecvBufferSize = ConnectionMaxRecvBufferSize;
 		netConfig.ConnectionMaxSendBufferSize = ConnectionMaxSendBufferSize;
 		netConfig.MaxPacketSize = MaxPacketSize;

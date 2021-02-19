@@ -287,8 +287,8 @@ namespace NetLib
 			ConnectionNetConfig config;
 			config.MaxSendBufferSize = m_NetConfig.ConnectionMaxSendBufferSize;
 			config.MaxRecvBufferSize = m_NetConfig.ConnectionMaxRecvBufferSize;
-			config.MaxRecvOverlappedBufferSize = m_NetConfig.MaxRecvOverlappedBufferSize;
-			config.MaxSendOverlappedBufferSize = m_NetConfig.MaxSendOverlappedBufferSize;
+			config.MaxRecvOverlappedBufferSize = m_NetConfig.MaxPacketSize;
+			config.MaxSendOverlappedBufferSize = m_NetConfig.MaxPacketSize;
 
 			for (int i = 0; i < m_NetConfig.MaxConnectionCount; ++i)
 			{
