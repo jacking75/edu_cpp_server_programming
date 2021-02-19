@@ -155,32 +155,38 @@ namespace NetLib
 			return NetResult::Success;
 		}
 		
-		bool PostSend(const int sendSize)
+		NetResult WriteSendData(const int sendSize, const char* pSendData)
 		{
-			//남은 패킷이 존재하는지 확인하기 위한 과정
-			if (sendSize > 0)
+			if (!m_IsConnect)
 			{
-				m_SendRingBuffer.SetUsedBufferSize(sendSize);
+				return NetResult::ReservedSendPacketBuffer_Not_Connected;
 			}
 
+			if (m_SendRingBuffer.AddSendData(sendSize, pSendData) == false)
+			{
+				return NetResult::ReservedSendPacketBuffer_Empty_Buffer;
+			}
+
+			return NetResult::Success;
+		}
+
+		bool PostSend()
+		{
 			if (InterlockedCompareExchange(reinterpret_cast<LPLONG>(&m_IsSendable), FALSE, TRUE))
 			{
-				auto reservedSize = 0;
-				char* pBuf = m_SendRingBuffer.GetBuffer(m_SendBufSize, reservedSize);
-				if (pBuf == nullptr)
+				auto [sendSize, pSendData] = m_SendRingBuffer.GetSendAbleData(m_SendBufSize);
+				if (sendSize == 0)
 				{
 					InterlockedExchange(reinterpret_cast<LPLONG>(&m_IsSendable), TRUE);
 					return true;
 				}
 
+
 				ZeroMemory(&m_pSendOverlappedEx->Overlapped, sizeof(OVERLAPPED));
 
-				m_pSendOverlappedEx->OverlappedExWsaBuf.len = reservedSize;
-				m_pSendOverlappedEx->OverlappedExWsaBuf.buf = pBuf;
+				m_pSendOverlappedEx->OverlappedExWsaBuf.len = sendSize;
+				m_pSendOverlappedEx->OverlappedExWsaBuf.buf = pSendData;
 				m_pSendOverlappedEx->ConnectionIndex = GetIndex();
-
-				//m_pSendOverlappedEx->OverlappedExRemainByte = 0;
-				m_pSendOverlappedEx->OverlappedExTotalByte = reservedSize;
 				m_pSendOverlappedEx->OverlappedExOperationType = OperationType::Send;
 
 				IncrementSendIORefCount();
@@ -205,23 +211,7 @@ namespace NetLib
 			return true;
 		}
 		
-		NetResult ReservedSendPacketBuffer(OUT char** ppBuf, const int sendSize)
-		{
-			if (!m_IsConnect)
-			{
-				*ppBuf = nullptr;
-				return NetResult::ReservedSendPacketBuffer_Not_Connected;
-			}
-
-			*ppBuf = m_SendRingBuffer.ForwardMark(sendSize);
-			if (*ppBuf == nullptr)
-			{
-				return NetResult::ReservedSendPacketBuffer_Empty_Buffer;
-			}
-
-			return NetResult::Success;
-		}
-
+	
 
 		SOCKET GetClientSocket() { return m_ClientSocket; }
 
@@ -252,7 +242,7 @@ namespace NetLib
 		
 		std::tuple<int, char*> GetReceiveData(int recvSize) { return m_RecvRingBuffer.GetReceiveData(recvSize); }
 		
-		void UsedRecvBuffer(int size) { m_RecvRingBuffer.UsedRecvBuffer(size); }
+		void ReadRecvBuffer(int size) { m_RecvRingBuffer.ForwardReadPos(size); }
 		
 
 		bool SetNetAddressInfo()
@@ -287,7 +277,7 @@ namespace NetLib
 
 		void SendBufferSendCompleted(const INT32 sendSize)
 		{
-			m_SendRingBuffer.ReleaseBuffer(sendSize);
+			m_SendRingBuffer.ForwardReadPos(sendSize);
 		}
 
 		void SetEnableSend()

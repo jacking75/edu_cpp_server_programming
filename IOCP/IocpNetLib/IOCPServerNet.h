@@ -3,6 +3,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <optional>
 
 #define WIN32_LEAN_AND_MEAN 
 #include <Windows.h>
@@ -163,7 +164,7 @@ namespace NetLib
 			return true;
 		}
 
-		void SendPacket(const INT32 connectionIndex, const void* pSendPacket, const INT16 packetSize)
+		void SendPacket(const INT32 connectionIndex, const char* pSendPacket, const INT16 packetSize)
 		{
 			auto pConnection = GetConnection(connectionIndex);
 			if (pConnection == nullptr)
@@ -171,8 +172,8 @@ namespace NetLib
 				return;
 			}
 			
-			char* pReservedSendBuf = nullptr;
-			auto result = pConnection->ReservedSendPacketBuffer(&pReservedSendBuf, packetSize);
+
+			auto result = pConnection->WriteSendData(packetSize, pSendPacket);
 			if (result == NetResult::ReservedSendPacketBuffer_Not_Connected)
 			{
 				return;
@@ -185,10 +186,9 @@ namespace NetLib
 				}
 				return;
 			}
+			
 
-			CopyMemory(pReservedSendBuf, pSendPacket, packetSize);
-
-			if (pConnection->PostSend(packetSize) == false)
+			if (pConnection->PostSend() == false)
 			{
 				if (pConnection->CloseComplete())
 				{
@@ -530,9 +530,13 @@ namespace NetLib
 
 			auto [remainByte, pNext] = pConnection->GetReceiveData(ioSize);
 			
-			PacketForwardingLoop(pConnection, remainByte, pNext);
-			
-			pConnection->UsedRecvBuffer(remainByte);
+			auto totalReadSize = PacketForwardingLoop(pConnection, remainByte, pNext);
+			if (!totalReadSize)
+			{
+				return;
+			}
+
+			pConnection->ReadRecvBuffer(totalReadSize.value());
 
 			if (pConnection->PostRecv() != NetResult::Success)
 			{
@@ -545,14 +549,15 @@ namespace NetLib
 
 		}
 
-		void PacketForwardingLoop(Connection* pConnection, int& remainByte, char* pBuffer)
+		std::optional<int> PacketForwardingLoop(Connection* pConnection, int remainByte, char* pBuffer)
 		{
 			//TODO 패킷 분해 부분을 가상 함수로 만들기 
 
 			const int PACKET_HEADER_LENGTH = 5;
 			const int PACKET_SIZE_LENGTH = 2;
 			const int PACKET_TYPE_LENGTH = 2;
-			short packetSize = 0;
+			
+			int totalReadSize = 0;
 
 			while (true)
 			{
@@ -561,8 +566,8 @@ namespace NetLib
 					break;
 				}
 
+				short packetSize = 0;
 				CopyMemory(&packetSize, pBuffer, PACKET_SIZE_LENGTH);
-				auto currentSize = packetSize;
 
 				if (0 >= packetSize || packetSize > pConnection->RecvBufferSize())
 				{
@@ -573,32 +578,35 @@ namespace NetLib
 					{
 						HandleExceptionCloseConnection(pConnection);
 					}
-					return;
+					return std::nullopt;
 				}
 
-				if (remainByte >= currentSize)
+				if (remainByte >= packetSize)
 				{
 					auto pMsg = m_pMsgPool->AllocMsg();
 					if (pMsg == nullptr)
 					{
-						return;
+						return totalReadSize;
 					}
 
 					pMsg->SetMessage(MessageType::OnRecv, pBuffer);
-					if (PostNetMessage(pConnection, pMsg, currentSize) != NetResult::Success)
+					if (PostNetMessage(pConnection, pMsg, packetSize) != NetResult::Success)
 					{
 						m_pMsgPool->DeallocMsg(pMsg);
-						return;
+						return totalReadSize;
 					}
 
-					remainByte -= currentSize;
-					pBuffer += currentSize;
+					remainByte -= packetSize;
+					totalReadSize += packetSize;
+					pBuffer += packetSize;					
 				}
 				else
 				{
 					break;
 				}
 			}
+
+			return totalReadSize;
 		}
 
 		void DoSend(OVERLAPPED_EX* pOverlappedEx, const DWORD ioSize)
@@ -611,59 +619,16 @@ namespace NetLib
 
 			
 			pConnection->DecrementSendIORefCount();
-
-			pOverlappedEx->OverlappedExRemainByte += ioSize;
-
-			//모든 메세지 전송하지 못한 상황
-			if (static_cast<DWORD>(pOverlappedEx->OverlappedExTotalByte) > pOverlappedEx->OverlappedExRemainByte)
+			pConnection->SendBufferSendCompleted(ioSize);
+			pConnection->SetEnableSend();
+			
+			if (pConnection->PostSend() == false)
 			{
-				pConnection->IncrementSendIORefCount();
-
-				pOverlappedEx->OverlappedExWsaBuf.buf += ioSize;
-				pOverlappedEx->OverlappedExWsaBuf.len -= ioSize;
-
-				ZeroMemory(&pOverlappedEx->Overlapped, sizeof(OVERLAPPED));
-
-				DWORD flag = 0;
-				DWORD sendByte = 0;
-				auto result = WSASend(
-					pConnection->GetClientSocket(),
-					&(pOverlappedEx->OverlappedExWsaBuf),
-					1,
-					&sendByte,
-					flag,
-					&(pOverlappedEx->Overlapped),
-					NULL);
-
-				if (result == SOCKET_ERROR && WSAGetLastError() != ERROR_IO_PENDING)
+				if (pConnection->CloseComplete())
 				{
-					pConnection->DecrementSendIORefCount();
-
-					char logmsg[128] = { 0, };
-					sprintf_s(logmsg, "IOCPServer::DoSend. WSASend. error:%d", WSAGetLastError());
-					LogFuncPtr((int)LogLevel::Error, logmsg);
-
-					if (pConnection->CloseComplete())
-					{
-						HandleExceptionCloseConnection(pConnection);
-					}
-					return;
+					HandleExceptionCloseConnection(pConnection);
 				}
-			}
-			//모든 메세지 전송한 상황
-			else
-			{
-				pConnection->SendBufferSendCompleted(pOverlappedEx->OverlappedExTotalByte);
-				pConnection->SetEnableSend();
-				
-				if (pConnection->PostSend(0) == false)
-				{
-					if (pConnection->CloseComplete())
-					{
-						HandleExceptionCloseConnection(pConnection);
-					}
-				}
-			}
+			}		
 		}
 
 		void DoPostConnection(Connection* pConnection, const Message* pMsg, OUT INT8& msgOperationType, OUT INT32& connectionIndex)

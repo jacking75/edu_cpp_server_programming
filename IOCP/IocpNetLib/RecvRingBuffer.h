@@ -44,13 +44,18 @@ namespace NetLib
 			if (auto size = m_RingBufferSize - m_WritePos; size < wantedSize)
 			{
 				auto remain = m_WritePos - m_ReadPos;
-				if (remain > 0)
+				if (remain <= 0)
+				{
+					m_WritePos = 0;
+					m_ReadPos = 0;
+				}
+				else
 				{
 					CopyMemory(&m_pRingBuffer[0], &m_pRingBuffer[m_ReadPos], remain);
-				}
 
-				m_WritePos = 0;
-				m_ReadPos = 0;
+					m_WritePos = remain;
+					m_ReadPos = 0;
+				}
 			}
 
 			return &m_pRingBuffer[m_WritePos];			
@@ -64,20 +69,12 @@ namespace NetLib
 			return { remain, &m_pRingBuffer[m_ReadPos] };
 		}
 
-		void UsedRecvBuffer(const int forwardLength)
+		void ForwardReadPos(const int forwardLength)
 		{
 			m_ReadPos += forwardLength;
 		}
 
-		/*int ForwardWritePos(const int forwardLength)
-		{
-			m_WritePos += forwardLength;
-
-			return m_WritePos - m_ReadPos;
-		}*/
-						
-		//char* GetReadBuffer() { return &m_pRingBuffer[m_ReadPos]; }
-		
+				
 		int GetBufferSize() { return m_RingBufferSize; }
 		
 
@@ -86,12 +83,5 @@ namespace NetLib
 		int m_RingBufferSize = INVALID_VALUE;
 		int m_ReadPos = 0;
 		int m_WritePos = 0;
-
-		//int m_UsedBufferSize = INVALID_VALUE;		
-		//char* m_pBeginMark = nullptr;
-		//char* m_pEndMark = nullptr;
-		//char* m_pCurMark = nullptr;
-		//char* m_pGettedBufferMark = nullptr;
-		//char* m_pLastMoveMark = nullptr;
 	};
 }

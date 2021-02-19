@@ -29,9 +29,6 @@ namespace NetLib
 			delete[] m_pRingBuffer;
 			m_pRingBuffer = new char[m_RingBufferSize];
 
-			m_pBeginMark = m_pRingBuffer;
-			m_pEndMark = m_pBeginMark + m_RingBufferSize - 1;
-
 			Init();
 			return true;
 		}
@@ -40,133 +37,67 @@ namespace NetLib
 		{
 			SpinLockGuard Lock(&m_CS);
 
-			m_UsedBufferSize = 0;
-
-			m_pCurMark = m_pBeginMark;
-			m_pGettedBufferMark = m_pBeginMark;
-			m_pLastMoveMark = m_pEndMark;
+			m_ReadPos = 0;
+			m_WritePos = 0;
 		}
 
-		char* GetBuffer(const int reqReadSize, OUT int& resReadSize)
+		bool AddSendData(const int dataSize, const char* pData)
 		{
 			SpinLockGuard Lock(&m_CS);
 
-			char* pResult = nullptr;
-			if (m_pLastMoveMark == m_pGettedBufferMark)
+			if (auto size = m_RingBufferSize - m_WritePos; size < dataSize)
 			{
-				m_pGettedBufferMark = m_pBeginMark;
-				m_pLastMoveMark = m_pEndMark;
-			}
-
-			if (m_UsedBufferSize > reqReadSize)
-			{
-				if ((m_pLastMoveMark - m_pGettedBufferMark) >= reqReadSize)
+				auto remain = m_WritePos - m_ReadPos;
+				if (remain > 0)
 				{
-					resReadSize = reqReadSize;
-				}
-				else
-				{
-					resReadSize = static_cast<int>(m_pLastMoveMark - m_pGettedBufferMark);
+					CopyMemory(&m_pRingBuffer[0], &m_pRingBuffer[m_ReadPos], remain);
 				}
 
-				pResult = m_pGettedBufferMark;
-				m_pGettedBufferMark += resReadSize;
-			}
-			else if (m_UsedBufferSize > 0)
-			{
-				if ((m_pLastMoveMark - m_pGettedBufferMark) >= m_UsedBufferSize)
-				{
-					resReadSize = m_UsedBufferSize;
-					pResult = m_pGettedBufferMark;
-					m_pGettedBufferMark += m_UsedBufferSize;
-				}
-				else
-				{
-					resReadSize = static_cast<int>(m_pLastMoveMark - m_pGettedBufferMark);
-					pResult = m_pGettedBufferMark;
-					m_pGettedBufferMark += resReadSize;
-				}
+				m_WritePos = remain;
+				m_ReadPos = 0;
 			}
 
-			return pResult;
+			if (auto size = m_RingBufferSize - m_WritePos; size < dataSize)
+			{
+				return false;
+			}
+
+			CopyMemory(&m_pRingBuffer[m_WritePos], pData, dataSize);
+			return true;
 		}
 
-		char* ForwardMark(const int forwardLength)
+		std::tuple<int, char*> GetSendAbleData(const int maxSize)
 		{
 			SpinLockGuard Lock(&m_CS);
 
-			char* pPreCurMark = nullptr;
-			if (m_UsedBufferSize + forwardLength > m_RingBufferSize)
+			auto remain = m_WritePos - m_ReadPos;
+			if (remain <= 0)
 			{
-				return pPreCurMark;
+				return { 0, nullptr };
 			}
 
-			if ((m_pEndMark - m_pCurMark) >= forwardLength)
+			if (remain > maxSize)
 			{
-				pPreCurMark = m_pCurMark;
-				m_pCurMark += forwardLength;
-			}
-			else
-			{
-				m_pLastMoveMark = m_pCurMark;
-				m_pCurMark = m_pBeginMark + forwardLength;
-				pPreCurMark = m_pBeginMark;
+				remain = maxSize;
 			}
 
-			return pPreCurMark;
-		}
+			return { remain, &m_pRingBuffer[m_ReadPos] };
 
-		char* ForwardMark(const int forwardLength, const int nextLength, const DWORD remainLength)
+		}					
+
+		void ForwardReadPos(const int forwardLength)
 		{
 			SpinLockGuard Lock(&m_CS);
-
-			if (m_UsedBufferSize + forwardLength + nextLength > m_RingBufferSize)
-			{
-				return nullptr;
-			}
-
-			if ((m_pEndMark - m_pCurMark) >= (nextLength + forwardLength))
-			{
-				m_pCurMark += forwardLength;
-			}
-			else
-			{
-				m_pLastMoveMark = m_pCurMark;
-
-				CopyMemory(m_pBeginMark, m_pCurMark - (remainLength - forwardLength), remainLength);
-				m_pCurMark = m_pBeginMark + remainLength;
-			}
-
-			return m_pCurMark;
+			m_ReadPos += forwardLength;
 		}
-
-		void ReleaseBuffer(const int releaseSize)
-		{
-			SpinLockGuard Lock(&m_CS);
-			m_UsedBufferSize = (releaseSize > m_UsedBufferSize) ? 0 : (m_UsedBufferSize - releaseSize);
-		}
-
-		void SetUsedBufferSize(const int usedBufferSize)
-		{
-			SpinLockGuard Lock(&m_CS);
-			m_UsedBufferSize += usedBufferSize;
-		}
-
-		int GetBufferSize() { return m_RingBufferSize; }
-		char* GetBeginMark() { return m_pBeginMark; }
-		char* GetCurMark() { return m_pCurMark; }
 
 
 	private:
 		CustomSpinLockCriticalSection m_CS;
 
-		int m_RingBufferSize = INVALID_VALUE;
-		int m_UsedBufferSize = INVALID_VALUE;
 		char* m_pRingBuffer = nullptr;
-		char* m_pBeginMark = nullptr;
-		char* m_pEndMark = nullptr;
-		char* m_pCurMark = nullptr;
-		char* m_pGettedBufferMark = nullptr;
-		char* m_pLastMoveMark = nullptr;
+		int m_RingBufferSize = INVALID_VALUE;
+		int m_ReadPos = 0;
+		int m_WritePos = 0;
 	};
 }

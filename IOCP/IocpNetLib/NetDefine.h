@@ -56,7 +56,7 @@ namespace NetLib
 		OperationType OverlappedExOperationType;
 
 		int	OverlappedExTotalByte;
-		DWORD OverlappedExRemainByte;
+		//DWORD OverlappedExRemainByte;
 		//char* pOverlappedExSocketMessage;
 
 		INT32 ConnectionIndex = 0;
