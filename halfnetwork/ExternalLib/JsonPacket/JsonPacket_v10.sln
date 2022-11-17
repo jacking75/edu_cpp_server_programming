@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonPacketLib", "JsonPacketLib\JsonPacketLib.vcxproj", "{2CF3A7B2-22E3-4AD3-BF01-0214438E5B50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testcase", "Testcase\Testcase.vcxproj", "{42AE0919-E8DD-4CBB-BEA1-DB0345060A3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CF3A7B2-22E3-4AD3-BF01-0214438E5B50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2CF3A7B2-22E3-4AD3-BF01-0214438E5B50}.Debug|Win32.Build.0 = Debug|Win32
+		{2CF3A7B2-22E3-4AD3-BF01-0214438E5B50}.Release|Win32.ActiveCfg = Release|Win32
+		{2CF3A7B2-22E3-4AD3-BF01-0214438E5B50}.Release|Win32.Build.0 = Release|Win32
+		{42AE0919-E8DD-4CBB-BEA1-DB0345060A3E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{42AE0919-E8DD-4CBB-BEA1-DB0345060A3E}.Debug|Win32.Build.0 = Debug|Win32
+		{42AE0919-E8DD-4CBB-BEA1-DB0345060A3E}.Release|Win32.ActiveCfg = Release|Win32
+		{42AE0919-E8DD-4CBB-BEA1-DB0345060A3E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

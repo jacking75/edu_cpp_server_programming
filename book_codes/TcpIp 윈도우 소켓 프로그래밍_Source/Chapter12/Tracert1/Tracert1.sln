@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tracert1", "Tracert1.vcxproj", "{06F04C18-8C33-43EB-B4EA-D1013A7EE4CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06F04C18-8C33-43EB-B4EA-D1013A7EE4CE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06F04C18-8C33-43EB-B4EA-D1013A7EE4CE}.Debug|Win32.Build.0 = Debug|Win32
+		{06F04C18-8C33-43EB-B4EA-D1013A7EE4CE}.Release|Win32.ActiveCfg = Release|Win32
+		{06F04C18-8C33-43EB-B4EA-D1013A7EE4CE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

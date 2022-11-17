@@ -1,0 +1,409 @@
+
+
+/*
+pAdo->UpdateParameter(_T("@v_bbb"), (TCHAR*)tstrString.c_str(), tstrString.size()); 
+동일 쿼리문을 여러번 실행 시킬 필요가 있을때 사용합니다. 예로 들어 여러 건수의 값을 insert할때
+*/
+
+
+
+/*
+2008. 12. 10 카페에 올려주신 예제 코드
+http://cafe.naver.com/ongameserver/3415
+
+create table Users(
+id int,
+PassWord varchar(16),
+Level smallint,
+Money int
+)
+
+
+insert into Users values(5, "sdofjoaf", 255, 10100) 
+
+ 
+
+//프로시저 입니다.
+
+create procedure dbo.sp_user_authe
+    @id int,
+    @CharCD bigint output
+as
+begin
+select [PassWord], level, money from Users where id = @id
+set @CharCD = 2736485867678
+return 77 
+end
+
+ 
+
+ 
+
+//소스
+
+#include "stdafx.h"
+#include "AdoManager.h"
+
+int AdoWork();
+
+CAdoManager* adomanager=NULL;
+
+int _tmain(int argc, _TCHAR* argv[])
+{  
+#ifdef _UNICODE
+  _tsetlocale(LC_ALL,_T("Korean"));
+#endif
+
+  SAdoConfig adoconfig;
+  adoconfig.SetIP(_T("172.20.0.63\\MYDB"));    //디비주소
+  adoconfig.SetUserID(_T("xxxxxxx"));          //아이디
+  adoconfig.SetPassword(_T("xxxxxx)"));        //패스워드
+  adoconfig.SetInitCatalog(_T("GAMEDB"));      //디비명
+  adoconfig.SetConnectionTimeout(3);
+  adoconfig.SetRetryConnection(true);
+  adoconfig.SetMaxConnectionPool(20);
+
+  adomanager = new CAdoManager(adoconfig);
+
+  AdoWork();
+  return 0;
+}
+
+
+int AdoWork()
+{
+  {
+    CAdo* pAdo = NULL;
+    //adomanager로부터 ado연결을 가져온다. 명시적 트랜잭션을 사용하지 않는다.
+    CScopedAdo scopedado(pAdo, adomanager, false);
+
+    INT nReturn = 0;
+    INT nId = 5;
+    INT64 i64CharCd = 0;
+    pAdo->CreateParameter(_T("return"),adInteger, adParamReturnValue, nReturn);  //리턴값 얻기
+    pAdo->CreateParameter(_T("id"),adInteger, adParamInput, nId);
+    pAdo->CreateParameter(_T("CharCd"),adBigInt, adParamInputOutput, i64CharCd); //Int64 및 Output 파라메터로 설정
+
+    pAdo->SetQuery(_T("GameDB..sp_user_authe"));
+    pAdo->Execute();
+    if(!pAdo->IsSuccess()){ return 0;  }
+
+    TCHAR tszPassWorld[17] = {0, };
+    WORD wLevel = 0;
+    INT nMoney = 0;
+
+    while(!pAdo->GetEndOfFile())
+    {
+      ISFAIL(pAdo->GetFieldValue(_T("PassWord"), tszPassWorld, 16));
+      ISFAIL(pAdo->GetFieldValue(_T("Level"), wLevel));
+      ISFAIL(pAdo->GetFieldValue(_T("Money"), nMoney));
+      _tprintf(_T("%s %d, %d\n"), tszPassWorld, wLevel, nMoney);
+      pAdo->MoveNext();
+    }
+
+    pAdo->GetParameter(_T("return"), nReturn);
+    pAdo->GetParameter(_T("CharCd"), i64CharCd);
+    _tprintf(_T("return:%d, CharCd:I64d\n"), nReturn, i64CharCd);
+  }
+}
+
+*/
+
+/*
+무모님 소스에 있던 예제 코드
+
+unsigned __stdcall AdoFunc(void *pArg);
+int AdoWork();
+int AdoWork2();
+
+CAdoManager* adomanager=NULL;
+
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{	
+#ifdef _UNICODE
+	_tsetlocale(LC_ALL,_T("Korean"));
+#endif
+
+	SAdoConfig adoconfig;
+	adoconfig.SetIP(_T("127.0.0.1"));
+//	adoconfig.SetDSN(_T("ADODB_CONN"));
+	adoconfig.SetUserID(_T("adotester"));
+	adoconfig.SetPassword(_T("adotester"));
+	adoconfig.SetInitCatalog(_T("ADODB"));
+	adoconfig.SetConnectionTimeout(3);
+	adoconfig.SetRetryConnection(true);
+	adoconfig.SetMaxConnectionPool(20);
+
+	adomanager = new CAdoManager(adoconfig);
+
+	HANDLE hThread;
+	unsigned threadID;
+	hThread = (HANDLE) _beginthreadex(NULL, 0, AdoFunc, NULL, 0, &threadID);
+
+	while(1)
+	{
+		AdoWork();
+	}
+
+	WaitForSingleObject(hThread, INFINITE);
+	CloseHandle(hThread);
+	return 0;
+}
+
+unsigned __stdcall AdoFunc(void *pArg)
+{
+	while(1)
+	{
+		AdoWork2();
+	}
+	return 0;
+}
+
+
+int AdoWork()
+{
+	DWORD nParam = 1231415151, nRtnParam = 0;
+	TCHAR tszParam[30] = _T("uuuuu");
+	BYTE pbyParam[10000] = {0XFF, 0XFE, 0X00, 0X01, 0X06, 0X07,};
+	BYTE pbyDATA[10000]={0XFF, 0XFE, 0X00, 0X01, 0X06, 0X07,};
+	bool bBoolValue = 1;
+	char byByteValue = 100;
+	WORD wWordValue = 20000;
+	int nReturn = 0;
+	INT64 i64BigIntValue = 8223372036854775801;
+	COleDateTime oleTime;
+	float fValue = 74.234738123f;
+	int nSize = 0;
+	TCHAR tszdsjo[4]={0,};
+	_variant_t vValue(1000);
+	BYTE pValue[1000]={0,};
+	oleTime.SetDateTime(2008, 2, 28, 23, 59, 59);
+
+
+	{
+		CAdo* pAdo = NULL;
+		//adomanager로부터 ado연결을 가져온다. 명시적 트랜잭션을 사용하지 않는다.
+		CScopedAdo scopedado(pAdo, adomanager, false);
+
+		pAdo->CreateParameter(_T("return"),adInteger, adParamReturnValue, nReturn);
+//		pAdo->CreateNullParameter(_T("@v_aaa"), adInteger, adParamInputOutput);
+		pAdo->CreateParameter(_T("@v_aaa"),adInteger, adParamInputOutput, vValue);
+		pAdo->CreateParameter(_T("@v_bbb"),adVarChar, adParamInputOutput, (TCHAR*)NULL, 1);
+		pAdo->CreateParameter(_T("@v_ccc"),adVarBinary, adParamInputOutput, (BYTE*)NULL, 1);
+		pAdo->CreateParameter(_T("@v_ddd"),adBoolean, adParamInputOutput, bBoolValue);
+		pAdo->CreateParameter(_T("@v_eee"),adTinyInt, adParamInputOutput, byByteValue);
+		pAdo->CreateParameter(_T("@v_fff"),adSmallInt, adParamInputOutput, wWordValue);
+		pAdo->CreateParameter(_T("@v_ggg"),adBigInt, adParamInputOutput, i64BigIntValue);
+		//pAdo->CreateParameter<COleDateTime&>(_T("@v_hhh"),adDBTimeStamp, adParamInputOutput, oleTime);
+		//pAdo->CreateParameter<COleDateTime&>(_T("@v_iii"),adDBTimeStamp, adParamInputOutput, oleTime);
+		pAdo->CreateParameter(_T("@v_hhh"),adDBTimeStamp, adParamInputOutput, oleTime);
+		pAdo->CreateParameter(_T("@v_iii"),adDBTimeStamp, adParamInputOutput, oleTime);
+		pAdo->CreateParameter(_T("@v_jjj"),adDouble, adParamInputOutput, fValue);
+		pAdo->CreateParameter(_T("@v_kkk"),adBinary, adParamInputOutput, (BYTE*)NULL, 1);
+
+		tstring tstrString;
+		int i = 5;
+
+		while(i > 0)
+		{
+//			pAdo->UpdateParameter(_T("@v_aaa"), i * 1000);
+//			pAdo->UpdateNullParameter(_T("@v_aaa"));
+			tstrString += _T("yy");
+			oleTime.SetDateTime(2007, 12, 12+i, 23, 10+i, 1+i);
+			pAdo->UpdateParameter<COleDateTime&>(_T("@v_hhh"), oleTime);
+			pAdo->UpdateParameter(_T("@v_hhh"), oleTime);
+			pAdo->UpdateParameter(_T("@v_bbb"), (TCHAR*)tstrString.c_str(), tstrString.size());
+//			pAdo->UpdateParameter(_T("@v_bbb"), (TCHAR*)NULL, 1);
+			pAdo->UpdateParameter(_T("@v_kkk"), pbyParam, 10);
+			pAdo->UpdateParameter(_T("@v_ccc"), pbyParam, 10);
+			//pAdo->UpdateParameter(_T("@v_ccc"), (BYTE*)NULL, i);
+			if(!pAdo->IsSuccess()){ return 0;	}
+
+			pAdo->SetQuery(_T("adotestproc"));
+
+			pAdo->Execute();
+			if(!pAdo->IsSuccess()){ return 0;	}
+
+			nParam = 0;
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("aaa"), nParam));
+				_tprintf(_T("%d\n"), nParam);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("bbb"), tszParam, 30));
+				_tprintf(_T("bbb%d\n"), nParam);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){return 0;}
+
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				memset(pValue, 0x00, 50);
+				ISFAIL(pAdo->GetFieldValue(_T("ccc"), pValue, 10, nSize));
+				_tprintf(_T("Size(%u)"), nSize);
+				for(int i = 0; i < nSize; ++i)
+					_tprintf(_T("%02X"), pValue[i]);
+				_tprintf(_T("\n"));
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("ddd"), bBoolValue));
+				_tprintf(_T("%d\n"), bBoolValue);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("eee"), byByteValue));
+				_tprintf(_T("%d\n"), byByteValue);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("fff"), wWordValue));
+				_tprintf(_T("%d\n"), wWordValue);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("ggg"), i64BigIntValue));
+				_tprintf(_T("%I64d\n"), i64BigIntValue);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("hhh"), oleTime));
+				_tprintf(_T("%s\n"), oleTime.Format(_T("%Y-%m-%d %H:%M:%S")));
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("iii"), oleTime));
+				_tprintf(_T("%s\n"), oleTime.Format(_T("%Y-%m-%d %H:%M:%S")));
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->NextRecordSet();
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			while(!pAdo->GetEndOfFile())
+			{
+				ISFAIL(pAdo->GetFieldValue(_T("jjj"), fValue));
+				_tprintf(_T("%.10lf\n"), fValue);
+				pAdo->MoveNext();
+			}
+			if(!pAdo->IsSuccess()){ return 0;}
+
+			pAdo->GetParameter(_T("return"), nRtnParam);
+			pAdo->GetParameter(_T("@v_aaa"), nParam);
+			pAdo->GetParameter(_T("@v_bbb"), tszParam, 100);
+			pAdo->GetParameter(_T("@v_ccc"), pbyDATA, 10, nSize);
+			pAdo->GetParameter(_T("@v_ddd"), bBoolValue);
+			pAdo->GetParameter(_T("@v_eee"), byByteValue);
+			pAdo->GetParameter(_T("@v_fff"), wWordValue);
+			pAdo->GetParameter(_T("@v_ggg"), i64BigIntValue);
+			pAdo->GetParameter(_T("@v_hhh"), oleTime);
+			pAdo->GetParameter(_T("@v_iii"), oleTime);
+			pAdo->GetParameter(_T("@v_jjj"), fValue);
+			pAdo->GetParameter(_T("@v_kkk"), pbyDATA, 10, nSize);
+			if(!pAdo->IsSuccess()){return 0;}
+
+			_tprintf(_T("\nReturn value: %d\n"), nRtnParam);
+			_tprintf(_T("param out1: %d\n"), nParam); 
+			_tprintf(_T("param out2: %s\n"), tszParam);
+			_tprintf(_T("param out4: %d\n"), bBoolValue); 
+			_tprintf(_T("param out5: %d\n"), byByteValue); 
+			_tprintf(_T("param out6: %d\n"), wWordValue); 
+			_tprintf(_T("param out7: %I64d\n"), i64BigIntValue);
+			_tprintf(_T("param out8: %s\n"), oleTime.Format(_T("%Y-%m-%d %H:%M:%S")));
+			_tprintf(_T("param out9: %.10lf\n"), fValue);
+			_tprintf(_T("param out10: "), fValue);
+			for(int k = 0; k < nSize; ++k)
+			{
+				_tprintf(_T("%02X"), pbyDATA[i]);
+			}
+
+
+			_tprintf(_T("\n"));
+
+			i--;
+		}
+	}
+	return 0;
+}
+
+int AdoWork2()
+{
+	CAdo* pAdo = NULL;
+	{
+		CScopedAdo scopedado(pAdo, adomanager, false);
+
+		pAdo->SetQuery(_T("Insert Into AdoTest Values(999, 'sdjfojaf', 12314, 1, 25, 25, 25, '20071231', '20070101', 25.3, null)"));
+		pAdo->Execute(adCmdText);
+		if(!pAdo->IsSuccess()){return 0;}
+		pAdo->SetQuery(_T("Insert Into AdoTest Values(888, 'sdjfojaf', 12314, 1, 25, 25, 25, '20071231', '20070101', 25.3, null)"));
+		//		pAdo->SetQuery(_T("select aaa from adotest"));
+		pAdo->Execute(adCmdText);
+		if(!pAdo->IsSuccess()){return 0;}
+
+		pAdo->SetCommit(false);
+
+
+		//DWORD nParam = 0;
+		//while(!pAdo->GetEndOfFile())
+		//{
+		//	ISFAIL(pAdo->GetFieldValue<DWORD>(_T("aaa"), nParam));
+		//	_tprintf(_T("%d\n"), nParam);
+		//	pAdo->MoveNext();
+		//}
+		//if(!pAdo->IsSuccess()){ return 0;}
+	}
+	return 0;
+}
+*/
