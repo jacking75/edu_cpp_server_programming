@@ -1,0 +1,2 @@
+powershell.exe
+pause
