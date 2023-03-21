@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="commonDef.h" />
+    <ClInclude Include="IocpServer.h" />
+    <ClInclude Include="queue.h" />
+    <ClInclude Include="ringBuffer.h" />
+    <ClInclude Include="singleton.h" />
+    <ClInclude Include="thread.h" />
+    <ClInclude Include="udpSocket.h" />
+    <ClInclude Include="vBuffer.h" />
+    <ClInclude Include="windowsService.h" />
+    <ClInclude Include="SpinLock.h" />
+    <ClInclude Include="Delegate.h" />
+    <ClInclude Include="session.h" />
+    <ClInclude Include="serverSessionMgr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IocpServer.cpp" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MD5">
+      <UniqueIdentifier>{06e5be11-a97b-4794-bf1e-d05dd6e7af32}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MD5.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="md5_global.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="md5class.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginIocpServer.h" />
+    <ClInclude Include="LoginServerDefine.h" />
+    <ClInclude Include="ProcessClientPacket.h" />
+    <ClInclude Include="ProcessServerPacket.h" />
+    <ClInclude Include="TickThread.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="md5c.c">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="md5class.cpp">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginIocpServer.cpp" />
+    <ClCompile Include="ProcessClientPacket.cpp" />
+    <ClCompile Include="ProcessServerPacket.cpp" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserManager.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+</Project>

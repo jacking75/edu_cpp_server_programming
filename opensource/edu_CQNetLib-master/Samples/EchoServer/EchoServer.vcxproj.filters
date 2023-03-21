@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="echoServer.h" />
+    <ClInclude Include="..\..\CQNetLib\commonDef.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\Delegate.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\IocpServer.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\queue.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\ringBuffer.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\serverSessionMgr.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\session.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\singleton.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\SpinLock.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\thread.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\udpSocket.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\vBuffer.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CQNetLib\windowsService.h">
+      <Filter>CQNetLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CQNetLib">
+      <UniqueIdentifier>{67dae769-5e52-40fe-aca7-84c5b7d4e5b0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
