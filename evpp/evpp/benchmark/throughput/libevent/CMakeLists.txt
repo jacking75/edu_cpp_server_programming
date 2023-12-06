@@ -1,5 +1,0 @@
-add_executable(benchmark_tcp_libevent_client client.c)
-target_link_libraries(benchmark_tcp_libevent_client event)
-
-add_executable(benchmark_tcp_libevent_server server.c)
-target_link_libraries(benchmark_tcp_libevent_server event)
