@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket_stream", "socket_stream.vcxproj", "{41FA5224-3315-4CDA-9C44-19085049F179}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		DebugDll|x64 = DebugDll|x64
+		DebugDll|x86 = DebugDll|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+		Releasedll|x64 = Releasedll|x64
+		Releasedll|x86 = Releasedll|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Debug|x64.ActiveCfg = Debug|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Debug|x64.Build.0 = Debug|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Debug|x86.ActiveCfg = Debug|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Debug|x86.Build.0 = Debug|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.DebugDll|x64.ActiveCfg = DebugDll|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.DebugDll|x64.Build.0 = DebugDll|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.DebugDll|x86.ActiveCfg = DebugDll|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.DebugDll|x86.Build.0 = DebugDll|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Release|x64.ActiveCfg = Release|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Release|x64.Build.0 = Release|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Release|x86.ActiveCfg = Release|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Release|x86.Build.0 = Release|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Releasedll|x64.ActiveCfg = Releasedll|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Releasedll|x64.Build.0 = Releasedll|x64
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Releasedll|x86.ActiveCfg = Releasedll|Win32
+		{41FA5224-3315-4CDA-9C44-19085049F179}.Releasedll|x86.Build.0 = Releasedll|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D5AD10A-C352-4A03-9B35-1CFBDCEAAE5D}
+	EndGlobalSection
+EndGlobal
