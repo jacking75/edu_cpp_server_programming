@@ -1,4 +1,4 @@
-#include "acl_stdafx.hpp"
+﻿#include "acl_stdafx.hpp"
 #ifndef ACL_PREPARE_COMPILE
 #include <utility>
 #include <stdarg.h>
@@ -96,7 +96,7 @@ string::string(ACL_FILE_HANDLE fd, size_t max, size_t n, size_t offset /* 0 */)
 	if (n < 1) {
 		n = 1;
 	}
-	if (fd >= 0) {
+	if (fd != ACL_FILE_INVALID/* fd >= 0*/) {
 		vbf_ = acl_vstring_mmap_alloc2(fd, max, n, offset);
 	} else {
 		vbf_ = ALLOC(n);
@@ -156,29 +156,29 @@ char string::operator [](int n) const
 
 char& string::operator [](size_t n)
 {
-	// ��ƫ��λ�ô���������ռ�����λ�ã���Ҫ���·����ڴ�
+	// 뎠튤盧貫零댕黨杰롸토왕쇌돨離댕貫零，矜狼路劤롸토코닸
 	if (n >= (size_t) CAP(vbf_)) {
 		int  len = (int) CAP(vbf_);
 		space(n + 1);
 		int  new_len = (int) CAP(vbf_);
 
-		// ��ʼ���·�����ڴ�
+		// 놓迦뺏劤롸토돨코닸
 		if (new_len > len) {
 			memset(END(vbf_), 0, new_len - len);
 		}
 
-		// �� vbf_->vbuf.ptr ָ�� n �ֽڴ���ͬʱ�޸� vbf_->vbuf.cnt ֵ
+		// 쉥 vbf_->vbuf.ptr 寧蕨 n 俚쌘뇹，谿珂錦맣 vbf_->vbuf.cnt 令
 		ACL_VSTRING_AT_OFFSET(vbf_, (int) n);
 	}
-	// ��ƫ��λ�ô��ڵ�ǰ���ݳ���ʱ��ͨ������ָ��λ�����޸����ݳ��ȣ�
-	// ���������� length() ����ʱ���Ի�ó���
+	// 뎠튤盧貫零댕黨뎠품鑒앴낀똑珂，繫법路零寧濾貫零鹿錦맣鑒앴낀똑，
+	// 侶湳뎠딧痰 length() 렘랬珂옵鹿삿돤낀똑
 	else if (n >= LEN(vbf_)) {
 		ACL_VSTRING_AT_OFFSET(vbf_, (int) n);
-		// ��Ϊ������������ƫ��λ�� n ���ĵ�ַ���ú󣬵����߶Դ�����
-		// ��ַ��ֵ����������ʹ���������ݳ������ӣ����Դ˴��ں�������
-		// ǰ���� ADDCH �൱�ڵ������ⲿ��ֵ�����ݳ��ȼ� 1
+		// 凜槨굶변鑒럿쀼죄튤盧貫零 n 뇹돨뒈囹多痰빈，딧痰諒뚤늪多痰
+		// 뒈囹립令，뎃깻꼇삔賈뻠녑혐鑒앴낀똑藤속，杰鹿늪뇹瞳변鑒럿쀼
+		// 품딧痰 ADDCH 宮뎠黨딧痰諒棍꼬립令빈쉥鑒앴낀똑속 1
 		ADDCH(vbf_, '\0');
-		// ��֤���һ���ֽ�Ϊ \0
+		// 괏聯離빈寧몸俚쌘槨 \0
 		TERM(vbf_);
 	}
 
@@ -198,11 +198,11 @@ char& string::operator [](int n)
 		printf("%d: cap2: %d\n", __LINE__, CAP(vbf_));
 		int  new_len = CAP(vbf_);
 
-		// ��ʼ���·�����ڴ�
+		// 놓迦뺏劤롸토돨코닸
 		if (new_len > len)
 			memset(END(vbf_), 0, new_len - len);
 
-		// �� vbf_->vbuf.ptr ָ�� n �ֽڴ���ͬʱ�޸� vbf_->vbuf.cnt ֵ
+		// 쉥 vbf_->vbuf.ptr 寧蕨 n 俚쌘뇹，谿珂錦맣 vbf_->vbuf.cnt 令
 		ACL_VSTRING_AT_OFFSET(vbf_, n);
 	} else if (n >= (int) LEN(vbf_)) {
 		ACL_VSTRING_AT_OFFSET(vbf_, n);
@@ -1515,10 +1515,10 @@ string& string::strip(const char* needle, bool each /* false */)
 
 		while (true) {
 			if ((ptr = acl_mystrtok(&src, needle)) == NULL) {
-				// �����ʱ pVbf Ϊ NULL����˵��Դ������
-				// ȫ��Ϊƥ���ַ�������������£���һ��
-				// ���� acl_mystrtok �ͻ᷵�� NULL����ʱ
-				// ��Ҫ���Դ����������
+				// 흔벎늪珂 pVbf 槨 NULL，橙綱츠都눔코휭
+				// 홍꼬槨튈토俚륜，瞳侶蘆헙워苟，뒤寧늴
+				// 딧痰 acl_mystrtok 앎삔럿쀼 NULL，늪珂
+				// 矜狼헌왕都뻠녑혐코휭
 				if (pVbf == NULL) {
 					RSET(vbf_);
 					TERM(vbf_);
@@ -1527,18 +1527,18 @@ string& string::strip(const char* needle, bool each /* false */)
 				break;
 			}
 
-			// ����дʱ������������Դ�������������κ�ƥ���ַ�
-			// ʱ�����ط�����ʱ������
+			// 꽃痰畇珂옙굔세減，뎠都뻠녑혐엇꼇벵훨부튈토俚륜
+			// 珂，꼇극롸토줄珂뻠녑혐
 			if (pVbf == NULL) {
 				pVbf = acl_vstring_alloc(LEN(vbf_) + 1);
 			}
 
-			// ������ƥ����������»�����
+			// 옙굔꼇튈토돨鑒앴逞劤뻠녑혐
 			SCAT(pVbf, ptr);
 		}
 		
-		// �����ʱ�������� NULL����˵��Դ���ݴ��ڲ���ƥ�����ݣ�
-		// ��Ҫ����ʱ��������Ϊ��ʽ�����������ͷ�Դ������
+		// 흔벎줄珂뻠녑혐렷 NULL，橙綱츠都鑒앴닸瞳꼬롸튈토鑒앴，
+		// 矜狼쉥줄珂뻠녑혐槨攣駕뻠녑혐깻矜姦렴都뻠녑혐
 		if (pVbf != NULL) {
 			FREE(vbf_);
 			vbf_ = pVbf;
@@ -1559,7 +1559,7 @@ string& string::strip(const char* needle, bool each /* false */)
 			break;
 		}
 
-		// ����дʱ�ӳٷ������
+		// 꽃痰畇珂儺넨롸토꿉쫠
 		if (pVbf == NULL) {
 			pVbf = acl_vstring_alloc(LEN(vbf_));
 		}

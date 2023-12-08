@@ -1,4 +1,4 @@
-/**
+﻿/**
  * \file ecdh.h
  *
  * \brief The Elliptic Curve Diffie-Hellman (ECDH) protocol APIs.
