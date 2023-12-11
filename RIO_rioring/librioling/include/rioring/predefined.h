@@ -1,0 +1,53 @@
+//
+// Created by newbiediver on 22. 11. 14.
+//
+
+#ifndef RIORING_RIORING_PREDEFINED_H
+#define RIORING_RIORING_PREDEFINED_H
+
+// Project version. SEMVER.
+#define RIORING_VERSION "0.2.1"
+
+
+// Environments
+#ifndef RIORING_TCP_NODELAY
+#define RIORING_TCP_NODELAY 1
+#endif
+
+#ifndef RIORING_REUSE_ADDR
+#define RIORING_REUSE_ADDR 1
+#endif
+
+#ifndef RIORING_KEEP_ALIVE
+#define RIORING_KEEP_ALIVE 1
+#endif
+
+#ifndef RIORING_KEEP_ALIVE_IDLE
+#define RIORING_KEEP_ALIVE_IDLE 2   // second
+#endif
+
+#ifndef RIORING_KEEP_ALIVE_CNT
+#define RIORING_KEEP_ALIVE_CNT 3
+#endif
+
+#ifndef RIORING_KEEP_ALIVE_INTERVAL
+#define RIORING_KEEP_ALIVE_INTERVAL 1   // second
+#endif
+
+#ifndef RIORING_ONLY_IPV6
+#define RIORING_ONLY_IPV6 0
+#endif
+
+#ifndef RIORING_IO_URING_ENTRIES
+#define RIORING_IO_URING_ENTRIES 128
+#endif
+
+#ifndef RIORING_CONTEXT_POOL_SIZE
+#define RIORING_CONTEXT_POOL_SIZE 256
+#endif
+
+#ifndef RIORING_DATA_BUFFER_SIZE
+#define RIORING_DATA_BUFFER_SIZE (1024*64)  // 64kb
+#endif
+
+#endif //RIORING_RIORING_PREDEFINED_H
