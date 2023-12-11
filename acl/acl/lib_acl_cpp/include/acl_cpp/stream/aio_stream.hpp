@@ -42,9 +42,9 @@ public:
 	}
 
 	/**
-	 * 读回调虚函数，该回调函数当满足了类 aio_istream 实例中的
-	 * read_wait 的可读条件即异步流中有数据可读时被调用；当超时时会
-	 * 调用 timeout_callback，流异常被关闭时会调用 close_callback
+	 * 佬扁 妮归 歹固 窃荐绰 佬扁 啊瓷 炼扒捞 面练瞪 锭, 溜 厚悼扁 胶飘覆俊 佬阑 单捞磐啊 乐阑 锭 龋免邓聪促.
+	 * read_wait篮 aio_istream 努贰胶 牢胶畔胶狼 佬扁 啊瓷 炼扒捞 面练瞪 锭, 溜 厚悼扁 胶飘覆俊 佬阑 单捞磐啊 乐阑 锭 龋免登绊, timeout_callback篮 促澜苞 鞍篮 版快俊 龋免邓聪促.
+	 * timeout_callback捞 龋免登绊, 胶飘覆捞 厚沥惑利栏肺 摧鳃 锭 close_callback捞 龋免邓聪促.
 	 */
 	virtual bool read_wakeup(void)
 	{
