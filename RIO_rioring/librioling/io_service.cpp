@@ -12,18 +12,21 @@ using namespace std::chrono_literals;
 
 namespace rioring {
 
+//TODO 아래 값들은 설정으로 변경 가능해야 한다
 constexpr DWORD MAX_RIO_RESULT = 256;
 constexpr DWORD MAX_SEND_RQ_SIZE_PER_SOCKET = 32;
 constexpr DWORD MAX_RECV_RQ_SIZE_PER_SOCKET = 32;
 constexpr DWORD MAX_CLIENT_PER_RIO_THREAD = 2560;
 constexpr DWORD MAX_CQ_SIZE_PER_RIO_THREAD = ( MAX_SEND_RQ_SIZE_PER_SOCKET + MAX_RECV_RQ_SIZE_PER_SOCKET ) * MAX_CLIENT_PER_RIO_THREAD;
 
+
 bool io_service::initialize_winsock() {
     WSAData data{};
-    int result = WSAStartup( MAKEWORD( 2, 2 ), &data );
-    if ( result != 0 ) {
+
+    if ( auto result = WSAStartup(MAKEWORD(2, 2), &data); result != 0 ) {
         return false;
     }
+
     return true;
 }
 
@@ -31,12 +34,14 @@ void io_service::deinitialize_winsock() {
     WSACleanup();
 }
 
-io_service::io_service() : context_pool{ RIORING_CONTEXT_POOL_SIZE }, address_pool{ RIORING_CONTEXT_POOL_SIZE } {
+io_service::io_service() : context_pool{ RIORING_CONTEXT_POOL_SIZE }, 
+                            address_pool{ RIORING_CONTEXT_POOL_SIZE } {
 }
 
 io_service::~io_service() noexcept {
     std::vector< io_context * > all_context;
     context_pool.enum_all( &all_context );
+
     for ( auto ctx : all_context ) {
         unregister_buffer( ctx->addr_buffer_id );
     }
@@ -65,8 +70,13 @@ bool io_service::load_rio() {
 }
 
 bool io_service::run( int concurrency ) {
-    if ( concurrency < 1 ) return false;
-    if ( !load_rio() ) return false;
+    if (concurrency < 1) {
+        return false;
+    }
+
+    if (!load_rio()) {
+        return false;
+    }
 
     io_array.reserve( concurrency );
     tg.run_object( this, concurrency );
@@ -137,6 +147,7 @@ bool io_service::submit( io_context *ctx ) {
 
 void io_service::on_thread() {
     RIO_CQ cq = rio.RIOCreateCompletionQueue( MAX_CQ_SIZE_PER_RIO_THREAD, nullptr );
+    
     if ( cq == RIO_INVALID_CQ ) {
         assert( cq != RIO_INVALID_CQ && "Failed to create completion queue" );
         int *p = nullptr;

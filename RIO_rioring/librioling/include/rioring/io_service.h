@@ -20,15 +20,15 @@
 
 namespace rioring {
 
+//TODO interface 클래스를 만들어서 Windows, Linux용으로 클래스를 정의한다
+
 class io_service : private thread_object {
 public:
     io_service();
     ~io_service() noexcept override;
 
-#ifdef _WIN32
     static bool initialize_winsock();
     static void deinitialize_winsock();
-#endif
 
     bool run( int concurrency );
     bool submit( io_context *ctx );
