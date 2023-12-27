@@ -47,8 +47,7 @@ io_service::~io_service() noexcept {
     }
 }
 
-// Load registered io function table
-bool io_service::load_rio() {
+bool io_service::LoadRIOFunctionTable() {
     GUID id = WSAID_MULTIPLE_RIO;
     unsigned long size = 0;
 
@@ -74,7 +73,7 @@ bool io_service::run( int concurrency ) {
         return false;
     }
 
-    if (!load_rio()) {
+    if (!LoadRIOFunctionTable()) {
         return false;
     }
 

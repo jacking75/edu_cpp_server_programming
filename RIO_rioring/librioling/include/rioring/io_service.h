@@ -20,7 +20,9 @@
 
 namespace rioring {
 
-//TODO interface 클래스를 만들어서 Windows, Linux용으로 클래스를 정의한다
+//TODO 코딩 룰에 맞추어서 이름 변경하기
+//TODO 실패 종료가 2가지 이상이 되는 함수는 애러코드를 반환하도록 한다 
+//TODO rio와 io_uring 분리하기. 분리해서 각자 플랫폼에 최적화된 코드를 작성하도록 한다.  
 
 class io_service : private thread_object {
 public:
@@ -42,7 +44,7 @@ protected:
     void on_thread() override;
 
 private:
-    bool load_rio();
+    bool LoadRIOFunctionTable();
     void io( RIO_CQ cq );
     void deallocate_context( io_context *ctx );
     RIO_BUF *allocate_address_context( io_context *ctx );
