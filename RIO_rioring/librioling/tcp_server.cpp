@@ -31,6 +31,7 @@ void tcp_server::error_occur( std::errc err ) {
 
 bool tcp_server::run( unsigned short port ) {
     server_socket = WSASocketW( AF_INET6, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_REGISTERED_IO );
+
     if ( server_socket == INVALID_SOCKET ) {
         error_occur( std::errc( errno ) );
         return false;
