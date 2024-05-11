@@ -114,4 +114,4 @@ C++ 학습 및 게임 서버 개발에 사용할 목적으로 아래 오픈소�
 - `opensource` 디렉토리의 Easy-Reactor
 - `opensource` 디렉토리의 edu_CQNetLib
 - `opensource` 디렉토리의 zsummerX
-- `opensource` 디렉토리의 GameProject3
+- [GameProject3](https://github.com/ylmbtm/GameProject3 )
