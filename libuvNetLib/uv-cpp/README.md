@@ -17,3 +17,59 @@
 - VS2017 (windows)
 - Codeblocks (linux)
 - CMake (linux)  
+   
+
+## Quick start
+A simple echo server  
+```
+#include <iostream>
+#include <uv/include/uv11.h>
+
+int main(int argc, char** args)
+{
+    uv::EventLoop* loop = uv::EventLoop::DefaultLoop();
+	
+    uv::TcpServer server(loop);
+    server.setMessageCallback([](uv::TcpConnectionPtr ptr,const char* data, ssize_t size)
+    {
+        ptr->write(data, size, nullptr);
+    });
+    //server.setTimeout(60); //heartbeat timeout.
+	
+    uv::SocketAddr addr("0.0.0.0", 10005, uv::SocketAddr::Ipv4);
+    server.bindAndListen(addr);
+    loop->run();
+}
+```  
+  
+A simple http service router which based on radix tree.  
+```
+int main(int argc, char** args)
+{
+    uv::EventLoop loop;
+    uv::http::HttpServer::SetBufferMode(uv::GlobalConfig::BufferMode::CycleBuffer);
+
+    uv::http::HttpServer server(&loop);
+	
+    //example:  127.0.0.1:10010/test
+    server.Get("/test",std::bind(&func1,std::placeholders::_1,std::placeholders::_2));
+    
+    //example:  127.0.0.1:10010/some123abc
+    server.Get("/some*",std::bind(&func2, std::placeholders::_1, std::placeholders::_2));
+    
+    //example:  127.0.0.1:10010/value:1234
+    server.Get("/value:",std::bind(&func3, std::placeholders::_1, std::placeholders::_2));
+    
+    //example:  127.0.0.1:10010/sum?param1=100&param2=23
+    server.Get("/sum",std::bind(&func4, std::placeholders::_1, std::placeholders::_2));
+    
+    uv::SocketAddr addr("127.0.0.1", 10010);
+    server.bindAndListen(addr);
+    loop.run();
+}
+```  
+
+
+
+
+
