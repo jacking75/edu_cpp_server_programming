@@ -107,6 +107,28 @@
     <ClCompile Include="..\..\..\uv\Timer.cpp" />
     <ClCompile Include="..\..\..\uv\Udp.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\uv\include\Async.hpp" />
+    <ClInclude Include="..\..\..\uv\include\CycleBuffer.hpp" />
+    <ClInclude Include="..\..\..\uv\include\DnsGet.hpp" />
+    <ClInclude Include="..\..\..\uv\include\EventLoop.hpp" />
+    <ClInclude Include="..\..\..\uv\include\GlobalConfig.hpp" />
+    <ClInclude Include="..\..\..\uv\include\Idle.hpp" />
+    <ClInclude Include="..\..\..\uv\include\ListBuffer.hpp" />
+    <ClInclude Include="..\..\..\uv\include\LogWriter.hpp" />
+    <ClInclude Include="..\..\..\uv\include\Packet.hpp" />
+    <ClInclude Include="..\..\..\uv\include\PacketBuffer.hpp" />
+    <ClInclude Include="..\..\..\uv\include\Signal.hpp" />
+    <ClInclude Include="..\..\..\uv\include\SocketAddr.hpp" />
+    <ClInclude Include="..\..\..\uv\include\TcpAcceptor.hpp" />
+    <ClInclude Include="..\..\..\uv\include\TcpClient.hpp" />
+    <ClInclude Include="..\..\..\uv\include\TcpConnection.hpp" />
+    <ClInclude Include="..\..\..\uv\include\TcpServer.hpp" />
+    <ClInclude Include="..\..\..\uv\include\Timer.hpp" />
+    <ClInclude Include="..\..\..\uv\include\TimerWheel.hpp" />
+    <ClInclude Include="..\..\..\uv\include\Udp.hpp" />
+    <ClInclude Include="..\..\..\uv\include\uv11.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
