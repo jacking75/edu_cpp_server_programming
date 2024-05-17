@@ -51,21 +51,6 @@ namespace NaveNetLib {
 		SendPostAll(pPacket, Len);
 	}
 
-
-	/*void NFConnectionManager::Draw()
-	{
-		std::lock_guard<std::mutex> Sync(m_Lock);
-
-		INT Count = 0;
-		for(INT i = 0; i < m_iMaxCount; ++i)
-		{
-			if(m_vecConn[i])
-				Count++;
-		}
-
-		LOG_ERROR((L"Leave 되지 않은 Count : %d", Count));
-	}*/
-
 	// Connect, Disconnect 를 관리하는 함수.
 	void NFConnectionManager::Join(NFConnection* pUser)
 	{

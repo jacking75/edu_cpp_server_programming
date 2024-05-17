@@ -7,7 +7,6 @@
 
 namespace NaveNetLib { class NFConnectionManager; }
 
-// LoginServer의 UserConnect가 접속속할때 사용되는 Connect..
 class TestConnection : public NaveNetLib::NFConnection
 {
 public:
@@ -21,7 +20,7 @@ public:
 
 	void DispatchPacket(NaveNetLib::NFPacket& Packet);
 
-	//------------------------ 멤 버 변 수 -------------------------//
+	
 protected:
 	void  (TestConnection::*OnMsgMap[MaxPacket])(char* Packet, int Len);
 
@@ -33,6 +32,7 @@ public:
 	void Parsed_TEST(char* Packet, int Len);
 
 	void Send_IRC(const char* strCommand, const char* strMsg);
+
 
 
 private:

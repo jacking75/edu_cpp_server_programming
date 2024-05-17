@@ -55,9 +55,6 @@ namespace NaveNetLib {
 		inline bool					IsRun() { return m_bServerRun; };
 		inline bool					IsPause() { return m_bPause; };
 
-		//static unsigned __stdcall	WINAPI	Thread_MainEx(LPVOID lpvoid);		// IOCP 구동 메인 Thread
-		//static unsigned __stdcall	WINAPI	Process_MainEx(LPVOID lpvoid);		// Process 처리 Thread
-		//static unsigned __stdcall	WINAPI	Packet_MainEx(LPVOID lpvoid);		// Packet 처리 Thread
 		void Thread_MainEx();		// IOCP 구동 메인 Thread
 		void Process_MainEx();		// Process 처리 Thread
 		void Packet_MainEx();		// Packet 처리 Thread
@@ -84,14 +81,10 @@ namespace NaveNetLib {
 
 	protected:
 		INT							m_nMaxThreadNum;							// 최대 스레드 수 결정 
-		//HANDLE*						m_pWorkThread;								// IOCP Work 스레드 핸들 
 		HANDLE						m_hIOCP;									// IOCP 핸들 
 
 		std::vector<LISTENER>		m_vecListener;								// 리스너 리스트 여러개의 리스너를 생성할 수도 있다.
-
-		//HANDLE						m_hProcThread;								// 프로세싱을 위한 스레드
-		//HANDLE						m_hPacketThread;							// PacketUpdate을 위한 스레드
-
+				
 		std::vector<std::thread> m_MainThreadList;
 		std::thread m_ProcessThread;
 		std::thread m_PacketThread;

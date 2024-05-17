@@ -19,9 +19,6 @@ void TestConnection::Init(NaveNetLib::NFConnectionManager* pNFConnectionManager)
 	OnMsgMap[TEST] = &TestConnection::Parsed_TEST;
 }
 
-//////////////////////////////////////////////////////////////////////
-// 변수 초기화..
-//////////////////////////////////////////////////////////////////////
 void TestConnection::Clear()
 {
 	m_SendPacket.Init();
@@ -33,12 +30,6 @@ void TestConnection::DispatchPacket(NFPacket& Packet)
 
 	// 함수 호출
 	(this->*OnMsgMap[Packet.GetCommand()])(Packet.m_Packet, Packet.GetSize());
-	/*
-	if(Packet.GetCommand() == 0)
-	Parsed_IRC(Packet.m_Packet, Packet.GetSize());
-	else
-	Parsed_TEST(Packet.m_Packet, Packet.GetSize());
-	*/
 }
 
 void TestConnection::OnConnect(bool bConnect)

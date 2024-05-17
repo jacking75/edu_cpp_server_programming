@@ -13,7 +13,7 @@
 
 namespace NaveNetLib {
 
-	//TODO: 최흥배. 가능하면 NFMemPool은 사용하지 않도록 한다.
+	//TODO: 최흥배. ConcurrentQueue 를 사용하도록 한다
 //#pragma pack(push, struct_packing_before)
 //#pragma pack(1)													
 

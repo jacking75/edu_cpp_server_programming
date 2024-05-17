@@ -9,7 +9,7 @@
 
 ServerCtrl::ServerCtrl(void)
 {
-	m_pLogin = NULL;					// Client List º¯¼ö
+	m_pLogin = NULL;					
 }
 
 ServerCtrl::~ServerCtrl(void) { }
@@ -18,14 +18,6 @@ void ServerCtrl::SetConfig(Config* pConfig)
 {
 	m_pConfig = pConfig;
 }
-
-//void ServerCtrl::InitializeCommand()
-//{
-	//ADD_COMMAND(L"help", CCmdHelp, L"Show Command List.");
-	//ADD_COMMAND(L"clear", CCmdClear, L"Clear Display.");
-	//ADD_COMMAND(L"close", CCmdClose, L"Close Server.");
-	//ADD_COMMAND(L"msg", CCmdMsg, L"Send IRC Message");
-//}
 
 void ServerCtrl::StartServer()
 {

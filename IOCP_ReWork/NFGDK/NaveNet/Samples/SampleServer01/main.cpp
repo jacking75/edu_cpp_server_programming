@@ -8,9 +8,7 @@ int main()
 {
 	ServerCtrl Server;
 		
-	Config config;
-	config.Load();
-		
+	Config config;		
 	Server.SetConfig(&config);
 
 	Server.StartServer();
@@ -19,11 +17,6 @@ int main()
 	getchar();
 	
 	Server.EndServer();
-	// 콘솔에서 exit 누르면 빠져나오도록한다
-	/*while (true)
-	{
-		std::this_thread::yield();
-	}*/
-
+	
 	return 0;
 }

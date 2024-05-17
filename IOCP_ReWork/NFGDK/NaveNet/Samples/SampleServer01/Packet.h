@@ -21,7 +21,6 @@ typedef struct PKIRC
 typedef struct PKTEST
 {
 	unsigned int	TestKey;
-
 	char	Message[512];
 }*LPPKTEST;
 

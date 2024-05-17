@@ -248,23 +248,7 @@ namespace NaveNetLib {
 			InterlockedIncrement((LONG*)&m_bIsConnect);		// 접속 상태 변수 ON !!!
 			
 			SetConnectFlag(CONNECT_true, pUpdateManager);
-
-			//AccpetEx 에서 클라이언트 접속 후 데이터를 보낼 때만 Accept 이벤트를 받는 경우 아래 코드를 활성화 한다.
-			//// 검사된 연결자 아난 경우 연결 해제 
-			//if(lpOverlapPlus->dwBytes && strncmp(lpOverlapPlus->wbuf.buf,CONNECT_CHECK_DATA,CONNECT_CHECK_SIZE) == 0)
-			//{
-			//	ShowMessage(CONNECT_SUCCESS);
-			//	SetConnectFlag(CONNECT_true, pUpdateManager);
-			//}
-			//else
-			//{
-			//	ShowMessage(CONNECT_FAILED);
-			//	//LOG_ERROR((L"[%04d] Check Sum : %d, %s.", GetIndex(), lpOverlapPlus->dwBytes, lpOverlapPlus->wbuf.buf));
-			//	SetConnectFlag(CONNECT_false, pUpdateManager);
-			//	ReleaseAcptPacket( lpOverlapPlus );
-			//	break;
-			//}
-
+			
 			// Accept 할당 패킷 해제 
 			if(!RecvPost())
 			{
@@ -347,10 +331,10 @@ namespace NaveNetLib {
 		newolp->sckClient	= m_Socket;
 		newolp->nConnState	= ClientIoAccept;
 		newolp->pClientConn = (void*)this;
-		newolp->wbuf.len	= CONNECT_CHECK_SIZE;					//	newolp->wbuf.len	= MAXPACKETSIZE;
-																	// ** WARNING ** 
-																	// When you change your packet certfying correct connection,
-																	// you must change the size of definition 'CONNECT_CHECK_SIZE'.
+		newolp->wbuf.len	= CONNECT_CHECK_SIZE;//	newolp->wbuf.len	= MAXPACKETSIZE;
+												// ** WARNING ** 
+												// When you change your packet certfying correct connection,
+												// you must change the size of definition 'CONNECT_CHECK_SIZE'.
 		return newolp;
 	}
 
@@ -699,9 +683,9 @@ namespace NaveNetLib {
 		INT ret = WSASend(	newolp->sckClient,
 							&newolp->wbuf,
 							1,
-							&newolp->dwBytes,						// 만약 호출했을때 바로 받았다면 여기로 받은 크기가 넘어오지만 iocp에서는 의미가 없다.
+							&newolp->dwBytes,// 만약 호출했을때 바로 받았다면 여기로 받은 크기가 넘어오지만 iocp에서는 의미가 없다.
 							newolp->dwFlags,
-							&newolp->overlapped,					// Overlapped 구조체 
+							&newolp->overlapped,// Overlapped 구조체 
 							NULL );
 		
 		// 에러 처리 

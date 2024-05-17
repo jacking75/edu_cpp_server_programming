@@ -69,11 +69,7 @@ namespace NaveNetLib {
 
 		if (Socket == INVALID_SOCKET) {
 			return Socket;
-		}
-
-		//if (ConnectIOCPSocket(Socket) == NULL) { // 내가 넣은 것
-		//	return Socket;
-		//}
+		}				
 
 		// [2] bind listen socket
 		SOCKADDR_IN serveraddr;
@@ -162,31 +158,7 @@ namespace NaveNetLib {
 				return false;
 			}
 		}
-
-		// [02] Wait for thread terminations
-		//nCnt = WaitForMultipleObjects( m_nMaxThreadNum, m_pWorkThread, true, 15000 );
-
-		//switch ( nCnt )
-		//{
-		//	case WAIT_TIMEOUT:
-		//		//LOG_ERROR((L"Not All WorkThreads Died in Time."));
-		//		break;
-		//	case WAIT_FAILED:
-		//		//LOG_ERROR((L"WAIT_FAILED, WaitForMultipleObjects()."));
-		//		break;
-		//	default:
-		//		break;
-		//}
-
-		//// [03] Close Thread Handles
-		//if( m_pWorkThread )
-		//{
-		//	for (nCnt = 0; nCnt < m_nMaxThreadNum; nCnt++) {
-		//		CloseHandle(m_pWorkThread[nCnt]);
-		//	}
-
-		//	_DELETE_ARRAY(m_pWorkThread);
-		//}
+				
 		for (auto& thread : m_MainThreadList) {
 			if (thread.joinable()) {
 				thread.join();
@@ -195,8 +167,7 @@ namespace NaveNetLib {
 
 		// [04] Process Thread Stop and Close
 		m_bServerRun = false;
-		//CloseHandle(m_hProcThread);
-		//CloseHandle(m_hPacketThread);
+		
 		if (m_ProcessThread.joinable()) {
 			m_ProcessThread.join();
 		}
@@ -375,84 +346,14 @@ namespace NaveNetLib {
 	// [3]RETURN : bool - 의미 없음				 					//
 	// [4]DATE : 2003년 10월 24일									//
 	//////////////////////////////////////////////////////////////////
-	/*unsigned NFServerCtrl::Thread_MainEx(LPVOID lpvoid)
-	{
-		DWORD			dwIoSize;									// 완료처리 사이즈 얻음 
-		PULONG_PTR		lCompletionKey;								// 무한 루프 탈출 용이 됨 
-		bool			bSuccess;									// 블럭킹 처리 에러 확인  
-		HANDLE			hIOCP = (HANDLE)lpvoid;					// IOCP 핸들 얻음 
-		
-		LPOVERLAPPED	lpOverlapped;								// 중첩 확장 포인터 
-
-		////////////
-		// 무한 루프 
-		while( true )
-		{
-			// IOCP 처리를 기다리는 BLOCKING MODE
-			bSuccess = GetQueuedCompletionStatus(hIOCP,										// IOCP Handle
-												&dwIoSize,									// 처리 사이즈 
-												lCompletionKey,							// 완료 키 
-												(LPOVERLAPPED*) &lpOverlapped,				// 중첩 확장 
-												INFINITE);									// Waiting Time 
-
-			LPOVERLAPPEDPLUS lpOverlapPlus = (LPOVERLAPPEDPLUS)lpOverlapped;
-
-			if(bSuccess)
-			{
-				// 종료 신호가 들어왔다면, 루프 탈출 
-				if (*lCompletionKey == IOCP_SHUTDOWN) {
-					break;
-				}
-
-				if( NULL != lpOverlapPlus )
-				{
-					///////////////////////////////////////////////
-					// 처리가 정상적으로 이루어진다면 이쪽으로...
-					lpOverlapPlus->dwBytes = dwIoSize;				// 처리 데이타 Size
-					// 처리 변수 Cast 변환 
-					// 속도를 위해 메인프레임에선 try~catch를 뺀다.
-					// 알수 없는 오류를 검사하기 위해선 Exception::EnableUnhandledExceptioinFilter(true)를 사용한다
-
-					// Recv 카운트 처리
-					//if(lpOverlapPlus->nConnState == ClientIoRead)
-					//{
-					//	InterlockedExchange((LONG*)&iRecvPacket,iRecvPacket+1);
-					//}
-
-					NFConnection* lpClientConn = (NFConnection*) lpOverlapPlus->pClientConn;
-					lpClientConn->DoIo(lpOverlapPlus);				// IOCP 처리 핸들링 
-				}
-			}
-			else
-			{
-				if(!lpOverlapPlus)
-				{
-					//LOG_ERROR((L"Critical Error on GetQueuedCompletionStatus()."));
-				}
-				else
-				{
-					// 처리 변수 Cast 변환
-					NFConnection* lpClientConn = (NFConnection*) lpOverlapPlus->pClientConn;
-					// 강제로 Clear해주면 안된다. (데이타가 제대로 초기화 되지 않을수도 있다)
-//					lpClientConn->Clear();
-//					LOG_ERROR(("[%04d] IOCP OverlapPlus Error, Close_Open()호출. SOCKET_ERROR, %d", lpClientConn->GetIndex(), WSAGetLastError()));
-					lpClientConn->SetClose_Open(lpOverlapPlus, true);	// 연결 해제
-				}
-			}
-		}
-
-		return 0;
-	}*/
 	void NFServerCtrl::Thread_MainEx()
 	{
 		DWORD			dwIoSize = 0;									// 완료처리 사이즈 얻음 
 		ULONG_PTR		lCompletionKey = 0;					// 무한 루프 탈출 용이 됨 
 		bool			bSuccess;									// 블럭킹 처리 에러 확인  
 		HANDLE			hIOCP = m_hIOCP;					// IOCP 핸들 얻음 
-		LPOVERLAPPED	lpOverlapped = NULL;								// 중첩 확장 포인터 
-
-																	////////////
-																	// 무한 루프 
+		LPOVERLAPPED	lpOverlapped = NULL;			// 중첩 확장 포인터 
+																
 		while (true)
 		{
 			// IOCP 처리를 기다리는 BLOCKING MODE
@@ -518,26 +419,6 @@ namespace NaveNetLib {
 	// [3]RETURN : bool - 의미 없음				 					//
 	// [4]DATE : 2003년 10월 24일									//
 	//////////////////////////////////////////////////////////////////
-	/*unsigned NFServerCtrl::Process_MainEx(LPVOID lpvoid)
-	{
-		NFServerCtrl*	pCtrl = (NFServerCtrl*)lpvoid;					// IOCP 핸들 얻음 
-
-		assert(pCtrl);
-
-		while( pCtrl->IsRun())
-		{
-			if(pCtrl->IsPause())
-			{
-				Sleep(1);
-				continue;
-			}
-
-			pCtrl->Update();
-			Sleep(1);
-		}
-
-		return 0;
-	}*/
 	void NFServerCtrl::Process_MainEx()
 	{
 		while (IsRun())
@@ -559,22 +440,6 @@ namespace NaveNetLib {
 	// [3]RETURN : bool - 의미 없음				 					//
 	// [4]DATE : 2003년 10월 24일									//
 	//////////////////////////////////////////////////////////////////
-	/*unsigned NFServerCtrl::Packet_MainEx(LPVOID lpvoid)
-	{
-		NFServerCtrl*	pCtrl = (NFServerCtrl*)lpvoid;					// IOCP 핸들 얻음 
-		//NFUpdateManager* pUpdateManager = NFUpdateManager::GetInstancePtr();
-
-		assert(pCtrl);
-		assert(pCtrl->m_pUpdateManager);
-
-		while( pCtrl->IsRun())
-		{
-			pCtrl->m_pUpdateManager->Update();
-			Sleep(1);
-		}
-
-		return 0;
-	}*/
 	void NFServerCtrl::Packet_MainEx()
 	{
 		while (IsRun())

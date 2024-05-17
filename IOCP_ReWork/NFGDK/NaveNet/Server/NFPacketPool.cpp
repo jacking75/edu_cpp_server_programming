@@ -1,5 +1,5 @@
 
-//#include "NFMemPool.h"
+#include "NFMemPool.h"
 #include "NFPacketPool.h"
 //#include <Nave/NFLog.h>
 
@@ -130,7 +130,7 @@ namespace NaveNetLib {
 		va_list		argptr;
 		CHAR		szOutStr[1024];
 		va_start(argptr, lpszFmt);
-		vsprintf(szOutStr, lpszFmt, argptr);
+		vsprintf_s(szOutStr, lpszFmt, argptr);
 		va_end(argptr);
 		
 		INT nBytesWritten = fprintf( m_hLogFile, "%s\r\n", szOutStr );// LOG ³»¿ë 
