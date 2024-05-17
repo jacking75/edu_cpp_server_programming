@@ -34,7 +34,7 @@
 	- 구글 프로토버퍼
 - 링버퍼 만들기
 - 로그 라이브러리 만들기
-- 메모리 풀
+- 메모리 최적화
     - 객체 풀
 	- 크기별 메모리 풀 만들기 
 	- tcmalloc 사용하기
@@ -45,7 +45,7 @@
 `SyncIOChatServer` 디렉토리에 있는 코드를 토대로 채팅 서버와 오목게임서버를 만든다.  
 
 - 채팅 서버 만들기
-    - [참고 코드: SelectChatServer](https://github.com/jacking75/com2us_cppNetStudy_work/tree/master/SelectChatServer ) 를 참고한다  
+    - [참고 코드: SelectChatServer](https://github.com/jacking75/edu_cpp_server_programming/tree/main/SelectChatServer ) 를 참고한다  
 - 오목 게임 서버 만들기
     - 채팅 서버를 다 만들었다면 여기에 오목 게임 콘텐츠를 구현하여 온라인 오목 게임을 만든다.
 	- 오목 게임 클라이언트는 `CSharp_OmokClient` 디렉토리에 있는 것을 사용한다.  
