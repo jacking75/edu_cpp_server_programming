@@ -86,7 +86,7 @@ namespace hbServerEngine
             return true;
         }
 
-        bool SendMessageData(int32_t nConnID, int32_t nMsgID, uint64_t u64TargetID, uint32_t dwUserData, const char* pData, uint32_t dwLen)
+        bool SendMessageData(int32_t nConnID, int32_t MsgID, uint64_t u64TargetID, uint32_t dwUserData, const char* pData, uint32_t dwLen)
         {
             if (nConnID <= 0)
             {
@@ -102,7 +102,7 @@ namespace hbServerEngine
 
             if (pConn->GetConnectStatus() != NET_ST_CONN)
             {
-                CLog::GetInstancePtr()->LogError("CNetManager::SendMessageData FAILED, 연결이 끊어졌다, MsgID:%d, nConnID:%d", nMsgID, nConnID);
+                CLog::GetInstancePtr()->LogError("CNetManager::SendMessageData FAILED, 연결이 끊어졌다, MsgID:%d, nConnID:%d", MsgID, nConnID);
                 return false;
             }
 
@@ -110,16 +110,12 @@ namespace hbServerEngine
             ERROR_RETURN_false(pDataBuffer != NULL);
 
             PacketHeader* pHeader = (PacketHeader*)pDataBuffer->GetBuffer();
-            pHeader->CheckCode = CODE_VALUE;
-            pHeader->dwUserData = dwUserData;
-            pHeader->u64TargetID = u64TargetID;
-            pHeader->nSize = dwLen + sizeof(PacketHeader);
-            pHeader->nMsgID = nMsgID;
-            pHeader->nPacketNo = 1;
-
+            pHeader->TotalSize = dwLen + sizeof(PacketHeader);
+            pHeader->MsgID = MsgID;
+            
             memcpy(pDataBuffer->GetBuffer() + sizeof(PacketHeader), pData, dwLen);
 
-            pDataBuffer->SetTotalLenth(pHeader->nSize);
+            pDataBuffer->SetTotalLenth(pHeader->TotalSize);
 
             if (pConn->SendBuffer(pDataBuffer))
             {

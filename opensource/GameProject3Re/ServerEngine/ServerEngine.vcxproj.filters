@@ -18,7 +18,6 @@
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="DataBuffer.h" />
     <ClInclude Include="IBufferHandler.h" />
-    <ClInclude Include="LockFreeQueue.h" />
     <ClInclude Include="PacketHeader.h" />
     <ClInclude Include="RandomValue.h" />
     <ClInclude Include="ReaderWriterQueue.h" />

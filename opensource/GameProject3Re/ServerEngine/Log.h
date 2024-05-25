@@ -236,11 +236,11 @@ namespace hbServerEngine
             char szLog[512] = { 0 };
             snprintf(szLog, 512, "%s: ", m_strPrefix.c_str());
 
-            int32_t nSize = (int32_t)strlen(szLog);
+            int32_t TotalSize = (int32_t)strlen(szLog);
 
             va_list argList;
             va_start(argList, lpszFormat);
-            vsnprintf(szLog + nSize, 512 - nSize, lpszFormat, argList);
+            vsnprintf(szLog + TotalSize, 512 - TotalSize, lpszFormat, argList);
             va_end(argList);
 
             SetConsoleTitleA(szLog);

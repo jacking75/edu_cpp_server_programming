@@ -74,7 +74,7 @@ namespace hbServerEngine
             PacketHeader* pHeader = (PacketHeader*)pDataBuffer->GetBuffer();
 
             queue_lock_.lock();
-            m_pRecvDataQueue->emplace_back(NetPacket(nConnID, pDataBuffer, pHeader->nMsgID));
+            m_pRecvDataQueue->emplace_back(NetPacket(nConnID, pDataBuffer, pHeader->MsgID));
             queue_lock_.unlock();
 
             return true;
@@ -117,7 +117,7 @@ namespace hbServerEngine
         }
 
         template<typename T>
-        bool SendMsgStruct(int32_t nConnID, int32_t nMsgID, uint64_t u64TargetID, uint32_t dwUserData, T& Data)
+        bool SendMsgStruct(int32_t nConnID, int32_t MsgID, uint64_t u64TargetID, uint32_t dwUserData, T& Data)
         {
             if (nConnID <= 0)
             {
@@ -126,10 +126,10 @@ namespace hbServerEngine
 
             m_nSendNum++;
 
-            return CNetManager::GetInstancePtr()->SendMessageData(nConnID, nMsgID, u64TargetID, dwUserData, &Data, sizeof(T));
+            return CNetManager::GetInstancePtr()->SendMessageData(nConnID, MsgID, u64TargetID, dwUserData, &Data, sizeof(T));
         }
                 
-        bool SendMsgRawData(int32_t nConnID, int32_t nMsgID, uint64_t u64TargetID, uint32_t dwUserData, const char* pdata, uint32_t dwLen)
+        bool SendMsgRawData(int32_t nConnID, int32_t MsgID, uint64_t u64TargetID, uint32_t dwUserData, const char* pdata, uint32_t dwLen)
         {
             if (nConnID <= 0)
             {
@@ -138,19 +138,8 @@ namespace hbServerEngine
 
             m_nSendNum++;
 
-            return CNetManager::GetInstancePtr()->SendMessageData(nConnID, nMsgID, u64TargetID, dwUserData, pdata, dwLen);
-        }
-
-        bool SendMsgBuffer(int32_t nConnID, IDataBuffer* pDataBuffer)
-        {
-            if (nConnID == 0)
-            {
-                return false;
-            }
-
-            m_nSendNum++;
-            return CNetManager::GetInstancePtr()->SendMessageBuff(nConnID, pDataBuffer);
-        }
+            return CNetManager::GetInstancePtr()->SendMessageData(nConnID, MsgID, u64TargetID, dwUserData, pdata, dwLen);
+        }              
 
         CConnection* GetConnectionByID(int32_t nConnID)
         {
@@ -202,7 +191,8 @@ namespace hbServerEngine
                 
 
 
-    protected:
+    protected:        
+
         INetEventDispatcher* m_pPacketDispatcher;
 
         //TODO: 락프리 큐로 바꾸어야 한다

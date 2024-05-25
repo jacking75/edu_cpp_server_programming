@@ -511,7 +511,7 @@ bool StringToVector(const char* pStrValue, std::vector<int32_t>& vtInt, char cDe
     return true;
 }
 
-bool StringToVector(const char* pStrValue, int32_t IntVector[], int32_t nSize, char cDelim = ',')
+bool StringToVector(const char* pStrValue, int32_t IntVector[], int32_t TotalSize, char cDelim = ',')
 {
     if (pStrValue == NULL)
     {
@@ -535,7 +535,7 @@ bool StringToVector(const char* pStrValue, int32_t IntVector[], int32_t nSize, c
     {
         //*pEndPos = 0;
         IntVector[nIndex++] = StringToInt(pBeginPos);
-        if (nIndex >= nSize)
+        if (nIndex >= TotalSize)
         {
             return true;
         }
@@ -544,7 +544,7 @@ bool StringToVector(const char* pStrValue, int32_t IntVector[], int32_t nSize, c
         pEndPos = strchr(pBeginPos, cDelim);
     }
 
-    if (*pBeginPos != 0 && nIndex < nSize)
+    if (*pBeginPos != 0 && nIndex < TotalSize)
     {
         IntVector[nIndex++] = StringToInt(pBeginPos);
     }
@@ -552,7 +552,7 @@ bool StringToVector(const char* pStrValue, int32_t IntVector[], int32_t nSize, c
     return true;
 }
 
-bool StringToVector(const char* pStrValue, float FloatVector[], int32_t nSize, char cDelim = ',')
+bool StringToVector(const char* pStrValue, float FloatVector[], int32_t TotalSize, char cDelim = ',')
 {
     if (pStrValue == NULL)
     {
@@ -575,7 +575,7 @@ bool StringToVector(const char* pStrValue, float FloatVector[], int32_t nSize, c
     while (pEndPos != NULL)
     {
         FloatVector[nIndex++] = StringToFloat(pBeginPos);
-        if (nIndex >= nSize)
+        if (nIndex >= TotalSize)
         {
             return true;
         }
@@ -584,7 +584,7 @@ bool StringToVector(const char* pStrValue, float FloatVector[], int32_t nSize, c
         pEndPos = strchr(pBeginPos, cDelim);
     }
 
-    if (*pBeginPos != 0 && nIndex < nSize)
+    if (*pBeginPos != 0 && nIndex < TotalSize)
     {
         FloatVector[nIndex++] = StringToFloat(pBeginPos);
     }

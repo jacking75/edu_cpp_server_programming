@@ -333,49 +333,49 @@ namespace hbServerEngine
         }
 
     public:
-        IDataBuffer* AllocDataBuff(int nSize)
+        IDataBuffer* AllocDataBuff(int TotalSize)
         {
-            if (nSize < 64)
+            if (TotalSize < 64)
             {
                 return m_BufferManager64B.AllocDataBuff();
             }
-            if (nSize < 128)
+            if (TotalSize < 128)
             {
                 return m_BufferManager128B.AllocDataBuff();
             }
-            if (nSize < 256)
+            if (TotalSize < 256)
             {
                 return m_BufferManager256B.AllocDataBuff();
             }
-            if (nSize < 512)
+            if (TotalSize < 512)
             {
                 return m_BufferManager512B.AllocDataBuff();
             }
-            if (nSize < 1024)
+            if (TotalSize < 1024)
             {
                 return m_BufferManager1K.AllocDataBuff();
             }
-            else if (nSize < 2048)
+            else if (TotalSize < 2048)
             {
                 return m_BufferManager2K.AllocDataBuff();
             }
-            else if (nSize < 4096)
+            else if (TotalSize < 4096)
             {
                 return m_BufferManager4K.AllocDataBuff();
             }
-            else if (nSize < 8192)
+            else if (TotalSize < 8192)
             {
                 return m_BufferManager8K.AllocDataBuff();
             }
-            else if (nSize < 16384)
+            else if (TotalSize < 16384)
             {
                 return m_BufferManager16K.AllocDataBuff();
             }
-            else if (nSize < 32768)
+            else if (TotalSize < 32768)
             {
                 return m_BufferManager32K.AllocDataBuff();
             }
-            else if (nSize < 65536)
+            else if (TotalSize < 65536)
             {
                 return m_BufferManager64K.AllocDataBuff();
             }

@@ -5,18 +5,18 @@
 
 namespace hbServerEngine
 {
-	template <uint16_t Size>
+	template <uint16_t TotalSize>
 	class CRandonValue
 	{
 	private:
 		CRandonValue()
 		{
-			for (int32_t i = 0; i < Size; i++)
+			for (int32_t i = 0; i < TotalSize; i++)
 			{
 				m_Values[i] = i;
 			}
 
-			Disorder(m_Values, Size);
+			Disorder(m_Values, TotalSize);
 
 			m_nCurIndex = 1;
 
@@ -58,20 +58,20 @@ namespace hbServerEngine
 
 		uint16_t Random()
 		{
-			m_nCurIndex = (m_nCurIndex + 1) % Size;
+			m_nCurIndex = (m_nCurIndex + 1) % TotalSize;
 			if (m_nCurIndex != m_nStartIndex)
 			{
 				return m_Values[m_nCurIndex];
 			}
 			else
 			{
-				m_nStartIndex = m_nCurIndex = rand() % Size;
+				m_nStartIndex = m_nCurIndex = rand() % TotalSize;
 
 				return m_Values[m_nCurIndex];
 			}
 		}
 
-		uint16_t  m_Values[Size];
+		uint16_t  m_Values[TotalSize];
 
 		uint16_t  m_nCurIndex;
 

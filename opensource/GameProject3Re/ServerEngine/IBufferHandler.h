@@ -44,11 +44,11 @@ namespace hbServerEngine
 
     struct NetPacket
     {
-        NetPacket(int32_t nConnID = 0, IDataBuffer* pBuffer = nullptr, int32_t nMsgID = 0)
+        NetPacket(int32_t nConnID = 0, IDataBuffer* pBuffer = nullptr, int32_t MsgID = 0)
         {
             m_nConnID = nConnID;
             m_pDataBuffer = pBuffer;
-            m_nMsgID = nMsgID;
+            m_nMsgID = MsgID;
         }
 
         int32_t        m_nMsgID = 0;

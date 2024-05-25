@@ -209,9 +209,8 @@ namespace hbServerEngine
                         m_pBufPos += m_nCurBufferSize - m_pCurRecvBuffer->GetTotalLenth();
                         m_pCurRecvBuffer->SetTotalLenth(m_nCurBufferSize);
                         m_uLastRecvTick = CommonFunc::GetTickCount();
-                        UpdateCheckNo(m_pCurRecvBuffer->GetBuffer());
                         m_pDataHandler->OnDataHandle(m_pCurRecvBuffer, GetConnectionID());
-                        m_pCurRecvBuffer = NULL;
+                        m_pCurRecvBuffer = nullptr;
                     }
                 }
 
@@ -227,16 +226,16 @@ namespace hbServerEngine
                 }
 
                 PacketHeader* pHeader = (PacketHeader*)m_pBufPos;
-                //////////////////////////////////////////////////////////////////////////
+                
                 //여기서 패킷 헤더를 확인하고 합법적이지 않은 경우 false를 반환한다
                 if (!CheckHeader(m_pBufPos))
                 {
                     //return false;
                 }
 
-                int32_t nPacketSize = pHeader->nSize;
+                int32_t nPacketSize = pHeader->TotalSize;
 
-                //////////////////////////////////////////////////////////////////////////
+                
                 if ((nPacketSize > m_nDataLen) && (nPacketSize < RECV_BUF_SIZE))
                 {
                     break;
@@ -255,7 +254,6 @@ namespace hbServerEngine
                     pDataBuffer->SetTotalLenth(nPacketSize);
 
                     m_uLastRecvTick = CommonFunc::GetTickCount();
-                    UpdateCheckNo(pDataBuffer->GetBuffer());
                     m_pDataHandler->OnDataHandle(pDataBuffer, GetConnectionID());
                 }
                 else
@@ -377,8 +375,6 @@ namespace hbServerEngine
             m_pBufPos = m_pRecvBuf;
 
             m_bNotified = false;
-
-            m_bPacketNoCheck = false;
 
             m_uLastRecvTick = 0;
 
@@ -597,71 +593,27 @@ namespace hbServerEngine
             3. 패키지의 일련 번호 
             */
             PacketHeader* pHeader = (PacketHeader*)m_pBufPos;
-            if (pHeader->CheckCode != CODE_VALUE)
+            
+            if (pHeader->TotalSize > 1024 * 1024)
             {
                 return false;
             }
 
-            if (pHeader->nSize > 1024 * 1024)
+            if (pHeader->TotalSize <= 0)
             {
+                CLog::GetInstancePtr()->LogWarn("packetsize < 0, pHeader->nMsgID:%d", pHeader->MsgID);
                 return false;
             }
 
-            if (pHeader->nSize <= 0)
+            if (pHeader->MsgID > 399999 || pHeader->MsgID == 0)
             {
-                CLog::GetInstancePtr()->LogWarn("packetsize < 0, pHeader->nMsgID:%d, roleid:%lld", pHeader->nMsgID, pHeader->u64TargetID);
+                CLog::GetInstancePtr()->LogWarn("Invalid MessageID roleid:%d", pHeader->MsgID);
                 return false;
             }
-
-            if (pHeader->nMsgID > 399999 || pHeader->nMsgID == 0)
-            {
-                CLog::GetInstancePtr()->LogWarn("Invalid MessageID roleid:%lld", pHeader->u64TargetID);
-                return false;
-            }
-
-            if (!m_bPacketNoCheck)
-            {
-                return true;
-            }
-
-            int32_t nPktChkNo = pHeader->nPacketNo - (pHeader->nMsgID ^ pHeader->nSize);
-
-            if (nPktChkNo <= 0)
-            {
-                CLog::GetInstancePtr()->LogWarn("nPktChkNo <= 0");
-                return false;
-            }
-
-            if (m_nCheckNo == 0)
-            {
-                return true;
-            }
-
-            if (m_nCheckNo == nPktChkNo)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        bool UpdateCheckNo(char* pNetPacket)
-        {
-            PacketHeader* pHeader = (PacketHeader*)pNetPacket;
-
-            int32_t nPktChkNo = pHeader->nPacketNo - (pHeader->nMsgID ^ pHeader->nSize);
-
-            if (m_nCheckNo == 0)
-            {
-                m_nCheckNo = nPktChkNo + 1;
-                return true;
-            }
-
-            m_nCheckNo += 1;
 
             return true;
         }
-
+                
         uint32_t GetIpAddr(bool bHost = true)
         {
             if (bHost)
@@ -672,11 +624,7 @@ namespace hbServerEngine
             return HostToNet(m_dwIpAddr);
         }
 
-        void EnableCheck(bool bCheck)
-        {
-            m_bPacketNoCheck = bCheck;
-        }
-
+        
 
     public:
         SOCKET                      m_hSocket = INVALID_SOCKET;
@@ -684,8 +632,6 @@ namespace hbServerEngine
         int32_t                       m_nConnStatus = NET_ST_INIT;
 
         bool                        m_bNotified = false;
-
-        bool                        m_bPacketNoCheck = false;
 
         NetIoOperatorData           m_IoOverlapRecv;
 
@@ -714,7 +660,7 @@ namespace hbServerEngine
 
         uint64_t                      m_uLastRecvTick = 0;
 
-        moodycamel::ReaderWriterQueue< IDataBuffer*> m_SendBuffList;
+        moodycamel::ReaderWriterQueue<IDataBuffer*> m_SendBuffList;
 
         sockaddr                    m_UdpAddr;
 

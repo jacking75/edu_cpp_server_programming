@@ -82,6 +82,7 @@ public:
         return true;
 	}
 
+    // 1개의 스레드에서만 호출 되어야 한다
 	bool Run()
 	{
         while (true)

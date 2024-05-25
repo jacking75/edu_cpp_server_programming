@@ -107,7 +107,6 @@
     <ClInclude Include="CrashReport.h" />
     <ClInclude Include="DataBuffer.h" />
     <ClInclude Include="IBufferHandler.h" />
-    <ClInclude Include="LockFreeQueue.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="NetManager.h" />
     <ClInclude Include="PacketHeader.h" />
