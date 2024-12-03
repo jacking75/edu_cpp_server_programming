@@ -109,6 +109,8 @@ C++ 학습 및 게임 서버 개발에 사용할 목적으로 아래 오픈소�
 	- HTTP/SMTP/ICMP//MQTT/Redis/Memcached/Beanstalk/Handler Socket 과 같은 일반적인 프로토콜이 Acl에서 구현되며, XML/JSON/MIME/BASE64/UUCODE/QPCODE/RFC2047/RFC1035 등과 같은 코덱 라이브러리도 Acl에 포함되어 있다. 
 	- 또한 Acl은 Mysql, Postgresql, Sqlite와 같이 널리 사용되는 데이터베이스를 위한 통합 추상 인터페이스도 제공한다.
 	- Acl 라이브러리를 사용하면 데이터베이스 애플리케이션을 더 쉽고, 빠르고, 안전하게 작성할 수 있다.
+- acl-beginner
+    - acl을 초보자 대상으로 좀 더 상세하게 정리한 것이다.	
 - RIO_rioring
     -  Widows의 `Registered I/O` 와 Linux의 `io_uring`을 지원하는 라이브러리
 - `opensource` 디렉토리의 Easy-Reactor
